@@ -1,0 +1,9 @@
+import auth from './auth'
+import building from './building'
+import survey from './survey'
+
+export default {
+  auth,
+  building,
+  survey
+}
