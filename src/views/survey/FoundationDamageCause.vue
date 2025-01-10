@@ -67,19 +67,17 @@ const options = [
     <form class="Form" autocomplete="off" @submit.prevent="void">
       <div class="RadioTextInput">
         <div class="RadioTextInput__Wrapper">
-          <div Name="type">
-            <div v-for="option in options" class="RadioTextInput__Field">
-              <input
-                type="radio"
-                name="cause"
-                v-model="Model.FoundationDamageCause"
-                :id="`option_${option.id}`"
-                :value="option.id"
-              />
-              <label :for="`option_${option.id}`" class="RadioTextInput__Label">
-                <span>{{ option.label }}</span>
-              </label>
-            </div>
+          <div v-for="option in options" class="RadioTextInput__Field">
+            <input
+              type="radio"
+              name="cause"
+              v-model="Model.FoundationDamageCause"
+              :id="`option_${option.id}`"
+              :value="option.id"
+            />
+            <label :for="`option_${option.id}`" class="RadioTextInput__Label">
+              <span>{{ option.label }}</span>
+            </label>
           </div>
         </div>
       </div>

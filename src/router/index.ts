@@ -9,11 +9,7 @@ const router = createRouter({
       path: '/:vendor?',
       name: 'start',
       beforeEnter(to) {
-        console.log(to)
-
         if (!to.params.vendor) {
-          console.log(`${import.meta.env.VITE_DEFAULT_APP_ID || 'incident'}`)
-
           return {
             path: to.path,
             name: to.name,

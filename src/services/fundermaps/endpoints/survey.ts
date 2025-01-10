@@ -8,9 +8,8 @@ export const getSurveyConfig = async function getSurveyConfig(
 ): Promise<ISurveyConfig> {
   try {
     return await get({
-      endpoint: 'survey/config',
-      requireAuth: false,
-      queryString: { slug }
+      endpoint: `app/${slug}`,
+      requireAuth: false
     })
   } catch (e) {
     console.error(e)
@@ -20,7 +19,7 @@ export const getSurveyConfig = async function getSurveyConfig(
 
 export const saveSurveyData = async function saveSurveyData(body: ISurveyModel) {
   return await post({
-    endpoint: 'survey/save',
+    endpoint: 'incident',
     requireAuth: false,
     body
   })

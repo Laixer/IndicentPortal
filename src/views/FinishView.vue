@@ -32,7 +32,7 @@ const isFeedback = computed(() => vendorSlug.value === 'feedback')
         <a
           href="https://www.kcaf.nl/wat-doet-het-kcaf/fundermaps/"
           target="_blank"
-          alt="stappenplann"
+          alt="meer informatie"
           ><button class="Button Button--line">
             <span>Meer informatie</span>
             <div class="SvgIcon svg-container">

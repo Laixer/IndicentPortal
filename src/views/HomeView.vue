@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import Title from '@/components/Title.vue'
 import { useConfigStore } from '@/stores/config.js'
 
-const { vendorLogoPath, vendorName, loading } = storeToRefs(useConfigStore())
+const { vendorLogoPath, vendorName } = storeToRefs(useConfigStore())
 
 // TODO:  https://www.npmjs.com/package/vue-markdown-render ?
 </script>

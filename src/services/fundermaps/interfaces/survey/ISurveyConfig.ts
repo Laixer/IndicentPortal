@@ -1,10 +1,11 @@
 export interface ISurveyConfig {
-  clientId: number
+  client_id: number
   branding: {
-    vendorName: string
-    vendorLogoPath: string
-    primaryColor: string
-    secondaryColor: string
+    vendor_name: string
+    vendor_slug: string
+    primary_color: string
+    secondary_color: string
+    vendor_logo_path: string
   }
   pages: string[]
 }

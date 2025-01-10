@@ -22,43 +22,41 @@ const { Model } = storeToRefs(useSurveyStore())
 
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
-            <div>
-              <div class="RadioImageInput__Field">
-                <input
-                  type="radio"
-                  v-model="Model.Owner"
-                  id="eigendom 0"
-                  name="eigendom"
-                  :value="true"
-                />
-                <label for="eigendom 0" class="RadioImageInput__Label">
-                  <div class="SvgIcon svg-container">
-                    <SvgIconEigendomEigenaar />
-                  </div>
-                  <div class="SvgIcon svg-container SvgIcon--selected">
-                    <SvgIconCornerSelected />
-                  </div>
-                  <span>Eigenaar</span>
-                </label>
-              </div>
-              <div class="RadioImageInput__Field">
-                <input
-                  type="radio"
-                  v-model="Model.Owner"
-                  id="eigendom 1"
-                  name="eigendom"
-                  :value="false"
-                />
-                <label for="eigendom 1" class="RadioImageInput__Label">
-                  <div class="SvgIcon svg-container">
-                    <SvgIconEigendomHuurder />
-                  </div>
-                  <div class="SvgIcon svg-container SvgIcon--selected">
-                    <SvgIconCornerSelected />
-                  </div>
-                  <span>Taxateur</span>
-                </label>
-              </div>
+            <div class="RadioImageInput__Field">
+              <input
+                type="radio"
+                v-model="Model.Owner"
+                id="eigendom 0"
+                name="eigendom"
+                :value="true"
+              />
+              <label for="eigendom 0" class="RadioImageInput__Label">
+                <div class="SvgIcon svg-container">
+                  <SvgIconEigendomEigenaar />
+                </div>
+                <div class="SvgIcon svg-container SvgIcon--selected">
+                  <SvgIconCornerSelected />
+                </div>
+                <span>Eigenaar</span>
+              </label>
+            </div>
+            <div class="RadioImageInput__Field">
+              <input
+                type="radio"
+                v-model="Model.Owner"
+                id="eigendom 1"
+                name="eigendom"
+                :value="false"
+              />
+              <label for="eigendom 1" class="RadioImageInput__Label">
+                <div class="SvgIcon svg-container">
+                  <SvgIconEigendomHuurder />
+                </div>
+                <div class="SvgIcon svg-container SvgIcon--selected">
+                  <SvgIconCornerSelected />
+                </div>
+                <span>Taxateur</span>
+              </label>
             </div>
           </div>
         </div>
@@ -69,43 +67,41 @@ const { Model } = storeToRefs(useSurveyStore())
 
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
-            <div>
-              <div class="RadioImageInput__Field">
-                <input
-                  type="radio"
-                  v-model="Model.NeighborRecovery"
-                  id="buren 0"
-                  name="buren"
-                  :value="true"
-                />
-                <label for="buren 0" class="RadioImageInput__Label">
-                  <div class="SvgIcon svg-container">
-                    <SvgIconBurenJa />
-                  </div>
-                  <div class="SvgIcon svg-container SvgIcon--selected">
-                    <SvgIconCornerSelected />
-                  </div>
-                  <span>Ja</span>
-                </label>
-              </div>
-              <div class="RadioImageInput__Field">
-                <input
-                  type="radio"
-                  v-model="Model.NeighborRecovery"
-                  id="buren 1"
-                  name="buren"
-                  :value="false"
-                />
-                <label for="buren 1" class="RadioImageInput__Label">
-                  <div class="SvgIcon svg-container">
-                    <BurenNee />
-                  </div>
-                  <div class="SvgIcon svg-container SvgIcon--selected">
-                    <SvgIconCornerSelected />
-                  </div>
-                  <span>Nee</span>
-                </label>
-              </div>
+            <div class="RadioImageInput__Field">
+              <input
+                type="radio"
+                v-model="Model.NeighborRecovery"
+                id="buren 0"
+                name="buren"
+                :value="true"
+              />
+              <label for="buren 0" class="RadioImageInput__Label">
+                <div class="SvgIcon svg-container">
+                  <SvgIconBurenJa />
+                </div>
+                <div class="SvgIcon svg-container SvgIcon--selected">
+                  <SvgIconCornerSelected />
+                </div>
+                <span>Ja</span>
+              </label>
+            </div>
+            <div class="RadioImageInput__Field">
+              <input
+                type="radio"
+                v-model="Model.NeighborRecovery"
+                id="buren 1"
+                name="buren"
+                :value="false"
+              />
+              <label for="buren 1" class="RadioImageInput__Label">
+                <div class="SvgIcon svg-container">
+                  <BurenNee />
+                </div>
+                <div class="SvgIcon svg-container SvgIcon--selected">
+                  <SvgIconCornerSelected />
+                </div>
+                <span>Nee</span>
+              </label>
             </div>
           </div>
         </div>

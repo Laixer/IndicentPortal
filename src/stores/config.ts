@@ -71,20 +71,21 @@ function useConfig() {
       //  - failed api call (after retry)
       //  - unkonwn vendor (404)
       //  - incomplete config
+      //  - mismatch in vendor slug ?
       const config = await getSurveyConfig(slug)
 
       /**
        * The client id
        */
-      clientId.value = config.clientId
+      clientId.value = config.client_id
 
       /**
        * Branding
        */
-      vendorName.value = config.branding.vendorName
-      vendorLogoPath.value = config.branding.vendorLogoPath
-      primaryColor.value = config.branding.primaryColor
-      secondaryColor.value = config.branding.secondaryColor
+      vendorName.value = config.branding.vendor_name
+      vendorLogoPath.value = config.branding.vendor_logo_path
+      primaryColor.value = config.branding.primary_color
+      secondaryColor.value = config.branding.secondary_color
 
       /**
        * The provided survey page slugs are filtered through a whitelist of known slugs

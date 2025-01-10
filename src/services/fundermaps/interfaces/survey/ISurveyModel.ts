@@ -1,9 +1,4 @@
-import type {
-  EnvironmentDamageCharacteristics,
-  FoundationDamageCause,
-  FoundationDamageCharacteristics,
-  FoundationType
-} from '@/enums'
+import type { FoundationDamageCause, FoundationType } from '@/enums'
 
 export interface ISurveyModel {
   // Address
@@ -21,13 +16,13 @@ export interface ISurveyModel {
   PhoneNumber: string
 
   // EnvironmentDamageCharacteristics
-  EnvironmentDamageCharacteristics: keyof EnvironmentDamageCharacteristics[] // number[]
+  EnvironmentDamageCharacteristics: number[] // keyof EnvironmentDamageCharacteristics[] //
 
   // FoundationDamageCause
   FoundationDamageCause: keyof FoundationDamageCause | null // number
 
   // FoundationDamageCharacteristics
-  FoundationDamageCharacteristics: keyof FoundationDamageCharacteristics[] // number[]
+  FoundationDamageCharacteristics: number[] //  keyof FoundationDamageCharacteristics[] //
 
   // FoundationType
   FoundationType: keyof FoundationType | null // number

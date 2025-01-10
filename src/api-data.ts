@@ -4,13 +4,14 @@ import type { ISurveyConfig } from './services/fundermaps/interfaces/survey/ISur
  * TODO: Move config data to DB...
  */
 const defaultBranding = {
-  vendorName: 'Fundermaps',
-  vendorLogoPath: '/img/logo.png',
-  primaryColor: '#000',
-  secondaryColor: '#000'
+  vendor_name: 'Fundermaps',
+  vendor_slug: 'fundermaps',
+  vendor_logo_path: '/img/logo.png',
+  primary_color: '#000',
+  secondary_color: '#000'
 }
 const defaultPages = [
-  'address',
+  // 'address',
   'foundation-damage-cause',
   'foundation-damage-characteristics',
   'address-characteristics',
@@ -22,12 +23,13 @@ const defaultPages = [
 ]
 export const APIResponseByVendorSlug: { [key: string]: ISurveyConfig } = {
   dordrecht: {
-    clientId: 26,
+    client_id: 26,
     branding: {
-      vendorName: 'Dordrecht',
-      vendorLogoPath: '/img/logo_dordrecht.png',
-      primaryColor: 'red',
-      secondaryColor: 'blue'
+      vendor_name: 'Dordrecht',
+      vendor_slug: 'dordrecht',
+      vendor_logo_path: '/img/logo_dordrecht.png',
+      primary_color: 'red',
+      secondary_color: 'blue'
     },
     pages: defaultPages
   },
@@ -37,12 +39,12 @@ export const APIResponseByVendorSlug: { [key: string]: ISurveyConfig } = {
   // veenweidefryslan: 22,
   // schiedam: 21,
   fundermaps: {
-    clientId: 20,
+    client_id: 20,
     branding: defaultBranding,
     pages: defaultPages
   },
   feedback: {
-    clientId: 77,
+    client_id: 77,
     branding: defaultBranding,
     pages: [
       // 'address',
@@ -54,7 +56,7 @@ export const APIResponseByVendorSlug: { [key: string]: ISurveyConfig } = {
     ]
   },
   incident: {
-    clientId: 10,
+    client_id: 10,
     branding: defaultBranding,
     pages: defaultPages
   }

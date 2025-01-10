@@ -79,7 +79,7 @@ const selectSuggestion = async function selectSuggestion(id: string) {
 
   // Set the coordinates, if the API response has this information
   // TODO: What to do if LngLat info is missing?
-  if (mapboxInstance && GeocoderResult.residence) {
+  if (mapboxInstance && GeocoderResult.residence && GeocoderResult.residence.longitude) {
     mapboxInstance.setCenter(
       new LngLat(GeocoderResult.residence.longitude, GeocoderResult.residence.latitude)
     )
@@ -136,7 +136,6 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
   <div class="Address">
     <div class="MapBox__Wrapper">
       <Mapbox style="width: 100%; height: 100%" :options="mapboxOptions" @load="onMapboxLoad" />
-      <!-- <div ref="mapElement" style="width: 100%; height: 100%"></div> -->
     </div>
     <div class="Address__Wrapper">
       <div class="Title">

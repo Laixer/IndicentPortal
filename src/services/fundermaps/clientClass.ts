@@ -119,7 +119,7 @@ const prepUrl = function prepUrl(endpoint: URL | string) {
 /**
  * Apply query string to url
  *
- * TODO: return body effect
+ * TODO: return body as undefined
  */
 const prepQueryString = function prepQueryString(
   url: URL,

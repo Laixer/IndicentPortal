@@ -7,6 +7,7 @@ import SvgIconCheck from '@/components/icons/SvgIconCheck.vue'
 
 import { FoundationDamageCharacteristics } from '@/enums.js'
 import { useSurveyStore } from '@/stores/survey.js'
+import type { ILocalCheckboxGroupModel } from '@/interfaces.js'
 
 const { Model } = storeToRefs(useSurveyStore())
 
