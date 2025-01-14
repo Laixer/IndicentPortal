@@ -2,7 +2,6 @@ import type { FoundationDamageCause, FoundationType } from '@/enums'
 
 export interface ISurveyModel {
   // Address
-  Address: string
   building_id: string | undefined // use this key format for consistency throughout Fundermaps
 
   // AddressCharacteristics / FeedbackCharacteristics

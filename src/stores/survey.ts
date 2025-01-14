@@ -10,7 +10,6 @@ import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurv
 
 const cleanModelState = {
   // Address
-  Address: '',
   building_id: '', // (use this param format)
 
   // AddressCharacteristics / FeedbackCharacteristics
