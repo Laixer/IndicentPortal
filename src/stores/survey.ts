@@ -13,32 +13,32 @@ const cleanModelState = {
   building_id: '', // (use this param format)
 
   // AddressCharacteristics / FeedbackCharacteristics
-  ChainedBuilding: null,
-  Owner: null,
-  NeighborRecovery: null, //
+  chained_building: null,
+  owner: null,
+  neighbor_recovery: null, //
 
   // Contact
-  Name: '',
-  Email: '',
-  PhoneNumber: '',
+  name: '',
+  email: '',
+  phone_number: '',
 
   // EnvironmentDamageCharacteristics
-  EnvironmentDamageCharacteristics: [],
+  environment_damage_characteristics: [],
 
   // FoundationDamageCause
-  FoundationDamageCause: null, // number
+  foundation_damage_cause: null, // number
 
   // FoundationDamageCharacteristics
-  FoundationDamageCharacteristics: [],
+  foundation_damage_characteristics: [],
 
   // FoundationType
-  FoundationType: null, // number
+  foundation_type: null, // number
 
   // Note
-  Note: '',
+  note: '',
 
   // Upload
-  DocumentFile: []
+  document_file: []
 }
 
 const saving: Ref<boolean> = ref(false)
@@ -67,7 +67,7 @@ export const useSurveyStore = defineStore('Survey', function useSurvey() {
 
     // TODO: Reminder: This is ad-hoc validation, because it is the only validation
     if (surveyPageSlugs.value.includes('contact')) {
-      if (Model.value.Name === '' || Model.value.Email === '' || Model.value.PhoneNumber === '') {
+      if (Model.value.name === '' || Model.value.email === '' || Model.value.phone_number === '') {
         saving.value = false
 
         // TODO: Validation feedback...

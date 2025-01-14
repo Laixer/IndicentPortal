@@ -25,7 +25,7 @@ const { Model } = storeToRefs(useSurveyStore())
             <div class="RadioImageInput__Field">
               <input
                 type="radio"
-                v-model="Model.Owner"
+                v-model="Model.owner"
                 id="eigendom 0"
                 name="eigendom"
                 :value="true"
@@ -43,7 +43,7 @@ const { Model } = storeToRefs(useSurveyStore())
             <div class="RadioImageInput__Field">
               <input
                 type="radio"
-                v-model="Model.Owner"
+                v-model="Model.owner"
                 id="eigendom 1"
                 name="eigendom"
                 :value="false"
@@ -70,7 +70,7 @@ const { Model } = storeToRefs(useSurveyStore())
             <div class="RadioImageInput__Field">
               <input
                 type="radio"
-                v-model="Model.NeighborRecovery"
+                v-model="Model.neighbor_recovery"
                 id="buren 0"
                 name="buren"
                 :value="true"
@@ -88,7 +88,7 @@ const { Model } = storeToRefs(useSurveyStore())
             <div class="RadioImageInput__Field">
               <input
                 type="radio"
-                v-model="Model.NeighborRecovery"
+                v-model="Model.neighbor_recovery"
                 id="buren 1"
                 name="buren"
                 :value="false"

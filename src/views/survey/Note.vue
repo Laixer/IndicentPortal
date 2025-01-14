@@ -23,7 +23,7 @@ const { Model } = storeToRefs(useSurveyStore())
           autocomplete="off"
           rows="25"
           class="FormField__Field"
-          v-model="Model.Note"
+          v-model="Model.note"
         />
       </div>
     </div>

@@ -33,7 +33,7 @@ const loadfiles = function loadFiles(e: Event) {
     // stream: file.OpenReadStream(512 * 1024 * 1024));
     // loadedFiles.Add(file);
 
-    Model.value.DocumentFile = loadedFiles.value.map(file => file.name)
+    Model.value.document_file = loadedFiles.value.map(file => file.name)
   }
 }
 </script>

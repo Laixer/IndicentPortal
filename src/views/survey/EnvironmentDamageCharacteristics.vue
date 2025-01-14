@@ -64,14 +64,16 @@ const options = [
  */
 const LocalModel: Ref<ILocalCheckboxGroupModel> = ref(
   options.reduce((acc: ILocalCheckboxGroupModel, option) => {
-    acc[option.id] = Model.value.EnvironmentDamageCharacteristics.includes(option.id) ? 'yes' : 'no'
+    acc[option.id] = Model.value.environment_damage_characteristics.includes(option.id)
+      ? 'yes'
+      : 'no'
     return acc
   }, {})
 )
 watch(
   LocalModel,
   () => {
-    Model.value.EnvironmentDamageCharacteristics = Object.keys(LocalModel.value)
+    Model.value.environment_damage_characteristics = Object.keys(LocalModel.value)
       .filter((id: string | number) => LocalModel.value[id] === 'yes')
       .map((id) => parseInt(id))
   },

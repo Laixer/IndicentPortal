@@ -5,30 +5,30 @@ export interface ISurveyModel {
   building_id: string | undefined // use this key format for consistency throughout Fundermaps
 
   // AddressCharacteristics / FeedbackCharacteristics
-  ChainedBuilding: boolean | null
-  Owner: boolean | null
-  NeighborRecovery: boolean | null
+  chained_building: boolean | null
+  owner: boolean | null
+  neighbor_recovery: boolean | null
 
   // Contact
-  Name: string
-  Email: string
-  PhoneNumber: string
+  name: string
+  email: string
+  phone_number: string
 
   // EnvironmentDamageCharacteristics
-  EnvironmentDamageCharacteristics: number[] // keyof EnvironmentDamageCharacteristics[] //
+  environment_damage_characteristics: number[] // keyof EnvironmentDamageCharacteristics[] //
 
   // FoundationDamageCause
-  FoundationDamageCause: keyof FoundationDamageCause | null // number
+  foundation_damage_cause: keyof FoundationDamageCause | null // number
 
   // FoundationDamageCharacteristics
-  FoundationDamageCharacteristics: number[] //  keyof FoundationDamageCharacteristics[] //
+  foundation_damage_characteristics: number[] //  keyof FoundationDamageCharacteristics[] //
 
   // FoundationType
-  FoundationType: keyof FoundationType | null // number
+  foundation_type: keyof FoundationType | null // number
 
   // Note
-  Note: string
+  note: string
 
   // Upload
-  DocumentFile: string[]
+  document_file: string[]
 }

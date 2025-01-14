@@ -48,7 +48,7 @@ const options = [
           <input
             type="radio"
             :id="`option_${option.id}`"
-            v-model="Model.FoundationType"
+            v-model="Model.foundation_type"
             name="type"
             :value="option.id"
           />

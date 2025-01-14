@@ -71,7 +71,7 @@ const options = [
             <input
               type="radio"
               name="cause"
-              v-model="Model.FoundationDamageCause"
+              v-model="Model.foundation_damage_cause"
               :id="`option_${option.id}`"
               :value="option.id"
             />

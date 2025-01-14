@@ -16,10 +16,10 @@ const { Model } = storeToRefs(useSurveyStore())
 // Although currently the contact page is actually always the last page in which the data is submitted.
 const handleValidateModel = function () {
   if (
-    !Model.value.Email ||
-    Model.value.Email === '' ||
-    !Model.value.Name ||
-    Model.value.Name === ''
+    !Model.value.email ||
+    Model.value.email === '' ||
+    !Model.value.name ||
+    Model.value.name === ''
   ) {
     disableNextButton()
   } else {
@@ -50,7 +50,7 @@ onBeforeMount(() => {
           class="FormField__Field"
           @focus="handleValidateModel"
           @blur="handleValidateModel"
-          v-model="Model.Name"
+          v-model="Model.name"
         />
       </div>
     </div>
@@ -64,7 +64,7 @@ onBeforeMount(() => {
           class="FormField__Field"
           @focus="handleValidateModel"
           @blur="handleValidateModel"
-          v-model="Model.Email"
+          v-model="Model.email"
         />
       </div>
     </div>
@@ -79,7 +79,7 @@ onBeforeMount(() => {
           class="FormField__Field"
           @focus="handleValidateModel"
           @blur="handleValidateModel"
-          v-model="Model.PhoneNumber"
+          v-model="Model.phone_number"
         />
       </div>
     </div>

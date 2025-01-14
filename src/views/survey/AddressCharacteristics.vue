@@ -31,7 +31,7 @@ const { Model } = storeToRefs(useSurveyStore())
               <input
                 type="radio"
                 id="vrijstaand 0"
-                v-model="Model.ChainedBuilding"
+                v-model="Model.chained_building"
                 name="vrijstaand"
                 :value="false"
               />
@@ -49,7 +49,7 @@ const { Model } = storeToRefs(useSurveyStore())
               <input
                 type="radio"
                 id="vrijstaand 1"
-                v-model="Model.ChainedBuilding"
+                v-model="Model.chained_building"
                 name="vrijstaand"
                 :value="true"
               />
@@ -76,7 +76,7 @@ const { Model } = storeToRefs(useSurveyStore())
               <input
                 type="radio"
                 id="eigendom 0"
-                v-model="Model.Owner"
+                v-model="Model.owner"
                 name="eigendom"
                 :value="true"
               />
@@ -94,7 +94,7 @@ const { Model } = storeToRefs(useSurveyStore())
               <input
                 type="radio"
                 id="eigendom 1"
-                v-model="Model.Owner"
+                v-model="Model.owner"
                 name="eigendom"
                 :value="false"
               />
@@ -124,7 +124,7 @@ const { Model } = storeToRefs(useSurveyStore())
               <input
                 type="radio"
                 id="buren 0"
-                v-model="Model.NeighborRecovery"
+                v-model="Model.neighbor_recovery"
                 name="buren"
                 :value="true"
               />
@@ -142,7 +142,7 @@ const { Model } = storeToRefs(useSurveyStore())
               <input
                 type="radio"
                 id="buren 1"
-                v-model="Model.NeighborRecovery"
+                v-model="Model.neighbor_recovery"
                 name="buren"
                 :value="false"
               />
