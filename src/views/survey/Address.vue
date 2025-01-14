@@ -16,7 +16,7 @@ const { disableNextButton, enableNextButton } = useNavigationStore()
 
 onBeforeMount(() => {
   // If either the address or building id are not filled in, disable the next button
-  if (Model.value.Address === '' || Model.value.building_id === '') {
+  if (Model.value.building_id === '') {
     disableNextButton()
   }
 })
@@ -74,15 +74,12 @@ const selectSuggestion = async function selectSuggestion(id: string) {
     doc.nummeraanduiding_id
   )
 
-  Model.value.Address = GeocoderResult.address.externalId
-  Model.value.building_id = GeocoderResult.address.buildingId
+  Model.value.building_id = GeocoderResult.building_id
 
   // Set the coordinates, if the API response has this information
   // TODO: What to do if LngLat info is missing?
-  if (mapboxInstance && GeocoderResult.residence && GeocoderResult.residence.longitude) {
-    mapboxInstance.setCenter(
-      new LngLat(GeocoderResult.residence.longitude, GeocoderResult.residence.latitude)
-    )
+  if (mapboxInstance && GeocoderResult.residence_lon) {
+    mapboxInstance.setCenter(new LngLat(GeocoderResult.residence_lon, GeocoderResult.residence_lat))
   }
 
   enableNextButton()

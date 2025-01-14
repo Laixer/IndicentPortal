@@ -1,20 +1,16 @@
-import type {
-  IBuilding,
-  IAddress,
-  IResidence,
-  INeighborhood,
-  IDistrict,
-  IMunicipality,
-  IState
-} from './index'
-import { type IEnumMethods } from '../util/IEnumMethods'
-
-export interface IGeoLocationData extends IEnumMethods {
-  building: IBuilding
-  address: IAddress
-  neighborhood: null | INeighborhood
-  residence: null | IResidence
-  district: null | IDistrict
-  municipality: null | IMunicipality
-  state: null | IState
+export interface IGeoLocationData {
+  building_built_year: null | string
+  building_id: string
+  building_type: null | string
+  residence_id: null | string
+  residence_lat: null | number
+  residence_lon: null | number
+  neighborhood_id: null | string
+  neighborhood_name: null | string
+  district_id: null | string
+  district_name: null | string
+  municipality_id: null | string
+  municipality_name: null | string
+  state_id: null | string
+  state_name: null | string
 }
