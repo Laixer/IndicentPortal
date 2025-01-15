@@ -5,7 +5,7 @@ import { ref, type Ref } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useConfigStore } from './config'
 import { useRouter } from 'vue-router'
-import { saveSurveyData } from '@/services/fundermaps/endpoints/survey'
+import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
 
 const cleanModelState = {
@@ -60,7 +60,7 @@ export const useSurveyStore = defineStore('Survey', function useSurvey() {
   const router = useRouter()
 
   /**
-   * Store the data in the DB
+   * Store the survey data as a new Incident record
    */
   const saveToDatabase = async function saveToDatabase() {
     saving.value = true
@@ -78,7 +78,7 @@ export const useSurveyStore = defineStore('Survey', function useSurvey() {
       }
     }
 
-    await saveSurveyData(Model.value)
+    await saveIncidentData(Model.value)
     saving.value = false
   }
 

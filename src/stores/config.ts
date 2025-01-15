@@ -1,13 +1,19 @@
 import { ref, watch, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
-import { getSurveyConfig } from '@/services/fundermaps/endpoints/survey'
 import { useSurveyStore } from './survey'
+import { getAppConfig } from '@/services/fundermaps/endpoints/app'
+import type { ISurveyConfig } from '@/services/fundermaps/interfaces/survey/ISurveyConfig'
 
 /**
  * A loading state
  */
 const loading: Ref<boolean> = ref(true)
+
+/**
+ * Whether an error occurred during loading the survey config
+ */
+const loadingError: Ref<boolean> = ref(false)
 
 /**
  * Synchronised to route path
@@ -57,6 +63,7 @@ function useConfig() {
       }
 
       loading.value = true
+      loadingError.value = false
 
       router.push({
         name: 'home',
@@ -72,25 +79,40 @@ function useConfig() {
       //  - unkonwn vendor (404)
       //  - incomplete config
       //  - mismatch in vendor slug ?
-      const config = await getSurveyConfig(slug)
+      let appConfig = null
+      try {
+        appConfig = await getAppConfig(slug)
+      } catch (err) {}
+
+      if (!appConfig || !appConfig.data) {
+        loadingError.value = true
+        // TODO: Error handling...
+        return
+      }
+
+      // Obtain the survey config information from the app config
+      const surveyConfig: ISurveyConfig =
+        typeof appConfig.data === 'string' ? JSON.parse(appConfig.data) : appConfig.data
 
       /**
        * The client id
        */
-      clientId.value = config.client_id
+      clientId.value = surveyConfig.client_id
 
       /**
        * Branding
        */
-      vendorName.value = config.branding.vendor_name
-      vendorLogoPath.value = config.branding.vendor_logo_path
-      primaryColor.value = config.branding.primary_color
-      secondaryColor.value = config.branding.secondary_color
+      vendorName.value = surveyConfig.branding.vendor_name
+      vendorLogoPath.value = surveyConfig.branding.vendor_logo_path
+      primaryColor.value = surveyConfig.branding.primary_color
+      secondaryColor.value = surveyConfig.branding.secondary_color
 
       /**
        * The provided survey page slugs are filtered through a whitelist of known slugs
        */
-      surveyPageSlugs.value = config.pages.filter((page) => knownSurveyPageSlug.includes(page))
+      surveyPageSlugs.value = surveyConfig.pages.filter((page) =>
+        knownSurveyPageSlug.includes(page)
+      )
 
       /**
        * Hide the loading state
@@ -121,6 +143,7 @@ function useConfig() {
   return {
     // state
     loading,
+    loadingError,
     // identifiers
     clientId,
     vendorSlug,

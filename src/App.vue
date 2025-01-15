@@ -9,7 +9,7 @@ import { useNavigationStore } from '@/stores/navigation.js'
 // TODO: Proper loading state indicator
 // TODO: Errors (fundermaps api unresponsive, unknown error, unknown vendor, incomplete vendor, save failed)
 
-const { vendorLogoPath, loading } = storeToRefs(useConfigStore())
+const { vendorLogoPath, loading, loadingError } = storeToRefs(useConfigStore())
 const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationStore())
 </script>
 
@@ -19,7 +19,10 @@ const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationSt
       <header class="Header">
         <div class="Header__Group">
           <Transition>
-            <h2 v-if="loading" class="Header__Loading">Bezit met laden...</h2>
+            <div v-if="loadingError">
+              <h2>Het laden van de vragenlijst is mislukt</h2>
+            </div>
+            <h2 v-else-if="loading" class="Header__Loading">Bezit met laden...</h2>
             <img v-else-if="vendorLogoPath" class="Header__Logo" :src="vendorLogoPath" alt="Logo" />
           </Transition>
         </div>
@@ -43,7 +46,18 @@ const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationSt
         </aside>
 
         <div class="Page__Main" :class="isProgressVisible ? 'Page__Main--sidebar' : ''">
-          <div v-if="!loading" class="Page__Content">
+          <div v-if="loadingError" class="Page__Content">
+            <div class="Profile__Wrapper">
+              <p>
+                Mogelijk is de vragenlijst niet langer beschikbaar.
+                <br />
+                <br />
+                Neem voor meer informatie contact op met de partij die u naar de vragenlijst heeft
+                doorverwezen.
+              </p>
+            </div>
+          </div>
+          <div v-else-if="!loading" class="Page__Content">
             <RouterView />
           </div>
         </div>
@@ -138,6 +152,19 @@ const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationSt
 @media only screen and (max-width: 900px) {
   .Page .ProgressSteps {
     display: none;
+  }
+}
+
+.Profile__Wrapper {
+  padding: 20px 20px;
+  color: black;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media only screen and (min-width: 900px) {
+  .Profile__Wrapper {
+    padding: 20px 80px;
   }
 }
 

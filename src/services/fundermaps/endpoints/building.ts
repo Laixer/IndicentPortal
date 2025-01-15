@@ -1,5 +1,5 @@
-import type { IGeoLocationData } from '../interfaces/building'
 import { get } from '../client'
+import type { IGeoLocationData } from '../interfaces/building/IGeoLocationData'
 
 /******************************************************************************
  *    Location
@@ -11,7 +11,7 @@ import { get } from '../client'
 export const getLocationInformationByBuildingId = async function getLocationInformationByBuildingId(
   buildingId: string
 ): Promise<IGeoLocationData> {
-  return await get({ endpoint: `/geocoder/${buildingId}` })
+  return await get({ endpoint: `/geocoder/${buildingId}`, requireAuth: false })
 }
 
 export default {
