@@ -59,6 +59,9 @@ function useNavigation() {
       // Do not show the next button on the finish page
       showNext.value = to.name !== 'finish'
 
+      // By default, enable the next btn.
+      isNextDisabled.value = false
+
       // Whether we're on home page
       isHomePage.value = to.name === 'home'
       isFinishPage.value = to.name === 'finish'
