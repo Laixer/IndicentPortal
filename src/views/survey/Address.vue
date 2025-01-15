@@ -51,7 +51,8 @@ const autoCompleteSuggestions: Ref<{ Id: string; Suggestion: string }[]> = ref([
  * Update the local & central model upon selecting a suggestion
  */
 const selectSuggestion = async function selectSuggestion(id: string) {
-  const response = await getLookup(id)
+  let response = await getLookup(id)
+  response = response?.response || null
 
   if (!response || !Array.isArray(response.docs) || response.docs.length === 0) {
     // TODO: Show error ?

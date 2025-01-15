@@ -20,7 +20,7 @@ export const getSuggestions = async function getSuggestions(
   count: number | undefined | null
 ) {
   return await callPDOK(
-    `suggest?q=${query}&rows=${count || 5}&fq=type:(woonplaats OR postcode OR adres)`
+    `suggest?q=${query}&rows=${count || 5}&fq=type:(adres)` // &fq=type:(woonplaats OR postcode OR adres)
   )
 }
 
