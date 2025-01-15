@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import SvgIconArrowPrevious from '@/components/icons/SvgIconArrowPrevious.vue'
 import SvgIconArrowNext from '@/components/icons/SvgIconArrowNext.vue'
 import { useNavigationStore } from '@/stores/navigation.js'
+import { useSurveyStore } from '@/stores/survey.js'
 import { storeToRefs } from 'pinia'
 import router from '@/router/index.js'
 
@@ -12,15 +13,22 @@ const { getNextSurveyPageSlug, getPreviousSurveyPageSlug } = useNavigationStore(
 const { showNext, showPrev, isNextDisabled, isHomePage, isLastSurveyPage } =
   storeToRefs(useNavigationStore())
 
+const { saveToDatabase } = useSurveyStore()
+
 const handlePrevStepNavigation = function handlePrevStepNavigation() {
   router.push({
     name: getPreviousSurveyPageSlug() || 'home'
   })
 }
 
-const handleNextStepNavigation = function handleNextStepNavigation() {
+const handleNextStepNavigation = async function handleNextStepNavigation() {
+  let nextPageName = getNextSurveyPageSlug() || 'finish'
+  if (isLastSurveyPage.value) {
+    nextPageName = (await saveToDatabase()) || nextPageName
+  }
+
   router.push({
-    name: getNextSurveyPageSlug() || 'finish'
+    name: nextPageName
   })
 }
 

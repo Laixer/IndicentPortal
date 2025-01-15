@@ -1,8 +1,13 @@
-import type { FoundationDamageCause, FoundationType } from '@/enums'
+import type {
+  EnvironmentDamageCharacteristics,
+  FoundationDamageCause,
+  FoundationDamageCharacteristics,
+  FoundationType
+} from '@/enums'
 
 export interface ISurveyModel {
   // Address
-  building_id: string | undefined // use this key format for consistency throughout Fundermaps
+  building: string | undefined // use this key format for consistency throughout Fundermaps
 
   // AddressCharacteristics / FeedbackCharacteristics
   chained_building: boolean | null
@@ -10,21 +15,21 @@ export interface ISurveyModel {
   neighbor_recovery: boolean | null
 
   // Contact
-  name: string
-  email: string
-  phone_number: string
+  contact_name: string
+  contact: string // email
+  contact_phone_number: string
 
   // EnvironmentDamageCharacteristics
-  environment_damage_characteristics: number[] // keyof EnvironmentDamageCharacteristics[] //
+  environment_damage_characteristics: string[] // (keyof EnvironmentDamageCharacteristics)[] // string[] // keyof EnvironmentDamageCharacteristics[] //
 
   // FoundationDamageCause
-  foundation_damage_cause: keyof FoundationDamageCause | null // number
+  foundation_damage_cause: keyof FoundationDamageCause | null // string
 
   // FoundationDamageCharacteristics
-  foundation_damage_characteristics: number[] //  keyof FoundationDamageCharacteristics[] //
+  foundation_damage_characteristics: string[] // (keyof FoundationDamageCharacteristics)[] // string[] //  (keyof FoundationDamageCharacteristics)[] //
 
   // FoundationType
-  foundation_type: keyof FoundationType | null // number
+  foundation_type: keyof FoundationType | null // string
 
   // Note
   note: string

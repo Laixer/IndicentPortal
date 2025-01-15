@@ -2,276 +2,276 @@ export enum EnvironmentDamageCharacteristics {
   /// <summary>
   ///     Subsidence.
   /// </summary>
-  Subsidence = 0,
+  Subsidence = 'subsidence',
 
   /// <summary>
-  ///     Sagging cewer connections.
+  ///     Sagging sewer connections.
   /// </summary>
-  SaggingSewerConnection = 1,
+  SaggingSewerConnection = 'sagging_sewer_connection',
 
   /// <summary>
   ///     Sagging cables and pipes.
   /// </summary>
-  SaggingCablesPipes = 2,
+  SaggingCablesPipes = 'sagging_cables_pipes',
 
   /// <summary>
   ///     Flooding.
   /// </summary>
-  Flooding = 3,
+  Flooding = 'flooding',
 
   /// <summary>
   ///     Foundation damage nearby.
   /// </summary>
-  FoundationDamageNearby = 4,
+  FoundationDamageNearby = 'foundation_damage_nearby',
 
   /// <summary>
   ///     Elevation.
   /// </summary>
-  Elevation = 5,
+  Elevation = 'elevation',
 
   /// <summary>
   ///     Increasing traffic.
   /// </summary>
-  IncreasingTraffic = 6,
+  IncreasingTraffic = 'increasing_traffic',
 
   /// <summary>
   ///     Construction nearby.
   /// </summary>
-  ConstructionNearby = 7,
+  ConstructionNearby = 'construction_nearby',
 
   /// <summary>
   ///     Vegetation nearby.
   /// </summary>
-  VegetationNearby = 8,
+  VegetationNearby = 'vegetation_nearby',
 
   /// <summary>
   ///     Sewage leakage.
   /// </summary>
-  SewageLeakage = 9,
+  SewageLeakage = 'sewage_leakage',
 
   /// <summary>
   ///     Low ground water.
   /// </summary>
-  LowGroundWater = 10
+  LowGroundWater = 'low_ground_water'
 }
 
 export enum FoundationDamageCause {
   /// <summary>
   ///     Drainage.
   /// </summary>
-  Drainage = 0,
+  Drainage = 'drainage',
 
   /// <summary>
   ///     Construction flaw.
   /// </summary>
-  ConstructionFlaw = 1,
+  ConstructionFlaw = 'construction_flaw',
 
   /// <summary>
   ///     Drystand.
   /// </summary>
-  Drystand = 2,
+  Drystand = 'drystand',
 
   /// <summary>
   ///     Overcharge.
   /// </summary>
-  Overcharge = 3,
+  Overcharge = 'overcharge',
 
   /// <summary>
   ///     Overcharge and negative cling.
   /// </summary>
-  OverchargeNegativeCling = 4,
+  OverchargeNegativeCling = 'overcharge_negative_cling',
 
   /// <summary>
   ///     Negative cling.
   /// </summary>
-  NegativeCling = 5,
+  NegativeCling = 'negative_cling',
 
   /// <summary>
   ///     Bio infection.
   /// </summary>
-  BioInfection = 6,
+  BioInfection = 'bio_infection',
 
   /// <summary>
   ///     Fungus infection.
   /// </summary>
-  FungusInfection = 8,
+  FungusInfection = 'fungus_infection',
 
   /// <summary>
   ///     Bio and fungus infection.
   /// </summary>
-  BioFungusInfection = 9,
+  BioFungusInfection = 'bio_fungus_infection',
 
   /// <summary>
   ///     Foundation flaw.
   /// </summary>
-  FoundationFlaw = 10,
+  FoundationFlaw = 'foundation_flaw',
 
   /// <summary>
-  ///     Construnction heave.
+  ///     Construction heave.
   /// </summary>
-  ConstructionHeave = 11,
+  ConstructionHeave = 'construction_heave',
 
   /// <summary>
   ///     Subsidence.
   /// </summary>
-  Subsidence = 12,
+  Subsidence = 'subsidence',
 
   /// <summary>
   ///     Vegetation.
   /// </summary>
-  Vegetation = 13,
+  Vegetation = 'vegetation',
 
   /// <summary>
   ///     Gas.
   /// </summary>
-  Gas = 14,
+  Gas = 'gas',
 
   /// <summary>
   ///     Vibrations.
   /// </summary>
-  Vibrations = 15,
+  Vibrations = 'vibrations',
 
   /// <summary>
   ///     Foundation was partially recovered.
   /// </summary>
-  PartialFoundationRecovery = 16,
+  PartialFoundationRecovery = 'partial_foundation_recovery',
 
   /// <summary>
-  ///     Damage due japanese knotweed.
+  ///     Damage due to Japanese knotweed.
   /// </summary>
-  JapanseKnotweed = 17,
+  JapanseKnotweed = 'japanse_knotweed',
 
   /// <summary>
   ///     Groundwater level reduction.
   /// </summary>
-  GroundwaterLevelReduction = 18
+  GroundwaterLevelReduction = 'groundwater_level_reduction'
 }
 
 export enum FoundationDamageCharacteristics {
   /// <summary>
   ///     Jamming door window.
   /// </summary>
-  JammingDoorWindow = 0,
+  JammingDoorWindow = 'jamming_door_window',
 
   /// <summary>
   ///     Crack.
   /// </summary>
-  Crack = 1,
+  Crack = 'crack',
 
   /// <summary>
   ///     Skewed.
   /// </summary>
-  Skewed = 2,
+  Skewed = 'skewed',
 
   /// <summary>
   ///     Crawlspace flooding.
   /// </summary>
-  CrawlspaceFlooding = 3,
+  CrawlspaceFlooding = 'crawlspace_flooding',
 
   /// <summary>
   ///     Threshold above subsurface.
   /// </summary>
-  ThresholdAboveSubsurface = 4,
+  ThresholdAboveSubsurface = 'threshold_above_subsurface',
 
   /// <summary>
   ///     Threshold below subsurface.
   /// </summary>
-  ThresholdBelowSubsurface = 5,
+  ThresholdBelowSubsurface = 'threshold_below_subsurface',
 
   /// <summary>
   ///     Crooked floor wall.
   /// </summary>
-  CrookedFloorWall = 6
+  CrookedFloorWall = 'crooked_floor_wall'
 }
 
 export enum FoundationType {
   /// <summary>
   ///     Wood.
   /// </summary>
-  Wood = 0,
+  Wood = 'wood',
 
   /// <summary>
-  ///     Wood foundation accoring to Amsterdam.
+  ///     Wood foundation according to Amsterdam.
   /// </summary>
-  WoodAmsterdam = 1,
+  WoodAmsterdam = 'wood_amsterdam',
 
   /// <summary>
-  ///     Wood foundation accoring to Rotterdam.
+  ///     Wood foundation according to Rotterdam.
   /// </summary>
-  WoodRotterdam = 2,
+  WoodRotterdam = 'wood_rotterdam',
 
   /// <summary>
   ///     Concrete.
   /// </summary>
-  Concrete = 3,
+  Concrete = 'concrete',
 
   /// <summary>
   ///     No pile.
   /// </summary>
-  NoPile = 4,
+  NoPile = 'no_pile',
 
   /// <summary>
   ///     No pile and no masonry.
   /// </summary>
-  NoPileMasonry = 5,
+  NoPileMasonry = 'no_pile_masonry',
 
   /// <summary>
   ///     No pile strips.
   /// </summary>
-  NoPileStrips = 6,
+  NoPileStrips = 'no_pile_strips',
 
   /// <summary>
   ///     No pile and no bearing floor.
   /// </summary>
-  NoPileBearingFloor = 7,
+  NoPileBearingFloor = 'no_pile_bearing_floor',
 
   /// <summary>
   ///     No pile and no concrete floor.
   /// </summary>
-  NoPileConcreteFloor = 8,
+  NoPileConcreteFloor = 'no_pile_concrete_floor',
 
   /// <summary>
   ///     No pile and no slit.
   /// </summary>
-  NoPileSlit = 9,
+  NoPileSlit = 'no_pile_slit',
 
   /// <summary>
   ///     Wood charger.
   /// </summary>
-  WoodCharger = 10,
+  WoodCharger = 'wood_charger',
 
   /// <summary>
   ///     Weighted pile.
   /// </summary>
-  WeightedPile = 11,
+  WeightedPile = 'weighted_pile',
 
   /// <summary>
   ///     Combined.
   /// </summary>
-  Combined = 12,
+  Combined = 'combined',
 
   /// <summary>
   ///     Steel pile.
   /// </summary>
-  SteelPile = 13,
+  SteelPile = 'steel_pile',
 
   /// <summary>
   ///     Other.
   /// </summary>
-  Other = 14,
+  Other = 'other',
 
   /// <summary>
-  ///     Wood foundation accoring to Amsterdam or Rotterdam.
+  ///     Wood foundation according to Amsterdam or Rotterdam.
   /// </summary>
-  WoodRotterdamAmsterdam = 15,
+  WoodRotterdamAmsterdam = 'wood_rotterdam_amsterdam',
 
   /// <summary>
-  ///     Wood foundation accoring to Rotterdam with an arch.
+  ///     Wood foundation according to Rotterdam with an arch.
   /// </summary>
-  WoodRotterdamArch = 16,
+  WoodRotterdamArch = 'wood_rotterdam_arch',
 
   /// <summary>
-  ///     Wood foundation accoring to Amsterdam with an arch.
+  ///     Wood foundation according to Amsterdam with an arch.
   /// </summary>
-  WoodAmsterdamArch = 17
+  WoodAmsterdamArch = 'wood_amsterdam_arch'
 }

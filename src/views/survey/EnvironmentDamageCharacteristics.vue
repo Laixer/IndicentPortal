@@ -73,9 +73,9 @@ const LocalModel: Ref<ILocalCheckboxGroupModel> = ref(
 watch(
   LocalModel,
   () => {
-    Model.value.environment_damage_characteristics = Object.keys(LocalModel.value)
-      .filter((id: string | number) => LocalModel.value[id] === 'yes')
-      .map((id) => parseInt(id))
+    Model.value.environment_damage_characteristics = Object.keys(LocalModel.value).filter(
+      (id: string) => LocalModel.value[id] === 'yes'
+    )
   },
   { deep: true }
 )

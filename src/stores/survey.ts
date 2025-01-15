@@ -4,13 +4,12 @@
 import { ref, type Ref } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useConfigStore } from './config'
-import { useRouter } from 'vue-router'
 import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
 
-const cleanModelState = {
+const cleanModelState: ISurveyModel = {
   // Address
-  building_id: '', // (use this param format)
+  building: '', // (use this param format)
 
   // AddressCharacteristics / FeedbackCharacteristics
   chained_building: null,
@@ -18,21 +17,21 @@ const cleanModelState = {
   neighbor_recovery: null, //
 
   // Contact
-  name: '',
-  email: '',
-  phone_number: '',
+  contact_name: '',
+  contact: '',
+  contact_phone_number: '',
 
   // EnvironmentDamageCharacteristics
   environment_damage_characteristics: [],
 
   // FoundationDamageCause
-  foundation_damage_cause: null, // number
+  foundation_damage_cause: null, // string
 
   // FoundationDamageCharacteristics
   foundation_damage_characteristics: [],
 
   // FoundationType
-  foundation_type: null, // number
+  foundation_type: null, // string
 
   // Note
   note: '',
@@ -56,25 +55,20 @@ const clearSurveyData = function clearSurveyData() {
 }
 
 export const useSurveyStore = defineStore('Survey', function useSurvey() {
-  const { surveyPageSlugs } = storeToRefs(useConfigStore())
-  const router = useRouter()
-
   /**
    * Store the survey data as a new Incident record
    */
   const saveToDatabase = async function saveToDatabase() {
+    const { surveyPageSlugs } = storeToRefs(useConfigStore())
+
     saving.value = true
 
     // TODO: Reminder: This is ad-hoc validation, because it is the only validation
     if (surveyPageSlugs.value.includes('contact')) {
-      if (Model.value.name === '' || Model.value.email === '' || Model.value.phone_number === '') {
+      if (Model.value.contact_name === '' || Model.value.contact === '') {
         saving.value = false
-
-        // TODO: Validation feedback...
-        router.push({
-          name: 'contact'
-        })
-        return
+        // TODO: Refactor redirect to contact page.
+        return 'contact'
       }
     }
 

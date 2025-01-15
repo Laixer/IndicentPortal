@@ -9,14 +9,14 @@ import { useNavigationStore } from '@/stores/navigation'
 import { getLookup, getSuggestions } from '@/services/pdok'
 import api from '@/services/fundermaps/'
 import Mapbox from '@/components/Mapbox.vue'
-import { LngLat, Map } from 'mapbox-gl'
+import { LngLat, Map, Marker } from 'mapbox-gl'
 
 const { Model } = storeToRefs(useSurveyStore())
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
 onBeforeMount(() => {
   // If either the address or building id are not filled in, disable the next button
-  if (Model.value.building_id === '') {
+  if (Model.value.building === '') {
     disableNextButton()
   }
 })
@@ -31,6 +31,7 @@ const mapboxOptions = {
 }
 
 let mapboxInstance: Map | undefined = undefined
+const marker = new Marker()
 
 /**
  * The local address model
@@ -75,12 +76,15 @@ const selectSuggestion = async function selectSuggestion(id: string) {
     doc.nummeraanduiding_id
   )
 
-  Model.value.building_id = GeocoderResult.building_id
+  Model.value.building = GeocoderResult.building_id
 
   // Set the coordinates, if the API response has this information
   // TODO: What to do if LngLat info is missing?
-  if (mapboxInstance && GeocoderResult.residence_lon) {
-    mapboxInstance.setCenter(new LngLat(GeocoderResult.residence_lon, GeocoderResult.residence_lat))
+  if (mapboxInstance && GeocoderResult.residence_lon && GeocoderResult.residence_lat) {
+    const coords = new LngLat(GeocoderResult.residence_lon, GeocoderResult.residence_lat)
+    mapboxInstance.setCenter(coords)
+
+    marker.remove().setLngLat(coords).addTo(mapboxInstance)
   }
 
   enableNextButton()
