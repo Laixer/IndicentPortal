@@ -4,36 +4,31 @@ import { storeToRefs } from 'pinia'
 
 import Title from '@/components/Title.vue'
 
+import { uploadIncidentFiles } from '@/services/fundermaps/endpoints/incident.js'
+
 import { useSurveyStore } from '@/stores/survey.js'
 
 const { Model } = storeToRefs(useSurveyStore())
 
 const loadedFiles: Ref<File[]> = ref([])
 
+const uploadFiles = async function uploadFile(files: FileList) {
+  await uploadIncidentFiles(files).then(() => {
+    loadedFiles.value = loadedFiles.value.concat(Array.from(files))
+    Model.value.document_file = loadedFiles.value.map((file) => file.name)
+  })
+}
+
 /**
- * TODO: Upload API ...
- * TODO: Dropzone ?
- * TODO: Allow remove files?
- * TODO: Is old implementation limited to 25 files ?
- * TODO: Styling when uploading multiple, and in particular more than 5 files...
+ * TODO:
+ * Limit uploads to max 25
+ * Limit file size to max 4 GB
+ * Limit file types to png, jpg, jpeg, docx, xlsx, csv, heif, <video>, <mobile cam foto types>
  */
-const loadfiles = function loadFiles(e: Event) {
+const handleFileChange = async function handleFileChange(e: Event) {
   const target = e.target as HTMLInputElement
   if (target && target.files) {
-    console.log('upload files...')
-
-    loadedFiles.value = Array.from(target.files)
-
-    // Blazer style...
-    // var storeFileName = FileHelper.GetUniqueName(file.Name);
-    // await BlobStorageService.StoreFileAsync(
-    // containerName: Core.Constants.IncidentStorageFolderName,
-    // fileName: storeFileName,
-    // contentType: file.ContentType,
-    // stream: file.OpenReadStream(512 * 1024 * 1024));
-    // loadedFiles.Add(file);
-
-    Model.value.document_file = loadedFiles.value.map((file) => file.name)
+    await uploadFiles(target.files)
   }
 }
 </script>
@@ -49,11 +44,17 @@ const loadfiles = function loadFiles(e: Event) {
     <form id="upload-area" class="UploadArea dropzone dz-clickable">
       <label for="file-upload">
         <div class="dz-message align-self-center">
-          <input type="file" id="file-upload" style="display: none" @change="loadfiles" multiple />
+          <input
+            type="file"
+            id="file-upload"
+            style="display: none"
+            @change="handleFileChange"
+            multiple
+          />
 
           <template v-if="loadedFiles.length !== 0">
-            <div style="display: flex; justify-content: center">
-              <div v-for="file in loadedFiles">
+            <div style="display: flex; justify-content: center; column-gap: 15px; flex-wrap: wrap">
+              <div v-for="(file, index) in loadedFiles" :key="`file_${index}`">
                 <img
                   alt="uploaded"
                   src="https://images.freeimages.com/fic/images/icons/2813/flat_jewels/512/file.png"
@@ -103,7 +104,7 @@ const loadfiles = function loadFiles(e: Event) {
   }
 }
 
-.Title {
+.Upload__Wrapper .Title {
   margin-bottom: 26px;
 }
 

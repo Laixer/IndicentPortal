@@ -108,7 +108,7 @@ const makeCall = async function makeCall({
       throw new Error('Failed to process query string')
     }
 
-    if (body && typeof body !== 'string') {
+    if (body && typeof body !== 'string' && !(body instanceof FormData)) {
       try {
         body = JSON.stringify(body)
         headers['Content-Type'] = 'application/json'
