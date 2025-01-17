@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import Title from '@/components/Title.vue'
@@ -11,15 +11,30 @@ const { disableNextButton, enableNextButton } = useNavigationStore()
 
 const { Model } = storeToRefs(useSurveyStore())
 
+/**
+ * Email validation according to browser standards
+ *  see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email#basic_validation
+ */
+const mailRegex =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+
+const inValidMail = function inValidMail() {
+  return Model.value.contact !== '' && !Model.value.contact.match(mailRegex)
+}
+const showEmailError = ref(false)
+
 // This is the only page with input requirements, so the validation is ad-hoc
 // The validation is repeated right before submit, and if validation fails, the user is redirected to this page
 // Although currently the contact page is actually always the last page in which the data is submitted.
 const handleValidateModel = function () {
+  showEmailError.value = inValidMail()
+
   if (
     !Model.value.contact ||
     Model.value.contact === '' ||
     !Model.value.contact_name ||
-    Model.value.contact_name === ''
+    Model.value.contact_name === '' ||
+    showEmailError.value
   ) {
     disableNextButton()
   } else {
@@ -42,7 +57,7 @@ onBeforeMount(() => {
     />
 
     <div class="FormField">
-      <label for="naam" class="FormField__Label">Naam</label>
+      <label for="naam" class="FormField__Label">Naam (vereist)</label>
       <div class="FormField__Wrapper">
         <input
           id="naam"
@@ -56,7 +71,8 @@ onBeforeMount(() => {
     </div>
 
     <div class="FormField">
-      <label for="email" class="FormField__Label">E-mail</label>
+      <label for="email" class="FormField__Label">E-mail (vereist)</label>
+      <div v-if="showEmailError" class="FormField__Error">Voer een geldig e-mail adres in</div>
       <div class="FormField__Wrapper">
         <input
           id="email"
@@ -93,6 +109,10 @@ onBeforeMount(() => {
   max-width: 550px;
   width: 100%;
   margin: 0 auto;
+}
+.FormField__Error {
+  color: rgb(211, 0, 0);
+  margin-bottom: 2px;
 }
 
 @media only screen and (min-width: 900px) {
