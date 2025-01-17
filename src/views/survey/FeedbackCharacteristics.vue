@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import Title from '@/components/Title.vue'
@@ -10,8 +11,22 @@ import SvgIconBurenJa from '@/components/icons/SvgIconBurenJa.vue'
 import BurenNee from '@/components/icons/BurenNee.vue'
 
 import { useSurveyStore } from '@/stores/survey.js'
+import { useNavigationStore } from '@/stores/navigation.js'
 
+const { disableNextButton, enableNextButton } = useNavigationStore()
 const { Model } = storeToRefs(useSurveyStore())
+
+watch(
+  () => Model.value,
+  () => {
+    if (Model.value.owner === null || Model.value.neighbor_recovery === null) {
+      disableNextButton()
+    } else {
+      enableNextButton()
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <template>
