@@ -78,18 +78,18 @@ const options = [
   }
 }
 
-.Title {
+.FoundationType .Title {
   margin-bottom: 21px;
 }
 
-.RadioImageInput__Wrapper {
+.FoundationType .RadioImageInput__Wrapper {
   display: flex;
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.RadioImageInput__Field {
+.FoundationType .RadioImageInput__Field {
   margin: 10px 10px 10px 10px;
 }
 </style>

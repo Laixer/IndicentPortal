@@ -94,8 +94,8 @@ a {
   text-decoration: none;
 }
 
-.Title,
-.BodyText {
+.Finish .Title,
+.Finish .BodyText {
   margin-bottom: 26px;
 }
 
@@ -117,27 +117,5 @@ a {
 
 .Footer .Copyright {
   display: none;
-}
-
-.BodyText {
-  color: #606976;
-  font-size: 18px;
-  line-height: 26px;
-  margin: 0;
-  padding: 0;
-
-  max-width: 550px;
-}
-
-.BodyText--center {
-  text-align: center;
-}
-
-.BodyText--bold {
-  font-weight: bold;
-}
-
-.BodyText--italic {
-  font-style: italic;
 }
 </style>
