@@ -6,6 +6,7 @@ export interface ISurveyConfig {
     primary_color: string
     secondary_color: string
     vendor_logo_path: string
+    intro_text?: string | null
   }
   pages: string[]
 }

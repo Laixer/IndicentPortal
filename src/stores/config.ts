@@ -1,4 +1,4 @@
-import { ref, watch, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useSurveyStore } from './survey'
@@ -25,10 +25,18 @@ const vendorSlug: Ref<string | undefined> = ref()
  */
 const clientId = ref(10)
 const vendorName = ref('Fundermaps')
-const vendorLogoPath = ref()
+const vendorLogoPath = ref('/img/logo.png')
 const primaryColor = ref('#000')
 const secondaryColor = ref('#000')
 const surveyPageSlugs: Ref<string[]> = ref([])
+
+// Default intro text
+const introText: Ref<string> = ref(`
+  **Stichting Kennis Centrum Aanpak Funderingsproblematiek (KCAF) is een stichting met als doelstelling het verzamelen, ontwikkelen en ontsluiten van kennis rond de aanpak en preventie van funderingsproblemen.**
+
+  KCAF fungeert als nationaal funderingsloket voor alle vragen rond deze problematiek. Van funderingsonderzoek tot funderingsherstel, van aanpak tot financiering en van preventie tot innovatie. KCAF is een stichting zonder winstoogmerk.
+  
+  Bij dit loket kunt u een melding maken van een funderingsprobleem aan uw woning. Wij zullen u vrijblijvend van advies voorzien. Dit loket is een initiatief van KCAF (Kennis Centrum Aanpak Funderingsproblematiek) en {{VENDOR}}.`)
 
 /**
  * List of known survey pages
@@ -102,10 +110,21 @@ function useConfig() {
       /**
        * Branding
        */
-      vendorName.value = surveyConfig.branding.vendor_name
-      vendorLogoPath.value = surveyConfig.branding.vendor_logo_path
-      primaryColor.value = surveyConfig.branding.primary_color
-      secondaryColor.value = surveyConfig.branding.secondary_color
+      if (surveyConfig.branding.vendor_name) {
+        vendorName.value = surveyConfig.branding.vendor_name
+      }
+      if (surveyConfig.branding.vendor_logo_path) {
+        vendorLogoPath.value = surveyConfig.branding.vendor_logo_path
+      }
+      if (surveyConfig.branding.primary_color) {
+        primaryColor.value = surveyConfig.branding.primary_color
+      }
+      if (surveyConfig.branding.secondary_color) {
+        secondaryColor.value = surveyConfig.branding.secondary_color
+      }
+      if (surveyConfig.branding.intro_text && surveyConfig.branding.intro_text.length !== 0) {
+        introText.value = surveyConfig.branding.intro_text
+      }
 
       /**
        * The provided survey page slugs are filtered through a whitelist of known slugs
@@ -152,6 +171,10 @@ function useConfig() {
     vendorLogoPath,
     primaryColor,
     secondaryColor,
+    // intro text
+    introText: computed(() => {
+      return introText.value.replace('{{VENDOR}}', vendorName.value)
+    }),
     // survey
     surveyPageSlugs
   }

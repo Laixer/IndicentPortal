@@ -1,40 +1,20 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 
+import VueMarkdown from 'vue-markdown-render'
+
 import Title from '@/components/Title.vue'
 import { useConfigStore } from '@/stores/config.js'
 
-const { vendorLogoPath, vendorName } = storeToRefs(useConfigStore())
-
-// TODO:  https://www.npmjs.com/package/vue-markdown-render ?
+const { vendorLogoPath, vendorName, introText } = storeToRefs(useConfigStore())
 </script>
 
 <template>
   <div class="Home__Wrapper">
     <div class="Home--left">
-      <Title message="Wat doen we?" />
+      <Title :message="`Funderingsloket ${vendorName}`" />
 
-      <p class="BodyText BodyText--bold" style="margin-bottom: 26px">
-        <span
-          >Stichting Kennis Centrum Aanpak Funderingsproblematiek (KCAF) is een stichting met als
-          doelstelling het verzamelen, ontwikkelen en ontsluiten van kennis rond de aanpak en
-          preventie van funderingsproblemen.</span
-        >
-      </p>
-      <p class="BodyText" style="margin-bottom: 26px">
-        <span
-          >KCAF fungeert als nationaal funderingsloket voor alle vragen rond deze problematiek. Van
-          funderingsonderzoek tot funderingsherstel, van aanpak tot financiering en van preventie
-          tot innovatie. KCAF is een stichting zonder winstoogmerk.</span
-        >
-      </p>
-      <p class="BodyText" style="margin-bottom: 26px">
-        <span>
-          Bij dit loket kunt u een melding maken van een funderingsprobleem aan uw woning. Wij
-          zullen u vrijblijvend van advies voorzien. Dit loket is een initiatief van KCAF (Kennis
-          Centrum Aanpak Funderingsproblematiek){{ vendorName ? ` en ${vendorName}` : '' }}.
-        </span>
-      </p>
+      <VueMarkdown class="Home__Intro" :source="introText" :options="{ breaks: true }" />
     </div>
 
     <div class="Home--right">
@@ -137,7 +117,8 @@ const { vendorLogoPath, vendorName } = storeToRefs(useConfigStore())
   display: none;
 }
 
-.BodyText {
+.BodyText,
+.Home__Intro p {
   color: #606976;
   font-size: 18px;
   line-height: 26px;
@@ -145,6 +126,9 @@ const { vendorLogoPath, vendorName } = storeToRefs(useConfigStore())
   padding: 0;
 
   max-width: 550px;
+}
+.Home__Intro p {
+  margin-bottom: 26px;
 }
 
 .BodyText--center {

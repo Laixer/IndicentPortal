@@ -8,7 +8,8 @@ const defaultBranding = {
   vendor_slug: 'fundermaps',
   vendor_logo_path: '/img/logo.png',
   primary_color: '#000',
-  secondary_color: '#000'
+  secondary_color: '#000',
+  intro_text: ''
 }
 const defaultPages = [
   // 'address',
@@ -29,7 +30,8 @@ export const APIResponseByVendorSlug: { [key: string]: ISurveyConfig } = {
       vendor_slug: 'dordrecht',
       vendor_logo_path: '/img/logo_dordrecht.png',
       primary_color: 'red',
-      secondary_color: 'blue'
+      secondary_color: 'blue',
+      intro_text: ''
     },
     pages: defaultPages
   },
