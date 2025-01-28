@@ -110,7 +110,7 @@ a {
 
 .Footer .SvgIcon {
   font-size: 24px;
-  color: #00c95d;
+  /* color: #00c95d; */
   margin-right: 6px;
 }
 /*  */
