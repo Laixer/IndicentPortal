@@ -13,9 +13,9 @@ const { Model } = storeToRefs(useSurveyStore())
 const loadedFiles: Ref<File[]> = ref([])
 
 const uploadFiles = async function uploadFile(files: FileList) {
-  await uploadIncidentFiles(files).then(() => {
+  await uploadIncidentFiles(files).then((response) => {
     loadedFiles.value = loadedFiles.value.concat(Array.from(files))
-    Model.value.document_file = loadedFiles.value.map((file) => file.name)
+    Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
   })
 }
 
