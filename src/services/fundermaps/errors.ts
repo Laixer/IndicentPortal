@@ -5,7 +5,7 @@
  * TODO: Make Error properties consistent ...
  *
  */
-export class APIClientError {}
+export class APIClientError { }
 export class APIErrorResponse extends APIClientError {
   // The status code of the error response
   status: number

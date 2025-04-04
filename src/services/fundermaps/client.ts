@@ -68,7 +68,7 @@ const makeCall = async function makeCall({
   let responseBody = null
   let url: URL
 
-  console.log(endpoint, body, requireAuth)
+  // console.debug(endpoint, body, requireAuth)
 
   try {
     passAuthCheckOrExit(requireAuth, autoredirect)
