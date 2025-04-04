@@ -90,7 +90,7 @@ function useConfig() {
       let appConfig = null
       try {
         appConfig = await getAppConfig(slug)
-      } catch (err) {}
+      } catch (err) { }
 
       if (!appConfig || !appConfig.data) {
         loadingError.value = true
