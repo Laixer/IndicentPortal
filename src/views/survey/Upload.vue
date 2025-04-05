@@ -24,7 +24,9 @@ const ALLOWED_FILE_TYPES = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // xlsx
   'text/csv',
-  'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv'
+  'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv',
+  'application/pdf', // PDF
+  'text/plain' // TXT
 ]
 
 const uploadFiles = async function uploadFile(files: FileList) {
@@ -97,7 +99,7 @@ const handleFileChange = async function handleFileChange(e: Event) {
             style="display: none"
             @change="handleFileChange"
             multiple
-            accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv"
+            accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv,.pdf,.txt"
           />
 
           <div v-if="errorMessage" class="error-message">
