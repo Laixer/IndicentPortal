@@ -111,22 +111,22 @@ function useConfig() {
       /**
        * Branding
        */
-      if (surveyConfig.branding.vendor_name) {
+      if (surveyConfig.branding?.vendor_name) {
         vendorName.value = surveyConfig.branding.vendor_name
       }
-      if (surveyConfig.branding.vendor_logo_path) {
+      if (surveyConfig.branding?.vendor_logo_path) {
         vendorLogoPath.value = surveyConfig.branding.vendor_logo_path
       }
-      if (surveyConfig.branding.vendor_picture_path) {
+      if (surveyConfig.branding?.vendor_picture_path) {
         vendorPicturePath.value = surveyConfig.branding.vendor_picture_path
       }
-      if (surveyConfig.branding.primary_color) {
+      if (surveyConfig.branding?.primary_color) {
         primaryColor.value = surveyConfig.branding.primary_color
       }
-      if (surveyConfig.branding.secondary_color) {
+      if (surveyConfig.branding?.secondary_color) {
         secondaryColor.value = surveyConfig.branding.secondary_color
       }
-      if (surveyConfig.branding.intro_text && surveyConfig.branding.intro_text.length !== 0) {
+      if (surveyConfig.branding?.intro_text && surveyConfig.branding.intro_text.length !== 0) {
         introText.value = surveyConfig.branding.intro_text
       }
 
