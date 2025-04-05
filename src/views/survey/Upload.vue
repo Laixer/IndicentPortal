@@ -7,16 +7,29 @@ import Title from '@/components/Title.vue'
 import { uploadIncidentFiles } from '@/services/fundermaps/endpoints/incident.js'
 
 import { useSurveyStore } from '@/stores/survey.js'
+import { useNavigationStore } from '@/stores/navigation.js'
 
 const { Model } = storeToRefs(useSurveyStore())
+const { disableNextButton, enableNextButton } = useNavigationStore()
 
 const loadedFiles: Ref<File[]> = ref([])
+const isUploading: Ref<boolean> = ref(false)
 
 const uploadFiles = async function uploadFile(files: FileList) {
-  await uploadIncidentFiles(files).then((response) => {
-    loadedFiles.value = loadedFiles.value.concat(Array.from(files))
-    Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
-  })
+  try {
+    isUploading.value = true
+    disableNextButton()
+    
+    await uploadIncidentFiles(files).then((response) => {
+      loadedFiles.value = loadedFiles.value.concat(Array.from(files))
+      Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
+    })
+  } catch (error) {
+    console.error('Error uploading files:', error)
+  } finally {
+    isUploading.value = false
+    enableNextButton()
+  }
 }
 
 /**
