@@ -61,19 +61,24 @@ export const useSurveyStore = defineStore('Survey', function useSurvey() {
   const saveToDatabase = async function saveToDatabase() {
     const { surveyPageSlugs } = storeToRefs(useConfigStore())
 
-    saving.value = true
+    try {
+      saving.value = true
 
-    // TODO: Reminder: This is ad-hoc validation, because it is the only validation
-    if (surveyPageSlugs.value.includes('contact')) {
-      if (Model.value.contact_name === '' || Model.value.contact === '') {
-        saving.value = false
-        // TODO: Refactor redirect to contact page.
-        return 'contact'
+      // TODO: Reminder: This is ad-hoc validation, because it is the only validation
+      if (surveyPageSlugs.value.includes('contact')) {
+        if (Model.value.contact_name === '' || Model.value.contact === '') {
+          saving.value = false
+          // TODO: Refactor redirect to contact page.
+          return 'contact'
+        }
       }
-    }
 
-    await saveIncidentData(Model.value)
-    saving.value = false
+      await saveIncidentData(Model.value)
+    } catch (error) {
+      console.error('Failed to save incident data:', error)
+    } finally {
+      saving.value = false
+    }
   }
 
   return {
