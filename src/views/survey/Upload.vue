@@ -29,40 +29,68 @@ const ALLOWED_FILE_TYPES = [
   'text/plain' // TXT
 ]
 
-const uploadFiles = async function uploadFile(files: FileList) {
-  try {
-    // Validate number of files
-    if (loadedFiles.value.length + files.length > MAX_FILES) {
-      errorMessage.value = `U kunt maximaal ${MAX_FILES} bestanden uploaden.`
-      return
-    }
+interface ValidationResult {
+  isValid: boolean;
+  validFiles: File[];
+  errorMessage: string;
+}
 
-    // Validate file types and sizes
-    const validFiles: File[] = []
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        errorMessage.value = 'Alleen png, jpg, jpeg, docx, xlsx, csv, heif, en video bestanden zijn toegestaan.'
-        return
+const validateFiles = (files: FileList, currentCount: number): ValidationResult => {
+  // Validate number of files
+  if (currentCount + files.length > MAX_FILES) {
+    return {
+      isValid: false,
+      validFiles: [],
+      errorMessage: `U kunt maximaal ${MAX_FILES} bestanden uploaden.`
+    }
+  }
+
+  // Validate file types and sizes
+  const validFiles: File[] = []
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    
+    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+      return {
+        isValid: false,
+        validFiles: [],
+        errorMessage: 'Alleen png, jpg, jpeg, docx, xlsx, csv, heif, en video bestanden zijn toegestaan.'
       }
-      
-      if (file.size > MAX_FILE_SIZE) {
-        errorMessage.value = 'Bestandsgrootte mag niet groter zijn dan 4 GB.'
-        return
-      }
-      
-      validFiles.push(file)
     }
     
-    if (validFiles.length === 0) return
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        isValid: false,
+        validFiles: [],
+        errorMessage: 'Bestandsgrootte mag niet groter zijn dan 4 GB.'
+      }
+    }
+    
+    validFiles.push(file)
+  }
+  
+  return {
+    isValid: validFiles.length > 0,
+    validFiles,
+    errorMessage: ''
+  }
+}
+
+const uploadFiles = async function uploadFile(files: FileList) {
+  try {
+    const validationResult = validateFiles(files, loadedFiles.value.length)
+    
+    if (!validationResult.isValid) {
+      errorMessage.value = validationResult.errorMessage
+      return
+    }
     
     errorMessage.value = ''
     isUploading.value = true
     disableNextButton()
     
-    await uploadIncidentFiles(validFiles as unknown as FileList).then((response) => {
-      loadedFiles.value = loadedFiles.value.concat(Array.from(validFiles))
+    await uploadIncidentFiles(validationResult.validFiles as unknown as FileList).then((response) => {
+      loadedFiles.value = loadedFiles.value.concat(Array.from(validationResult.validFiles))
       Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
     })
   } catch (error) {
