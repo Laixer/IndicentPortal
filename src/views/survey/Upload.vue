@@ -78,7 +78,9 @@ const handleFileChange = async function handleFileChange(e: Event) {
             </div>
           </template>
           <template v-else>
-            <img alt="upload" src="/img/upload.svg" />
+            <div class="upload-image-container">
+              <img alt="upload" src="/img/upload.svg" />
+            </div>
           </template>
 
           <div class="mb-0 mt-3">
@@ -153,5 +155,14 @@ const handleFileChange = async function handleFileChange(e: Event) {
   color: #354052;
   font-weight: 300;
   line-height: 17px;
+}
+
+.upload-image-container {
+  height: 172px;
+  width: 235px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 </style>
