@@ -59,7 +59,7 @@ const uploadFiles = async function uploadFile(files: FileList) {
     isUploading.value = true
     disableNextButton()
     
-    await uploadIncidentFiles(validFiles).then((response) => {
+    await uploadIncidentFiles(validFiles as unknown as FileList).then((response) => {
       loadedFiles.value = loadedFiles.value.concat(Array.from(validFiles))
       Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
     })
