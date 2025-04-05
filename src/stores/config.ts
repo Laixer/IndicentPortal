@@ -91,7 +91,10 @@ function useConfig() {
       let appConfig = null
       try {
         appConfig = await getAppConfig(slug)
-      } catch (err) { }
+      } catch (err) {
+        console.error('Error fetching app config:', err);
+        loadingError.value = true;
+      }
 
       if (!appConfig || !appConfig.data) {
         loadingError.value = true
