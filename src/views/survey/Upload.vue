@@ -14,30 +14,64 @@ const { disableNextButton, enableNextButton } = useNavigationStore()
 
 const loadedFiles: Ref<File[]> = ref([])
 const isUploading: Ref<boolean> = ref(false)
+const errorMessage: Ref<string> = ref('')
+
+// File validation constants
+const MAX_FILES = 25
+const MAX_FILE_SIZE = 4 * 1024 * 1024 * 1024 // 4GB in bytes
+const ALLOWED_FILE_TYPES = [
+  'image/png', 'image/jpeg', 'image/jpg', 'image/heif', 'image.heic',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // xlsx
+  'text/csv',
+  'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv'
+]
 
 const uploadFiles = async function uploadFile(files: FileList) {
   try {
+    // Validate number of files
+    if (loadedFiles.value.length + files.length > MAX_FILES) {
+      errorMessage.value = `U kunt maximaal ${MAX_FILES} bestanden uploaden.`
+      return
+    }
+
+    // Validate file types and sizes
+    const validFiles: File[] = []
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      
+      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+        errorMessage.value = 'Alleen png, jpg, jpeg, docx, xlsx, csv, heif, en video bestanden zijn toegestaan.'
+        return
+      }
+      
+      if (file.size > MAX_FILE_SIZE) {
+        errorMessage.value = 'Bestandsgrootte mag niet groter zijn dan 4 GB.'
+        return
+      }
+      
+      validFiles.push(file)
+    }
+    
+    if (validFiles.length === 0) return
+    
+    errorMessage.value = ''
     isUploading.value = true
     disableNextButton()
     
-    await uploadIncidentFiles(files).then((response) => {
-      loadedFiles.value = loadedFiles.value.concat(Array.from(files))
+    await uploadIncidentFiles(validFiles).then((response) => {
+      loadedFiles.value = loadedFiles.value.concat(Array.from(validFiles))
       Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
     })
   } catch (error) {
     console.error('Error uploading files:', error)
+    errorMessage.value = 'Er is een fout opgetreden bij het uploaden van bestanden.'
   } finally {
     isUploading.value = false
     enableNextButton()
   }
 }
 
-/**
- * TODO:
- * Limit uploads to max 25
- * Limit file size to max 4 GB
- * Limit file types to png, jpg, jpeg, docx, xlsx, csv, heif, <video>, <mobile cam foto types>
- */
 const handleFileChange = async function handleFileChange(e: Event) {
   const target = e.target as HTMLInputElement
   if (target && target.files) {
@@ -63,7 +97,12 @@ const handleFileChange = async function handleFileChange(e: Event) {
             style="display: none"
             @change="handleFileChange"
             multiple
+            accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv"
           />
+
+          <div v-if="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
 
           <template v-if="loadedFiles.length !== 0">
             <div style="display: flex; justify-content: center; column-gap: 15px; flex-wrap: wrap">
@@ -87,6 +126,7 @@ const handleFileChange = async function handleFileChange(e: Event) {
             <strong>Upload onderzoeksrapporten, archiefstukken, tekeningen of foto's</strong>
             <div>
               <span>Klik om een bestand te kiezen</span>
+              <p class="file-limits">(max 25 bestanden, 4 GB per bestand)</p>
             </div>
           </div>
         </div>
@@ -164,5 +204,19 @@ const handleFileChange = async function handleFileChange(e: Event) {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+}
+
+.error-message {
+  color: #d9534f;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: rgba(217, 83, 79, 0.1);
+  border-radius: 4px;
+}
+
+.file-limits {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 5px;
 }
 </style>
