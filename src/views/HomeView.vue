@@ -6,7 +6,7 @@ import VueMarkdown from 'vue-markdown-render'
 import Title from '@/components/Title.vue'
 import { useConfigStore } from '@/stores/config.js'
 
-const { vendorLogoPath, vendorName, introText } = storeToRefs(useConfigStore())
+const { vendorPicturePath, vendorName, introText } = storeToRefs(useConfigStore())
 </script>
 
 <template>
@@ -18,7 +18,7 @@ const { vendorLogoPath, vendorName, introText } = storeToRefs(useConfigStore())
     </div>
 
     <div class="Home--right">
-      <img :src="vendorLogoPath" width="640" height="585" alt="Logo" />
+      <img :src="vendorPicturePath" width="640" height="585" alt="Logo" />
     </div>
   </div>
 </template>

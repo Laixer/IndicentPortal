@@ -26,6 +26,7 @@ const vendorSlug: Ref<string | undefined> = ref()
 const clientId = ref(10)
 const vendorName = ref('Fundermaps')
 const vendorLogoPath = ref('/img/logo.png')
+const vendorPicturePath = ref('/img/home.jpg')
 const primaryColor = ref('#000')
 const secondaryColor = ref('#000')
 const surveyPageSlugs: Ref<string[]> = ref([])
@@ -116,6 +117,9 @@ function useConfig() {
       if (surveyConfig.branding.vendor_logo_path) {
         vendorLogoPath.value = surveyConfig.branding.vendor_logo_path
       }
+      if (surveyConfig.branding.vendor_picture_path) {
+        vendorPicturePath.value = surveyConfig.branding.vendor_picture_path
+      }
       if (surveyConfig.branding.primary_color) {
         primaryColor.value = surveyConfig.branding.primary_color
       }
@@ -169,6 +173,7 @@ function useConfig() {
     // branding
     vendorName,
     vendorLogoPath,
+    vendorPicturePath,
     primaryColor,
     secondaryColor,
     // intro text
