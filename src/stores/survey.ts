@@ -48,10 +48,22 @@ const saving: Ref<boolean> = ref(false)
 const Model: Ref<ISurveyModel> = ref(JSON.parse(JSON.stringify(cleanModelState)))
 
 /**
- * Reset the survey data
+ * Reset the survey data while preserving contact details
  */
 const clearSurveyData = () => {
+  const contactDetails = {
+    contact_name: Model.value.contact_name,
+    contact: Model.value.contact,
+    contact_phone_number: Model.value.contact_phone_number
+  }
+
+  // Reset all data
   Model.value = JSON.parse(JSON.stringify(cleanModelState))
+
+  // Restore contact details
+  Model.value.contact_name = contactDetails.contact_name
+  Model.value.contact = contactDetails.contact
+  Model.value.contact_phone_number = contactDetails.contact_phone_number
 }
 
 export const useSurveyStore = defineStore('Survey', () => {
