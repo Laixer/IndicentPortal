@@ -50,7 +50,7 @@ const Model: Ref<ISurveyModel> = ref(JSON.parse(JSON.stringify(cleanModelState))
 /**
  * Reset the survey data
  */
-const clearSurveyData = function clearSurveyData() {
+const clearSurveyData = () => {
   Model.value = JSON.parse(JSON.stringify(cleanModelState))
 }
 

@@ -28,7 +28,7 @@ const enableNextButton = () => {
   isNextDisabled.value = false
 }
 
-function useNavigation() {
+const useNavigation = () => {
   const route = useRoute()
   const { surveyPageSlugs } = storeToRefs(useConfigStore())
 
@@ -101,7 +101,7 @@ function useNavigation() {
    *  If on the last page, return null
    *  If there are no known pages, return null
    */
-  const getNextSurveyPageSlug = function getNextSurveyPageSlug(): string | null {
+  const getNextSurveyPageSlug = (): string | null => {
     const current = surveyNavigationState.value.findIndex((state) => state.current)
     if (current !== -1) {
       return surveyNavigationState.value[current + 1]?.slug || null
@@ -117,7 +117,7 @@ function useNavigation() {
    *  If on the first page, return null
    *  If there are no known pages, return null
    */
-  const getPreviousSurveyPageSlug = function getPreviousSurveyPageSlug(): string | null {
+  const getPreviousSurveyPageSlug = (): string | null => {
     const current = surveyNavigationState.value.findIndex((state) => state.current)
     if (current !== -1) {
       return surveyNavigationState.value[current - 1]?.slug || null
