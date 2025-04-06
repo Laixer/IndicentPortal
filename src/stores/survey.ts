@@ -98,4 +98,4 @@ export const useSurveyStore = defineStore('Survey', () => {
     clearSurveyData,
     saveToDatabase
   }
-})
+}, { persist: true })
