@@ -54,11 +54,11 @@ const clearSurveyData = function clearSurveyData() {
   Model.value = JSON.parse(JSON.stringify(cleanModelState))
 }
 
-export const useSurveyStore = defineStore('Survey', function useSurvey() {
+export const useSurveyStore = defineStore('Survey', () => {
   /**
    * Store the survey data as a new Incident record
    */
-  const saveToDatabase = async function saveToDatabase() {
+  const saveToDatabase = async () => {
     const { surveyPageSlugs } = storeToRefs(useConfigStore())
 
     try {

@@ -21,10 +21,10 @@ const isLastSurveyPage = ref(false)
 // Nav UI state set on survey page
 const isNextDisabled = ref(false)
 
-const disableNextButton = function () {
+const disableNextButton = () => {
   isNextDisabled.value = true
 }
-const enableNextButton = function () {
+const enableNextButton = () => {
   isNextDisabled.value = false
 }
 
