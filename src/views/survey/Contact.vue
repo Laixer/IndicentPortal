@@ -86,7 +86,7 @@ onBeforeMount(() => {
     </div>
 
     <div class="FormField">
-      <label for="telefoon" class="FormField__Label">Telefoonnummer</label>
+      <label for="telefoon" class="FormField__Label">Telefoonnummer (optioneel)</label>
       <div class="FormField__Wrapper">
         <input
           id="telefoon"
