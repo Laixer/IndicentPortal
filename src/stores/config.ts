@@ -59,7 +59,7 @@ function useConfig() {
   const route = useRoute()
   const router = useRouter()
 
-  const { clearSurveyData } = useSurveyStore()
+  // const { clearSurveyData } = useSurveyStore()
 
   /**
    * Extract vendor slug from subdomain of fundermaps.com
@@ -98,7 +98,7 @@ function useConfig() {
         }
       })
 
-      clearSurveyData()
+      // clearSurveyData()
 
       // TODO: Handle errors
       //  - failed api call (after retry)

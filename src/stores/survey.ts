@@ -86,6 +86,9 @@ export const useSurveyStore = defineStore('Survey', () => {
       }
 
       await saveIncidentData(Model.value)
+
+      // Reset the survey data
+      clearSurveyData()
     } catch (error) {
       console.error('Failed to save incident data:', error)
     } finally {
