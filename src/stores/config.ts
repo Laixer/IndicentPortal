@@ -62,6 +62,23 @@ function useConfig() {
   const { clearSurveyData } = useSurveyStore()
 
   /**
+   * Extract vendor slug from subdomain of fundermaps.com
+   * @returns the subdomain as vendor slug or undefined if not on a fundermaps.com subdomain
+   */
+  const extractVendorSlugFromSubdomain = (): string | undefined => {
+    const hostname = window.location.hostname
+
+    // Check if we're on a fundermaps.com subdomain
+    if (hostname.endsWith('.fundermaps.com') && hostname !== 'fundermaps.com') {
+      // Extract the subdomain (everything before the first dot)
+      const subdomain = hostname.split('.')[0]
+      return subdomain.toLowerCase()
+    }
+
+    return undefined
+  }
+
+  /**
    * Whenever the vendor slug changes we got to retrieve some info & reset the survey
    */
   watch(
@@ -98,7 +115,7 @@ function useConfig() {
 
       if (!appConfig || !appConfig.data) {
         loadingError.value = true
-        // TODO: Error handling...
+        console.error('No app config data found')
         return
       }
 
@@ -149,18 +166,25 @@ function useConfig() {
 
   /**
    * Keep the vendor slug in the store in sync with the vendor slug in the route path
+   * or extract it from the subdomain if on *.fundermaps.com
    */
   watch(
     route,
     (to) => {
-      if (typeof to.params.vendor !== 'string') {
-        return
-      }
+      // First check if we can extract the vendor slug from the subdomain
+      const subdomainSlug = extractVendorSlugFromSubdomain()
 
-      // update the vendor slug if the route vendor param has changed
-      const slug = to.params.vendor.toLowerCase()
-      if (slug !== vendorSlug.value) {
-        vendorSlug.value = slug
+      if (subdomainSlug) {
+        // Prioritize subdomain slug if we're on a fundermaps.com subdomain
+        if (subdomainSlug !== vendorSlug.value) {
+          vendorSlug.value = subdomainSlug
+        }
+      } else if (typeof to.params.vendor === 'string') {
+        // Fall back to route param if no subdomain is available
+        const slug = to.params.vendor.toLowerCase()
+        if (slug !== vendorSlug.value) {
+          vendorSlug.value = slug
+        }
       }
     },
     { flush: 'pre', immediate: true, deep: true }
