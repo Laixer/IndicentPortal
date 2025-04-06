@@ -148,22 +148,13 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
         <label for="address" class="FormField__Label">Zoek een adres</label>
 
         <div class="FormField__Wrapper">
-          <input
-            id="address"
-            placeholder="Stationsplein, 1012 AB Amsterdam"
-            autocomplete="off"
-            class="FormField__Field"
-            v-model="address"
-          />
+          <input id="address" placeholder="Stationsplein, 1012 AB Amsterdam" autocomplete="off" class="FormField__Field"
+            v-model="address" />
 
           <template v-if="autoCompleteSuggestions.length !== 0">
             <div class="GeoCoder__Suggestions">
-              <div
-                v-for="suggestion in autoCompleteSuggestions"
-                class="Suggestion"
-                :title="suggestion.Suggestion"
-                @click="selectSuggestion(suggestion.Id)"
-              >
+              <div v-for="suggestion in autoCompleteSuggestions" class="Suggestion" :title="suggestion.Suggestion"
+                @click="selectSuggestion(suggestion.Id)">
                 <div class="SvgIcon svg-container">
                   <SuggestionIcon />
                 </div>

@@ -39,21 +39,12 @@ watch(
   <div class="AddressCharacteristics">
     <form class="Form" @submit.prevent="void">
       <div class="AddressCharacteristics--one">
-        <Title
-          message="Is het een vrijstaand pand of onderdeel van een (bouw)blok?"
-          :center="true"
-        />
+        <Title message="Is het een vrijstaand pand of onderdeel van een (bouw)blok?" :center="true" />
 
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
             <div class="RadioImageInput__Field">
-              <input
-                type="radio"
-                id="vrijstaand 0"
-                v-model="Model.chained_building"
-                name="vrijstaand"
-                :value="false"
-              />
+              <input type="radio" id="vrijstaand 0" v-model="Model.chained_building" name="vrijstaand" :value="false" />
               <label for="vrijstaand 0" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconVrijstaandVrijstaand />
@@ -65,13 +56,7 @@ watch(
               </label>
             </div>
             <div class="RadioImageInput__Field">
-              <input
-                type="radio"
-                id="vrijstaand 1"
-                v-model="Model.chained_building"
-                name="vrijstaand"
-                :value="true"
-              />
+              <input type="radio" id="vrijstaand 1" v-model="Model.chained_building" name="vrijstaand" :value="true" />
               <label for="vrijstaand 1" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconVrijstaandBouwblok />
@@ -92,13 +77,7 @@ watch(
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
             <div class="RadioImageInput__Field">
-              <input
-                type="radio"
-                id="eigendom 0"
-                v-model="Model.owner"
-                name="eigendom"
-                :value="true"
-              />
+              <input type="radio" id="eigendom 0" v-model="Model.owner" name="eigendom" :value="true" />
               <label for="eigendom 0" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconEigendomEigenaar />
@@ -110,13 +89,7 @@ watch(
               </label>
             </div>
             <div class="RadioImageInput__Field">
-              <input
-                type="radio"
-                id="eigendom 1"
-                v-model="Model.owner"
-                name="eigendom"
-                :value="false"
-              />
+              <input type="radio" id="eigendom 1" v-model="Model.owner" name="eigendom" :value="false" />
               <label for="eigendom 1" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconEigendomHuurder />
@@ -132,21 +105,12 @@ watch(
       </div>
 
       <div class="AddressCharacteristics--three">
-        <Title
-          message="Is bij een van uw directe buren funderingsherstel uitgevoerd?"
-          :center="true"
-        />
+        <Title message="Is bij een van uw directe buren funderingsherstel uitgevoerd?" :center="true" />
 
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
             <div class="RadioImageInput__Field">
-              <input
-                type="radio"
-                id="buren 0"
-                v-model="Model.neighbor_recovery"
-                name="buren"
-                :value="true"
-              />
+              <input type="radio" id="buren 0" v-model="Model.neighbor_recovery" name="buren" :value="true" />
               <label for="buren 0" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconBurenJa />
@@ -158,13 +122,7 @@ watch(
               </label>
             </div>
             <div class="RadioImageInput__Field">
-              <input
-                type="radio"
-                id="buren 1"
-                v-model="Model.neighbor_recovery"
-                name="buren"
-                :value="false"
-              />
+              <input type="radio" id="buren 1" v-model="Model.neighbor_recovery" name="buren" :value="false" />
               <label for="buren 1" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <BurenNee />

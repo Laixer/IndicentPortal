@@ -127,6 +127,7 @@ const { vendorPicturePath, vendorName, introText } = storeToRefs(useConfigStore(
 
   max-width: 550px;
 }
+
 .Home__Intro p {
   margin-bottom: 26px;
 }

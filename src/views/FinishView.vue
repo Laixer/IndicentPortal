@@ -29,16 +29,13 @@ const isFeedback = computed(() => vendorSlug.value === 'feedback')
           </span>
         </p>
 
-        <a
-          href="https://www.kcaf.nl/wat-doet-het-kcaf/fundermaps/"
-          target="_blank"
-          alt="meer informatie"
-          ><button class="Button Button--line">
+        <a href="https://www.kcaf.nl/wat-doet-het-kcaf/fundermaps/" target="_blank" alt="meer informatie"><button
+            class="Button Button--line">
             <span>Meer informatie</span>
             <div class="SvgIcon svg-container">
               <SvgIconKCAF />
-            </div></button
-        ></a>
+            </div>
+          </button></a>
       </template>
       <template v-else>
         <Title message="Advies" />
@@ -61,16 +58,13 @@ const isFeedback = computed(() => vendorSlug.value === 'feedback')
           </span>
         </p>
 
-        <a
-          href="https://www.kcaf.nl/publicaties/stappenplan-funderingsherstel/"
-          target="_blank"
-          alt="stappenplann"
-          ><button class="Button Button--line">
+        <a href="https://www.kcaf.nl/publicaties/stappenplan-funderingsherstel/" target="_blank"
+          alt="stappenplann"><button class="Button Button--line">
             <span>Bekijk het stappenplan</span>
             <div class="SvgIcon svg-container">
               <SvgIconKCAF />
-            </div></button
-        ></a>
+            </div>
+          </button></a>
       </template>
     </div>
   </div>
@@ -113,6 +107,7 @@ a {
   /* color: #00c95d; */
   margin-right: 6px;
 }
+
 /*  */
 
 .Footer .Copyright {

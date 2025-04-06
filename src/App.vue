@@ -32,14 +32,11 @@ const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationSt
         <aside v-if="isProgressVisible" class="ProgressSteps">
           <div class="ProgressSteps__Indicator" style="top: 178px"></div>
           <ul>
-            <li
-              v-for="navState in surveyNavigationState"
-              :class="{
-                ProgressSteps__Current: navState.current,
-                ProgressSteps__Finished: navState.finished,
-                ProgressSteps__Future: navState.future
-              }"
-            >
+            <li v-for="navState in surveyNavigationState" :class="{
+              ProgressSteps__Current: navState.current,
+              ProgressSteps__Finished: navState.finished,
+              ProgressSteps__Future: navState.future
+            }">
               <span>{{ navState.number }}</span>
             </li>
           </ul>

@@ -106,6 +106,7 @@ onUnmounted(() => {
   width: 100% !important;
   height: 100% !important;
 }
+
 .mapboxgl-map {
   width: 100% !important;
   height: 100% !important;

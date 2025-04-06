@@ -49,7 +49,7 @@ const validateFiles = (files: FileList, currentCount: number): ValidationResult 
   const validFiles: File[] = []
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
-    
+
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       return {
         isValid: false,
@@ -57,7 +57,7 @@ const validateFiles = (files: FileList, currentCount: number): ValidationResult 
         errorMessage: 'Alleen png, jpg, jpeg, docx, xlsx, csv, heif, en video bestanden zijn toegestaan.'
       }
     }
-    
+
     if (file.size > MAX_FILE_SIZE) {
       return {
         isValid: false,
@@ -65,10 +65,10 @@ const validateFiles = (files: FileList, currentCount: number): ValidationResult 
         errorMessage: 'Bestandsgrootte mag niet groter zijn dan 4 GB.'
       }
     }
-    
+
     validFiles.push(file)
   }
-  
+
   return {
     isValid: validFiles.length > 0,
     validFiles,
@@ -79,16 +79,16 @@ const validateFiles = (files: FileList, currentCount: number): ValidationResult 
 const uploadFiles = async function uploadFile(files: FileList) {
   try {
     const validationResult = validateFiles(files, loadedFiles.value.length)
-    
+
     if (!validationResult.isValid) {
       errorMessage.value = validationResult.errorMessage
       return
     }
-    
+
     errorMessage.value = ''
     isUploading.value = true
     disableNextButton()
-    
+
     await uploadIncidentFiles(validationResult.validFiles as unknown as FileList).then((response) => {
       loadedFiles.value = loadedFiles.value.concat(Array.from(validationResult.validFiles))
       Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
@@ -112,23 +112,13 @@ const handleFileChange = async function handleFileChange(e: Event) {
 
 <template>
   <div class="Upload__Wrapper">
-    <Title
-      message="Heeft u informatie beschikbaar?"
-      subtitle="U kunt deze stap ook overslaan"
-      :center="true"
-    />
+    <Title message="Heeft u informatie beschikbaar?" subtitle="U kunt deze stap ook overslaan" :center="true" />
 
     <form id="upload-area" class="UploadArea dropzone dz-clickable">
       <label for="file-upload">
         <div class="dz-message align-self-center">
-          <input
-            type="file"
-            id="file-upload"
-            style="display: none"
-            @change="handleFileChange"
-            multiple
-            accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv,.pdf,.txt"
-          />
+          <input type="file" id="file-upload" style="display: none" @change="handleFileChange" multiple
+            accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv,.pdf,.txt" />
 
           <div v-if="errorMessage" class="error-message">
             {{ errorMessage }}
@@ -137,11 +127,8 @@ const handleFileChange = async function handleFileChange(e: Event) {
           <template v-if="loadedFiles.length !== 0">
             <div style="display: flex; justify-content: center; column-gap: 15px; flex-wrap: wrap">
               <div v-for="(file, index) in loadedFiles" :key="`file_${index}`">
-                <img
-                  alt="uploaded"
-                  src="https://images.freeimages.com/fic/images/icons/2813/flat_jewels/512/file.png"
-                  width="150"
-                />
+                <img alt="uploaded" src="https://images.freeimages.com/fic/images/icons/2813/flat_jewels/512/file.png"
+                  width="150" />
                 <p>{{ file.name }}</p>
               </div>
             </div>

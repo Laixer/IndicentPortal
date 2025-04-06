@@ -83,24 +83,15 @@ watch(
 
 <template>
   <div class="EnvironmentDamageCharacteristics">
-    <Title
-      message="Herkent u minstens één van de volgende punten in de omgeving van de woning?"
-      subtitle="Meerdere opties mogelijk"
-      :center="true"
-    />
+    <Title message="Herkent u minstens één van de volgende punten in de omgeving van de woning?"
+      subtitle="Meerdere opties mogelijk" :center="true" />
 
     <form class="Form" @submit.prevent="void">
       <div class="CheckboxInput">
         <div class="CheckboxInput__Wrapper">
           <div v-for="option in options" :key="option.id" class="CheckboxInput__Field">
-            <input
-              type="checkbox"
-              :id="`option_${option.id}`"
-              :name="`checkbox_${option.id}`"
-              v-model="LocalModel[option.id]"
-              true-value="yes"
-              false-value="no"
-            />
+            <input type="checkbox" :id="`option_${option.id}`" :name="`checkbox_${option.id}`"
+              v-model="LocalModel[option.id]" true-value="yes" false-value="no" />
 
             <label :for="`option_${option.id}`" class="CheckboxInput__Label">
               <span class="CheckboxInput__Checkbox">

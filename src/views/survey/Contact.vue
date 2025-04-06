@@ -50,23 +50,14 @@ onBeforeMount(() => {
 
 <template>
   <div class="Profile__Wrapper">
-    <Title
-      message="Uw gegevens"
-      subtitle="Uw persoonsgegevens worden vertrouwelijk behandeld en niet gedeeld met derden."
-      :center="true"
-    />
+    <Title message="Uw gegevens"
+      subtitle="Uw persoonsgegevens worden vertrouwelijk behandeld en niet gedeeld met derden." :center="true" />
 
     <div class="FormField">
       <label for="naam" class="FormField__Label">Naam (vereist)</label>
       <div class="FormField__Wrapper">
-        <input
-          id="naam"
-          autocomplete="given-name"
-          class="FormField__Field"
-          @focus="handleValidateModel"
-          @blur="handleValidateModel"
-          v-model="Model.contact_name"
-        />
+        <input id="naam" autocomplete="given-name" class="FormField__Field" @focus="handleValidateModel"
+          @blur="handleValidateModel" v-model="Model.contact_name" />
       </div>
     </div>
 
@@ -74,29 +65,16 @@ onBeforeMount(() => {
       <label for="email" class="FormField__Label">E-mail (vereist)</label>
       <div v-if="showEmailError" class="FormField__Error">Voer een geldig e-mail adres in</div>
       <div class="FormField__Wrapper">
-        <input
-          id="email"
-          autocomplete="email"
-          class="FormField__Field"
-          @focus="handleValidateModel"
-          @blur="handleValidateModel"
-          v-model="Model.contact"
-        />
+        <input id="email" autocomplete="email" class="FormField__Field" @focus="handleValidateModel"
+          @blur="handleValidateModel" v-model="Model.contact" />
       </div>
     </div>
 
     <div class="FormField">
       <label for="telefoon" class="FormField__Label">Telefoonnummer (optioneel)</label>
       <div class="FormField__Wrapper">
-        <input
-          id="telefoon"
-          placeholder="+31"
-          autocomplete="given-name"
-          class="FormField__Field"
-          @focus="handleValidateModel"
-          @blur="handleValidateModel"
-          v-model="Model.contact_phone_number"
-        />
+        <input id="telefoon" placeholder="+31" autocomplete="given-name" class="FormField__Field"
+          @focus="handleValidateModel" @blur="handleValidateModel" v-model="Model.contact_phone_number" />
       </div>
     </div>
   </div>
@@ -110,6 +88,7 @@ onBeforeMount(() => {
   width: 100%;
   margin: 0 auto;
 }
+
 .FormField__Error {
   color: rgb(211, 0, 0);
   margin-bottom: 2px;

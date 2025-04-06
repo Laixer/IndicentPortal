@@ -45,13 +45,8 @@ const options = [
     <div class="RadioImageInput">
       <div class="RadioImageInput__Wrapper">
         <div v-for="option in options" :key="option.id" class="RadioImageInput__Field">
-          <input
-            type="radio"
-            :id="`option_${option.id}`"
-            v-model="Model.foundation_type"
-            name="type"
-            :value="option.id"
-          />
+          <input type="radio" :id="`option_${option.id}`" v-model="Model.foundation_type" name="type"
+            :value="option.id" />
           <label :for="`option_${option.id}`" class="RadioImageInput__Label">
             <div class="SvgIcon svg-container">
               <component :is="option.svg" />

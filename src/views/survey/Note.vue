@@ -10,21 +10,13 @@ const { Model } = storeToRefs(useSurveyStore())
 
 <template>
   <div class="Note__Wrapper">
-    <Title
-      message="Aanvullende informatie of beschrijving"
+    <Title message="Aanvullende informatie of beschrijving"
       subtitle="Heeft u aanvullende informatie over het pand? Meld deze in het onderstaande tekstveld."
-      :center="true"
-    />
+      :center="true" />
 
     <div class="FormField">
       <div class="FormField__Wrapper">
-        <textarea
-          id="toelichting"
-          autocomplete="off"
-          rows="25"
-          class="FormField__Field"
-          v-model="Model.note"
-        />
+        <textarea id="toelichting" autocomplete="off" rows="25" class="FormField__Field" v-model="Model.note" />
       </div>
     </div>
   </div>

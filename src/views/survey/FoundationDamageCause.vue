@@ -68,13 +68,8 @@ const options = [
       <div class="RadioTextInput">
         <div class="RadioTextInput__Wrapper">
           <div v-for="option in options" class="RadioTextInput__Field">
-            <input
-              type="radio"
-              name="cause"
-              v-model="Model.foundation_damage_cause"
-              :id="`option_${option.id}`"
-              :value="option.id"
-            />
+            <input type="radio" name="cause" v-model="Model.foundation_damage_cause" :id="`option_${option.id}`"
+              :value="option.id" />
             <label :for="`option_${option.id}`" class="RadioTextInput__Label">
               <span>{{ option.label }}</span>
             </label>
