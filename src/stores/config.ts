@@ -105,12 +105,22 @@ function useConfig() {
       //  - unkonwn vendor (404)
       //  - incomplete config
       //  - mismatch in vendor slug ?
+      const defaultAppId = import.meta.env.VITE_DEFAULT_APP_ID || 'instance'
       let appConfig = null
       try {
         appConfig = await getAppConfig(slug)
       } catch (err) {
-        console.error('Error fetching app config:', err);
-        loadingError.value = true;
+        console.error('Error fetching app config for slug:', slug, err);
+
+        // Retry with the default app ID from environment or 'instance' as fallback
+        try {
+          console.log(`Attempting fallback to "${defaultAppId}" slug`);
+          appConfig = await getAppConfig(defaultAppId)
+        } catch (retryErr) {
+          console.error(`Error fetching app config with fallback slug "${defaultAppId}":`, retryErr);
+          loadingError.value = true;
+          return;
+        }
       }
 
       if (!appConfig || !appConfig.data) {
