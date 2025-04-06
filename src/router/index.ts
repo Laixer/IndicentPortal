@@ -98,4 +98,36 @@ const router = createRouter({
   ]
 })
 
+// Save route state to sessionStorage when navigating
+router.afterEach((to) => {
+  sessionStorage.setItem('currentRoute', JSON.stringify({
+    path: to.path,
+    params: to.params,
+    query: to.query,
+    hash: to.hash,
+  }))
+})
+
+// Restore route state from sessionStorage on application load
+const savedRoute = sessionStorage.getItem('currentRoute')
+if (savedRoute) {
+  try {
+    const routeData = JSON.parse(savedRoute)
+    // Only redirect if the saved route is different from the current one
+    if (window.location.pathname !== routeData.path) {
+      router.push({
+        path: routeData.path,
+        params: routeData.params,
+        query: routeData.query,
+        hash: routeData.hash
+      }).catch(err => {
+        console.error('Failed to restore route from session storage:', err)
+      })
+    }
+  } catch (e) {
+    console.error('Error parsing saved route:', e)
+    sessionStorage.removeItem('currentRoute')
+  }
+}
+
 export default router
