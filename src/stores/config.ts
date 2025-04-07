@@ -1,7 +1,6 @@
 import { computed, ref, watch, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
-import { useSurveyStore } from './survey'
 import { getAppConfig } from '@/services/fundermaps/endpoints/app'
 import type { ISurveyConfig } from '@/services/fundermaps/interfaces/survey/ISurveyConfig'
 
@@ -55,11 +54,9 @@ const knownSurveyPageSlug = [
   'contact'
 ]
 
-function useConfig() {
+const useConfig = () => {
   const route = useRoute()
   const router = useRouter()
-
-  // const { clearSurveyData } = useSurveyStore()
 
   /**
    * Extract vendor slug from subdomain of fundermaps.com
@@ -97,8 +94,6 @@ function useConfig() {
           vendor: vendorSlug.value
         }
       })
-
-      // clearSurveyData()
 
       // TODO: Handle errors
       //  - failed api call (after retry)
@@ -181,9 +176,10 @@ function useConfig() {
   watch(
     route,
     (to) => {
+      console.log('Route changed:', to)
+
       // First check if we can extract the vendor slug from the subdomain
       const subdomainSlug = extractVendorSlugFromSubdomain()
-
       if (subdomainSlug) {
         // Prioritize subdomain slug if we're on a fundermaps.com subdomain
         if (subdomainSlug !== vendorSlug.value) {
