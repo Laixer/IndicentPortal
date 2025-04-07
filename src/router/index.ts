@@ -110,11 +110,13 @@ router.afterEach((to) => {
 // Restore route state from sessionStorage on application load
 const savedRoute = sessionStorage.getItem('currentRoute')
 if (savedRoute) {
+  console.log('1. Restoring route from session storage:', savedRoute)
   try {
     const routeData = JSON.parse(savedRoute)
+    console.log('Parsed route data:', routeData)
     // Only redirect if the saved route is different from the current one
     if (window.location.pathname !== routeData.path) {
-      console.log('Restoring route from session storage:', routeData)
+      console.log('2. Restoring route from session storage:', routeData)
       router.push({
         path: routeData.path,
         params: routeData.params,
