@@ -115,17 +115,17 @@ if (savedRoute) {
     const routeData = JSON.parse(savedRoute)
     console.log('Parsed route data:', routeData)
     // Only redirect if the saved route is different from the current one
-    if (window.location.pathname !== routeData.path) {
-      console.log('2. Restoring route from session storage:', routeData)
-      router.push({
-        path: routeData.path,
-        params: routeData.params,
-        query: routeData.query,
-        hash: routeData.hash
-      }).catch(err => {
-        console.error('Failed to restore route from session storage:', err)
-      })
-    }
+    // if (window.location.pathname !== routeData.path) {
+    console.log('2. Restoring route from session storage:', routeData)
+    router.push({
+      path: routeData.path,
+      params: routeData.params,
+      query: routeData.query,
+      hash: routeData.hash
+    }).catch(err => {
+      console.error('Failed to restore route from session storage:', err)
+    })
+    // }
   } catch (e) {
     console.error('Error parsing saved route:', e)
     sessionStorage.removeItem('currentRoute')
