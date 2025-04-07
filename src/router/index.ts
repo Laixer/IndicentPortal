@@ -98,7 +98,6 @@ const router = createRouter({
   ]
 })
 
-// Save route state to sessionStorage when navigating
 router.afterEach((to) => {
   sessionStorage.setItem('currentRoute', JSON.stringify({
     path: to.path,
@@ -115,6 +114,7 @@ if (savedRoute) {
     const routeData = JSON.parse(savedRoute)
     // Only redirect if the saved route is different from the current one
     if (window.location.pathname !== routeData.path) {
+      console.log('Restoring route from session storage:', routeData)
       router.push({
         path: routeData.path,
         params: routeData.params,
