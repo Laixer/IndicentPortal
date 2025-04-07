@@ -11,6 +11,7 @@ const router = createRouter({
       beforeEnter(to) {
         console.log('1. Before enter route:', to)
         if (!to.params.vendor) {
+          console.log('2. No vendor in params, redirecting to default vendor')
           return {
             path: to.path,
             name: to.name,
@@ -110,10 +111,10 @@ router.afterEach((to) => {
 
 const savedRoute = sessionStorage.getItem('currentRoute')
 if (savedRoute) {
-  console.log('1. Restoring route from session storage:', savedRoute)
+  // console.log('1. Restoring route from session storage:', savedRoute)
   try {
     const routeData = JSON.parse(savedRoute)
-    console.log('Parsed route data:', routeData)
+    // console.log('Parsed route data:', routeData)
 
     console.log('2. Restoring route from session storage:', routeData)
     router.push({
