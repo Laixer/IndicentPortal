@@ -71,7 +71,7 @@ export const useSurveyStore = defineStore('Survey', () => {
    * Store the survey data as a new Incident record
    */
   const saveToDatabase = async () => {
-    const { surveyPageSlugs } = storeToRefs(useConfigStore())
+    const { clientId, surveyPageSlugs } = storeToRefs(useConfigStore())
 
     try {
       saving.value = true
@@ -84,6 +84,8 @@ export const useSurveyStore = defineStore('Survey', () => {
           return 'contact'
         }
       }
+
+      // Model.value.client_id = clientId.value
 
       await saveIncidentData(Model.value)
 
