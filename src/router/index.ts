@@ -9,6 +9,7 @@ const router = createRouter({
       path: '/:vendor?',
       name: 'start',
       beforeEnter(to) {
+        console.log('1. Before enter route:', to)
         if (!to.params.vendor) {
           return {
             path: to.path,
@@ -107,15 +108,13 @@ router.afterEach((to) => {
   }))
 })
 
-// Restore route state from sessionStorage on application load
 const savedRoute = sessionStorage.getItem('currentRoute')
 if (savedRoute) {
   console.log('1. Restoring route from session storage:', savedRoute)
   try {
     const routeData = JSON.parse(savedRoute)
     console.log('Parsed route data:', routeData)
-    // Only redirect if the saved route is different from the current one
-    // if (window.location.pathname !== routeData.path) {
+
     console.log('2. Restoring route from session storage:', routeData)
     router.push({
       path: routeData.path,
@@ -125,7 +124,6 @@ if (savedRoute) {
     }).catch(err => {
       console.error('Failed to restore route from session storage:', err)
     })
-    // }
   } catch (e) {
     console.error('Error parsing saved route:', e)
     sessionStorage.removeItem('currentRoute')
