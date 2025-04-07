@@ -8,6 +8,9 @@ import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
 
 const cleanModelState: ISurveyModel = {
+  // Client
+  client_id: null, // number
+
   // Address
   building: '', // (use this param format)
 
@@ -85,7 +88,7 @@ export const useSurveyStore = defineStore('Survey', () => {
         }
       }
 
-      // Model.value.client_id = clientId.value
+      Model.value.client_id = clientId.value
 
       await saveIncidentData(Model.value)
 

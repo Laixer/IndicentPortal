@@ -6,6 +6,9 @@ import type {
 } from '@/enums'
 
 export interface ISurveyModel {
+  // Client
+  client_id: number | null // number
+
   // Address
   building: string | undefined // use this key format for consistency throughout Fundermaps
 
