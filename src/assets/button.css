@@ -28,13 +28,13 @@
 }
 
 .Button:hover {
-  background: var(--fm-primary-color, #2657ff);
-  filter: brightness(75%);
+  background: var(--fm-primary-hover-color, #1c3fbf);
+  color: white;
 }
 
 .Button:active {
-  background: var(--fm-primary-color, #2657ff);
-  filter: brightness(200%);
+  background: var(--fm-primary-active-color, #4070ff);
+  color: white;
 }
 
 .Button[disabled] {
@@ -51,15 +51,14 @@
 }
 
 .Button--line:hover {
-  background: var(--fm-primary-color, #2657ff);
-  filter: brightness(200%);
+  background: var(--fm-primary-hover-color, #1c3fbf);
   color: white;
   border: none;
   padding: 15px 27px 16px;
 }
 
 .Button--line:active {
-  background: #9eb2ff;
+  background: var(--fm-primary-active-color, #4070ff);
   color: white;
   border: none;
   padding: 15px 27px 16px;
@@ -75,22 +74,27 @@
 .Button--ghost {
   background: transparent;
   color: var(--fm-primary-color, #2657ff);
-  filter: grayscale(80%);
   opacity: 0.8;
 }
 
 .Button--ghost:hover {
   background: transparent;
-  filter: none;
   opacity: 1;
   color: var(--fm-primary-color, #2657ff);
 }
 
 .Button--ghost:active {
   background: transparent;
-  filter: none;
   opacity: 1;
-  color: var(--fm-primary-color, #2657ff);
+  color: var(--fm-primary-hover-color, #1c3fbf);
+}
+
+.Button--submit:hover {
+  background: #00a64a; /* Darker green instead of filter */
+}
+
+.Button--submit:active {
+  background: #00e66a; /* Lighter green instead of filter */
 }
 
 .Button--wide {
