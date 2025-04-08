@@ -22,7 +22,7 @@ const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationSt
             <div v-if="loadingError">
               <h2>Het laden van de vragenlijst is mislukt</h2>
             </div>
-            <h2 v-else-if="loading" class="Header__Loading">Bezit met laden...</h2>
+            <h2 v-else-if="loading" class="Header__Loading">Bezig met laden...</h2>
             <img v-else-if="vendorLogoPath" class="Header__Logo" :src="vendorLogoPath" alt="Logo" />
           </Transition>
         </div>
