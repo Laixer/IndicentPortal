@@ -34,11 +34,15 @@ provide('loaded', readonly(loaded))
 const {
   accessToken = import.meta.env.VITE_MAPBOX_TOKEN,
   mapStyle = import.meta.env.VITE_MAPBOX_STYLE,
-  options = {}
+  options = {},
+  initialZoom = 9,
+  initialCenter = [0, 0]
 } = defineProps<{
   accessToken?: string
   mapStyle?: string
   options?: object
+  initialZoom?: number
+  initialCenter?: [number, number]
 }>()
 
 const emit = defineEmits<{
@@ -57,17 +61,23 @@ const loadMapbox = function () {
 
   map = new mapboxSDK.Map(
     Object.assign(
+      {
+        center: initialCenter,
+        zoom: initialZoom
+      },
       options,
       {
         container: mapcontainer.value,
-        preserveDrawingBuffer: true // Enables export to png
+        preserveDrawingBuffer: true,
+        attributionControl: false,
       },
       // Do not override style from options with an empty string
       mapStyle && mapStyle !== '' ? { style: mapStyle } : {}
     )
   )
 
-  // provide('map', map)
+  // Expose map instance to parent components via provide/inject
+  provide('map', readonly(map))
 
   map.on('load', () => {
     loaded.value = true
@@ -112,5 +122,9 @@ onUnmounted(() => {
 .mapboxgl-map {
   width: 100% !important;
   height: 100% !important;
+}
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
 }
 </style>
