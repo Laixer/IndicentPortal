@@ -76,7 +76,7 @@ const validateFiles = (files: FileList, currentCount: number): ValidationResult 
   }
 }
 
-const uploadFiles = async function uploadFile(files: FileList) {
+const uploadFiles = async (files: FileList) => {
   try {
     const validationResult = validateFiles(files, loadedFiles.value.length)
 
