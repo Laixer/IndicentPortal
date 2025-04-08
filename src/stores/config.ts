@@ -54,7 +54,7 @@ export const useConfigStore = defineStore('vendorConfig', () => {
     loadingError: false,
     errorMessage: null,
     vendorSlug: undefined,
-    clientId: 10,
+    clientId: 0,
     branding: {
       vendorName: 'Fundermaps',
       vendorLogoPath: '/img/logo.png',
@@ -142,7 +142,7 @@ export const useConfigStore = defineStore('vendorConfig', () => {
       loadingError: false,
       errorMessage: null,
       vendorSlug: undefined,
-      clientId: 10,
+      clientId: 0,
       branding: {
         vendorName: 'Fundermaps',
         vendorLogoPath: '/img/logo.png',
