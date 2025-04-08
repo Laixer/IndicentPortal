@@ -77,6 +77,10 @@ const router = createRouter({
       name: 'contact',
       component: () => import('@/views/survey/Contact.vue'),
       meta: { survey: true }
+    },
+    {
+      path: '/:catchAll(.*)',
+      redirect: { name: 'home' }
     }
   ]
 })
