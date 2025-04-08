@@ -6,6 +6,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { useConfigStore } from './config'
 import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
+import type { LocationQuery } from 'vue-router'
 
 const cleanModelState: ISurveyModel = {
   // Client
@@ -80,17 +81,24 @@ export const useSurveyStore = defineStore('Survey', () => {
       saving.value = true
 
       // TODO: Reminder: This is ad-hoc validation, because it is the only validation
-      if (surveyPageSlugs.value.includes('contact')) {
-        if (Model.value.contact_name === '' || Model.value.contact === '') {
-          saving.value = false
-          // TODO: Refactor redirect to contact page.
-          return 'contact'
-        }
-      }
+      // if (surveyPageSlugs.value.includes('contact')) {
+      //   if (Model.value.contact_name === '' || Model.value.contact === '') {
+      //     saving.value = false
+      //     // TODO: Refactor redirect to contact page.
+      //     return 'contact'
+      //   }
+      // }
 
       Model.value.client_id = clientId.value
 
+      if (!validateSurveyModel()) {
+        console.error('Survey model validation failed')
+        saving.value = false
+        return
+      }
+
       await saveIncidentData(Model.value)
+      // console.log('Saving incident data:', JSON.stringify(Model.value)) // Debugging line
 
       // Reset the survey data
       clearSurveyData()
@@ -101,9 +109,25 @@ export const useSurveyStore = defineStore('Survey', () => {
     }
   }
 
+  const validateSurveyModel = () => {
+    return Model.value.building !== ''
+      && Model.value.contact !== ''
+      && Model.value.contact_name !== ''
+  }
+
+  const populateFromParams = (params: LocationQuery) => {
+    // TODO: Validate params
+    if (params.building && typeof params.building === 'string') {
+      // console.log('Populating building from params:', params.building)
+      Model.value.building = params.building;
+    }
+  }
+
   return {
     Model,
     clearSurveyData,
-    saveToDatabase
+    saveToDatabase,
+    validateSurveyModel,
+    populateFromParams,
   }
 }, { persist: { storage: sessionStorage } })

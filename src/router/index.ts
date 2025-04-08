@@ -1,134 +1,149 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { useConfigStore } from '@/stores/config'
+import { useSurveyStore } from '@/stores/survey'
+import { storeToRefs } from 'pinia'
+import HomeView from '@/views/HomeView.vue'
 import FinishView from '@/views/FinishView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
-      path: '/:vendor?',
-      name: 'start',
-      beforeEnter(to) {
-        console.log('1. Before enter route:', to)
-        if (!to.params.vendor) {
-          console.log('2. No vendor in params, redirecting to default vendor')
-          return {
-            path: to.path,
-            name: to.name,
-            params: {
-              ...to.params,
-              vendor: `${import.meta.env.VITE_DEFAULT_APP_ID || 'incident'}`
-            }
-          }
-        }
-
-        return true
-      },
-      children: [
-        {
-          path: '',
-          name: 'home',
-          component: HomeView
-        },
-        {
-          path: 'finish',
-          name: 'finish',
-          component: FinishView
-        },
-        {
-          path: 'address',
-          name: 'address',
-          component: () => import('@/views/survey/Address.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'feedback-characteristics',
-          name: 'feedback-characteristics',
-          component: () => import('@/views/survey/FeedbackCharacteristics.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'foundation-damage-cause',
-          name: 'foundation-damage-cause',
-          component: () => import('@/views/survey/FoundationDamageCause.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'foundation-damage-characteristics',
-          name: 'foundation-damage-characteristics',
-          component: () => import('@/views/survey/FoundationDamageCharacteristics.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'address-characteristics',
-          name: 'address-characteristics',
-          component: () => import('@/views/survey/AddressCharacteristics.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'foundation-type',
-          name: 'foundation-type',
-          component: () => import('@/views/survey/FoundationType.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'environment-damage-characteristics',
-          name: 'environment-damage-characteristics',
-          component: () => import('@/views/survey/EnvironmentDamageCharacteristics.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'upload',
-          name: 'upload',
-          component: () => import('@/views/survey/Upload.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'note',
-          name: 'note',
-          component: () => import('@/views/survey/Note.vue'),
-          meta: { survey: true }
-        },
-        {
-          path: 'contact',
-          name: 'contact',
-          component: () => import('@/views/survey/Contact.vue'),
-          meta: { survey: true }
-        }
-      ]
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
+    {
+      path: '/finish',
+      name: 'finish',
+      component: FinishView
+    },
+    {
+      path: '/address',
+      name: 'address',
+      component: () => import('@/views/survey/Address.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/feedback-characteristics',
+      name: 'feedback-characteristics',
+      component: () => import('@/views/survey/FeedbackCharacteristics.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/foundation-damage-cause',
+      name: 'foundation-damage-cause',
+      component: () => import('@/views/survey/FoundationDamageCause.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/foundation-damage-characteristics',
+      name: 'foundation-damage-characteristics',
+      component: () => import('@/views/survey/FoundationDamageCharacteristics.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/address-characteristics',
+      name: 'address-characteristics',
+      component: () => import('@/views/survey/AddressCharacteristics.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/foundation-type',
+      name: 'foundation-type',
+      component: () => import('@/views/survey/FoundationType.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/environment-damage-characteristics',
+      name: 'environment-damage-characteristics',
+      component: () => import('@/views/survey/EnvironmentDamageCharacteristics.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/upload',
+      name: 'upload',
+      component: () => import('@/views/survey/Upload.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/note',
+      name: 'note',
+      component: () => import('@/views/survey/Note.vue'),
+      meta: { survey: true }
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('@/views/survey/Contact.vue'),
+      meta: { survey: true }
     }
   ]
 })
 
-router.afterEach((to) => {
-  sessionStorage.setItem('currentRoute', JSON.stringify({
-    path: to.path,
-    params: to.params,
-    query: to.query,
-    hash: to.hash,
-  }))
-})
+// TODO: Move to some helper file
+const extractVendorSlugFromSubdomain = (): string | undefined => {
+  const hostname = window.location.hostname
 
-const savedRoute = sessionStorage.getItem('currentRoute')
-if (savedRoute) {
-  // console.log('1. Restoring route from session storage:', savedRoute)
-  try {
-    const routeData = JSON.parse(savedRoute)
-    // console.log('Parsed route data:', routeData)
-
-    console.log('2. Restoring route from session storage:', routeData)
-    router.push({
-      path: routeData.path,
-      params: routeData.params,
-      query: routeData.query,
-      hash: routeData.hash
-    }).catch(err => {
-      console.error('Failed to restore route from session storage:', err)
-    })
-  } catch (e) {
-    console.error('Error parsing saved route:', e)
-    sessionStorage.removeItem('currentRoute')
+  // Handle localhost for development
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    // For local development, check if there's a query param like ?vendor=acme
+    const urlParams = new URLSearchParams(window.location.search)
+    const vendorParam = urlParams.get('vendor')
+    if (vendorParam) return vendorParam.toLowerCase()
+    return undefined
   }
+
+  // Check if we're on a fundermaps.com subdomain
+  if (hostname.endsWith('.fundermaps.com') && hostname !== 'fundermaps.com') {
+    // Extract the subdomain (everything before the first dot)
+    const subdomain = hostname.split('.')[0]
+    return subdomain.toLowerCase()
+  }
+
+  return undefined
 }
+
+// TODO: Move to some helper file
+const determineVendorSlug = (): string => {
+  const vendorFromSubdomain = extractVendorSlugFromSubdomain()
+  if (vendorFromSubdomain) {
+    return vendorFromSubdomain
+  }
+  return import.meta.env.VITE_DEFAULT_APP_ID || 'incident'
+}
+
+router.beforeEach(async (to, from, next) => {
+  const configStore = useConfigStore()
+  const { clientId, vendorSlug } = storeToRefs(configStore)
+  const surveyStore = useSurveyStore()
+
+  try {
+    // Only load vendor config if not already set or if different
+    if (!vendorSlug.value) {
+      const vendor = determineVendorSlug()
+      // console.log('Loading config for vendor:', vendor)
+      await configStore.loadVendorConfig(vendor)
+    }
+
+    // Populate the survey model with URL parameters
+    if (from.name === undefined && to.query && Object.keys(to.query).length > 0) {
+      surveyStore.populateFromParams(to.query)
+    }
+
+    // Validate the survey model
+    if (from.name === undefined && to.meta.survey && !surveyStore.validateSurveyModel()) {
+      console.error('Survey model validation failed')
+      surveyStore.clearSurveyData()
+      return next({ name: 'home' })
+    }
+
+    // console.log('Client ID:', clientId.value)
+    next()
+  } catch (error) {
+    console.error('Failed to load vendor configuration:', error)
+    next(false) // Cancel navigation
+  }
+})
 
 export default router
