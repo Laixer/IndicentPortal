@@ -89,7 +89,9 @@ onMounted(() => {
  */
 onUnmounted(() => {
   nextTick(() => {
-    map.remove()
+    if (map) {
+      map.remove()
+    }
   })
 })
 </script>
