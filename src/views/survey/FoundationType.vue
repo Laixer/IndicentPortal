@@ -12,7 +12,7 @@ import SvgIconTypeOnbekend from '@/components/icons/SvgIconTypeOnbekend.vue'
 import { FoundationType } from '@/enums.js'
 import { useSurveyStore } from '@/stores/survey.js'
 
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 
 const options = [
   {
@@ -45,7 +45,7 @@ const options = [
     <div class="RadioImageInput">
       <div class="RadioImageInput__Wrapper">
         <div v-for="option in options" :key="option.id" class="RadioImageInput__Field">
-          <input type="radio" :id="`option_${option.id}`" v-model="Model.foundation_type" name="type"
+          <input type="radio" :id="`option_${option.id}`" v-model="model.foundation_type" name="type"
             :value="option.id" />
           <label :for="`option_${option.id}`" class="RadioImageInput__Label">
             <div class="SvgIcon svg-container">

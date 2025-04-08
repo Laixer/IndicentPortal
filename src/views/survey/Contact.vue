@@ -9,7 +9,7 @@ import { useSurveyStore } from '@/stores/survey.js'
 
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 
 /**
  * Email validation according to browser standards
@@ -19,7 +19,7 @@ const mailRegex =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
 const inValidMail = function inValidMail() {
-  return Model.value.contact !== '' && !Model.value.contact.match(mailRegex)
+  return model.value.contact !== '' && !model.value.contact.match(mailRegex)
 }
 const showEmailError = ref(false)
 
@@ -30,10 +30,10 @@ const handleValidateModel = function () {
   showEmailError.value = inValidMail()
 
   if (
-    !Model.value.contact ||
-    Model.value.contact === '' ||
-    !Model.value.contact_name ||
-    Model.value.contact_name === '' ||
+    !model.value.contact ||
+    model.value.contact === '' ||
+    !model.value.contact_name ||
+    model.value.contact_name === '' ||
     showEmailError.value
   ) {
     disableNextButton()
@@ -57,7 +57,7 @@ onBeforeMount(() => {
       <label for="naam" class="FormField__Label">Naam (vereist)</label>
       <div class="FormField__Wrapper">
         <input id="naam" autocomplete="given-name" class="FormField__Field" @focus="handleValidateModel"
-          @blur="handleValidateModel" v-model="Model.contact_name" />
+          @blur="handleValidateModel" v-model="model.contact_name" />
       </div>
     </div>
 
@@ -66,7 +66,7 @@ onBeforeMount(() => {
       <div v-if="showEmailError" class="FormField__Error">Voer een geldig e-mail adres in</div>
       <div class="FormField__Wrapper">
         <input id="email" autocomplete="email" class="FormField__Field" @focus="handleValidateModel"
-          @blur="handleValidateModel" v-model="Model.contact" />
+          @blur="handleValidateModel" v-model="model.contact" />
       </div>
     </div>
 
@@ -74,7 +74,7 @@ onBeforeMount(() => {
       <label for="telefoon" class="FormField__Label">Telefoonnummer (optioneel)</label>
       <div class="FormField__Wrapper">
         <input id="telefoon" placeholder="+31" autocomplete="given-name" class="FormField__Field"
-          @focus="handleValidateModel" @blur="handleValidateModel" v-model="Model.contact_phone_number" />
+          @focus="handleValidateModel" @blur="handleValidateModel" v-model="model.contact_phone_number" />
       </div>
     </div>
   </div>

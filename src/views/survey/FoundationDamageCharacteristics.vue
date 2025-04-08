@@ -9,7 +9,7 @@ import { FoundationDamageCharacteristics } from '@/enums.js'
 import { useSurveyStore } from '@/stores/survey.js'
 import type { ILocalCheckboxGroupModel } from '@/interfaces.js'
 
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 
 const options = [
   {
@@ -47,7 +47,7 @@ const options = [
  */
 const LocalModel: Ref<ILocalCheckboxGroupModel> = ref(
   options.reduce((acc: ILocalCheckboxGroupModel, option) => {
-    acc[option.id] = Model.value.foundation_damage_characteristics.includes(option.id)
+    acc[option.id] = model.value.foundation_damage_characteristics.includes(option.id)
       ? 'yes'
       : 'no'
     return acc
@@ -56,7 +56,7 @@ const LocalModel: Ref<ILocalCheckboxGroupModel> = ref(
 watch(
   LocalModel,
   () => {
-    Model.value.foundation_damage_characteristics = Object.keys(LocalModel.value).filter(
+    model.value.foundation_damage_characteristics = Object.keys(LocalModel.value).filter(
       (id: string) => LocalModel.value[id] === 'yes'
     )
   },

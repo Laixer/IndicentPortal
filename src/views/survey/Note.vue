@@ -5,7 +5,7 @@ import Title from '@/components/Title.vue'
 
 import { useSurveyStore } from '@/stores/survey.js'
 
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const { Model } = storeToRefs(useSurveyStore())
 
     <div class="FormField">
       <div class="FormField__Wrapper">
-        <textarea id="toelichting" autocomplete="off" rows="25" class="FormField__Field" v-model="Model.note" />
+        <textarea id="toelichting" autocomplete="off" rows="25" class="FormField__Field" v-model="model.note" />
       </div>
     </div>
   </div>

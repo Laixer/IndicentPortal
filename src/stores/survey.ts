@@ -1,12 +1,15 @@
-/**
- * This store holds information on the survey answers to be sent to the API
- */
-import { ref, type Ref } from 'vue'
+import { reactive, toRefs } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useConfigStore } from './config'
 import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
 import type { LocationQuery } from 'vue-router'
+
+// Define interface for better type safety
+interface SurveyState {
+  saving: boolean
+  model: ISurveyModel
+}
 
 const cleanModelState: ISurveyModel = {
   // Client
@@ -44,87 +47,83 @@ const cleanModelState: ISurveyModel = {
   document_file: []
 }
 
-const saving: Ref<boolean> = ref(false)
+export const useSurveyStore = defineStore('survey', () => {
+  // State using reactive instead of ref for better destructuring
+  const state = reactive<SurveyState>({
+    saving: false,
+    model: JSON.parse(JSON.stringify(cleanModelState))
+  })
 
-/**
- * The survey data model, to be submitted to the API
- */
-const Model: Ref<ISurveyModel> = ref(JSON.parse(JSON.stringify(cleanModelState)))
+  /**
+   * Reset the survey data while preserving contact details
+   */
+  const clearSurveyData = () => {
+    const contactDetails = {
+      contact_name: state.model.contact_name,
+      contact: state.model.contact,
+      contact_phone_number: state.model.contact_phone_number
+    }
 
-/**
- * Reset the survey data while preserving contact details
- */
-const clearSurveyData = () => {
-  const contactDetails = {
-    contact_name: Model.value.contact_name,
-    contact: Model.value.contact,
-    contact_phone_number: Model.value.contact_phone_number
+    // Reset all data
+    state.model = JSON.parse(JSON.stringify(cleanModelState))
+
+    // Restore contact details
+    state.model.contact_name = contactDetails.contact_name
+    state.model.contact = contactDetails.contact
+    state.model.contact_phone_number = contactDetails.contact_phone_number
   }
 
-  // Reset all data
-  Model.value = JSON.parse(JSON.stringify(cleanModelState))
+  /**
+   * Validate the survey model to ensure required fields are filled
+   */
+  const validateSurveyModel = () => {
+    return state.model.building !== ''
+      && state.model.contact !== ''
+      && state.model.contact_name !== ''
+  }
 
-  // Restore contact details
-  Model.value.contact_name = contactDetails.contact_name
-  Model.value.contact = contactDetails.contact
-  Model.value.contact_phone_number = contactDetails.contact_phone_number
-}
-
-export const useSurveyStore = defineStore('Survey', () => {
   /**
    * Store the survey data as a new Incident record
    */
   const saveToDatabase = async () => {
-    const { clientId, surveyPageSlugs } = storeToRefs(useConfigStore())
+    const { clientId } = storeToRefs(useConfigStore())
 
     try {
-      saving.value = true
+      state.saving = true
 
-      // TODO: Reminder: This is ad-hoc validation, because it is the only validation
-      // if (surveyPageSlugs.value.includes('contact')) {
-      //   if (Model.value.contact_name === '' || Model.value.contact === '') {
-      //     saving.value = false
-      //     // TODO: Refactor redirect to contact page.
-      //     return 'contact'
-      //   }
-      // }
-
-      Model.value.client_id = clientId.value
+      state.model.client_id = clientId.value
 
       if (!validateSurveyModel()) {
         console.error('Survey model validation failed')
-        saving.value = false
+        state.saving = false
         return
       }
 
-      await saveIncidentData(Model.value)
-      // console.log('Saving incident data:', JSON.stringify(Model.value)) // Debugging line
+      await saveIncidentData(state.model)
 
       // Reset the survey data
       clearSurveyData()
     } catch (error) {
       console.error('Failed to save incident data:', error)
     } finally {
-      saving.value = false
+      state.saving = false
     }
   }
 
-  const validateSurveyModel = () => {
-    return Model.value.building !== ''
-      && Model.value.contact !== ''
-      && Model.value.contact_name !== ''
-  }
-
+  /**
+   * Populate the model from URL parameters
+   */
   const populateFromParams = (params: LocationQuery) => {
     // TODO: Validate params
     if (params.building && typeof params.building === 'string') {
-      // console.log('Populating building from params:', params.building)
-      Model.value.building = params.building;
+      state.model.building = params.building;
     }
   }
 
+  // Use toRefs to make all properties reactive while allowing destructuring
   return {
-    Model,
+    ...toRefs(state),
+    // Methods
     clearSurveyData,
     saveToDatabase,
     validateSurveyModel,

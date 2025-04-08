@@ -6,7 +6,7 @@ import Title from '@/components/Title.vue'
 import { FoundationDamageCause } from '@/enums.js'
 import { useSurveyStore } from '@/stores/survey.js'
 
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 
 const options = [
   {
@@ -68,7 +68,7 @@ const options = [
       <div class="RadioTextInput">
         <div class="RadioTextInput__Wrapper">
           <div v-for="option in options" class="RadioTextInput__Field">
-            <input type="radio" name="cause" v-model="Model.foundation_damage_cause" :id="`option_${option.id}`"
+            <input type="radio" name="cause" v-model="model.foundation_damage_cause" :id="`option_${option.id}`"
               :value="option.id" />
             <label :for="`option_${option.id}`" class="RadioTextInput__Label">
               <span>{{ option.label }}</span>

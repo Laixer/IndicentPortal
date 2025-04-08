@@ -9,7 +9,7 @@ import { uploadIncidentFiles } from '@/services/fundermaps/endpoints/incident.js
 import { useSurveyStore } from '@/stores/survey.js'
 import { useNavigationStore } from '@/stores/navigation.js'
 
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
 const loadedFiles: Ref<File[]> = ref([])
@@ -91,7 +91,7 @@ const uploadFiles = async (files: FileList) => {
 
     await uploadIncidentFiles(validationResult.validFiles as unknown as FileList).then((response) => {
       loadedFiles.value = loadedFiles.value.concat(Array.from(validationResult.validFiles))
-      Model.value.document_file = (Model.value.document_file || []).concat(response?.files || [])
+      model.value.document_file = (model.value.document_file || []).concat(response?.files || [])
     })
   } catch (error) {
     console.error('Error uploading files:', error)

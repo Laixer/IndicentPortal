@@ -132,11 +132,11 @@ router.beforeEach(async (to, from, next) => {
     }
 
     // Validate the survey model
-    if (from.name === undefined && to.meta.survey && !surveyStore.validateSurveyModel()) {
-      console.error('Survey model validation failed')
-      surveyStore.clearSurveyData()
-      return next({ name: 'home' })
-    }
+    // if (from.name === undefined && to.meta.survey && !surveyStore.validateSurveyModel()) {
+    //   console.error('Survey model validation failed')
+    //   surveyStore.clearSurveyData()
+    //   return next({ name: 'home' })
+    // }
 
     // console.log('Client ID:', clientId.value)
     next()

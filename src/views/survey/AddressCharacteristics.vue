@@ -16,15 +16,15 @@ import { useSurveyStore } from '@/stores/survey.js'
 import { useNavigationStore } from '@/stores/navigation.js'
 
 const { disableNextButton, enableNextButton } = useNavigationStore()
-const { Model } = storeToRefs(useSurveyStore())
+const { model } = storeToRefs(useSurveyStore())
 
 watch(
-  () => Model.value,
+  () => model.value,
   () => {
     if (
-      Model.value.chained_building === null ||
-      Model.value.owner === null ||
-      Model.value.neighbor_recovery === null
+      model.value.chained_building === null ||
+      model.value.owner === null ||
+      model.value.neighbor_recovery === null
     ) {
       disableNextButton()
     } else {
@@ -44,7 +44,7 @@ watch(
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
             <div class="RadioImageInput__Field">
-              <input type="radio" id="vrijstaand 0" v-model="Model.chained_building" name="vrijstaand" :value="false" />
+              <input type="radio" id="vrijstaand 0" v-model="model.chained_building" name="vrijstaand" :value="false" />
               <label for="vrijstaand 0" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconVrijstaandVrijstaand />
@@ -56,7 +56,7 @@ watch(
               </label>
             </div>
             <div class="RadioImageInput__Field">
-              <input type="radio" id="vrijstaand 1" v-model="Model.chained_building" name="vrijstaand" :value="true" />
+              <input type="radio" id="vrijstaand 1" v-model="model.chained_building" name="vrijstaand" :value="true" />
               <label for="vrijstaand 1" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconVrijstaandBouwblok />
@@ -77,7 +77,7 @@ watch(
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
             <div class="RadioImageInput__Field">
-              <input type="radio" id="eigendom 0" v-model="Model.owner" name="eigendom" :value="true" />
+              <input type="radio" id="eigendom 0" v-model="model.owner" name="eigendom" :value="true" />
               <label for="eigendom 0" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconEigendomEigenaar />
@@ -89,7 +89,7 @@ watch(
               </label>
             </div>
             <div class="RadioImageInput__Field">
-              <input type="radio" id="eigendom 1" v-model="Model.owner" name="eigendom" :value="false" />
+              <input type="radio" id="eigendom 1" v-model="model.owner" name="eigendom" :value="false" />
               <label for="eigendom 1" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconEigendomHuurder />
@@ -110,7 +110,7 @@ watch(
         <div class="RadioImageInput">
           <div class="RadioImageInput__Wrapper">
             <div class="RadioImageInput__Field">
-              <input type="radio" id="buren 0" v-model="Model.neighbor_recovery" name="buren" :value="true" />
+              <input type="radio" id="buren 0" v-model="model.neighbor_recovery" name="buren" :value="true" />
               <label for="buren 0" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <SvgIconBurenJa />
@@ -122,7 +122,7 @@ watch(
               </label>
             </div>
             <div class="RadioImageInput__Field">
-              <input type="radio" id="buren 1" v-model="Model.neighbor_recovery" name="buren" :value="false" />
+              <input type="radio" id="buren 1" v-model="model.neighbor_recovery" name="buren" :value="false" />
               <label for="buren 1" class="RadioImageInput__Label">
                 <div class="SvgIcon svg-container">
                   <BurenNee />
