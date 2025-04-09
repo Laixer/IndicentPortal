@@ -112,23 +112,37 @@ export const useConfigStore = defineStore('vendorConfig', () => {
       // Update branding information if available
       if (surveyConfig.branding) {
         const { branding } = surveyConfig
-        
+
         // Use optional chaining and nullish coalescing for cleaner code
         state.branding.vendorName = branding.vendor_name ?? state.branding.vendorName
         state.branding.vendorLogoPath = branding.vendor_logo_path ?? state.branding.vendorLogoPath
         state.branding.vendorPicturePath = branding.vendor_picture_path ?? state.branding.vendorPicturePath
         state.branding.primaryColor = branding.primary_color ?? state.branding.primaryColor
         state.branding.secondaryColor = branding.secondary_color ?? state.branding.secondaryColor
-        
+
         if (branding.intro_text && branding.intro_text.trim().length !== 0) {
           state.branding.introTextRaw = branding.intro_text
         }
       }
 
+      // Check if remote config contains required pages (address and contact)
+      const availablePages = Array.isArray(surveyConfig.pages) ? surveyConfig.pages : []
+      const hasAddressPage = availablePages.includes('address')
+      const hasContactPage = availablePages.includes('contact')
+
+      if (!hasAddressPage || !hasContactPage) {
+        throw new Error(
+          `Configuration is missing required pages: ${[
+            !hasAddressPage ? 'address' : '',
+            !hasContactPage ? 'contact' : ''
+          ].filter(Boolean).join(', ')}`
+        )
+      }
+
       // Filter survey page slugs against the whitelist
-      state.surveyPageSlugs = Array.isArray(surveyConfig.pages)
-        ? surveyConfig.pages.filter(page => KNOWN_SURVEY_PAGE_SLUGS.includes(page as any))
-        : []
+      state.surveyPageSlugs = availablePages.filter(page =>
+        KNOWN_SURVEY_PAGE_SLUGS.includes(page as any)
+      )
 
       state.loading = false
       return true
