@@ -49,6 +49,19 @@ const getCleanModelState = (): ISurveyModel => ({
   document_file: []
 })
 
+/**
+ * Validates the building identifier
+ * @param {string} building - The building identifier to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+const validateBuilding = (building: string): boolean => {
+  return Boolean(
+    building &&
+    building.trim().length > 0 &&
+    building.trim().startsWith('NL.IMBAG.')
+  )
+}
+
 export const useSurveyStore = defineStore('survey', () => {
   // State using reactive instead of ref for better destructuring
   const state = reactive<SurveyState>({
@@ -138,10 +151,11 @@ export const useSurveyStore = defineStore('survey', () => {
    * @param {LocationQuery} params - URL query parameters
    */
   const populateFromParams = (params: LocationQuery): void => {
-    // Only handle the building parameter for now
-    // Add more parameter handling as needed
     if (params.building && typeof params.building === 'string') {
-      state.model.building = params.building.trim();
+      const building = params.building.trim();
+      if (validateBuilding(building)) {
+        state.model.building = building;
+      }
     }
 
     // Additional parameters could be handled here
