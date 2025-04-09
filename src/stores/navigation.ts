@@ -8,27 +8,28 @@ import { defineStore, storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { useConfigStore } from './config'
 
-/**
- * Nav UI state set through route watcher
- */
-const showPrev = ref(false)
-const showNext = ref(false)
-const isProgressVisible = ref(false)
-const isHomePage = ref(false)
-const isFinishPage = ref(false)
-const isLastSurveyPage = ref(false)
+export const useNavigationStore = defineStore('navigation', () => {
+  /**
+   * Nav UI state set through route watcher
+   */
+  const showPrev = ref(false)
+  const showNext = ref(false)
+  const isProgressVisible = ref(false)
+  const isHomePage = ref(false)
+  const isFinishPage = ref(false)
+  const isLastSurveyPage = ref(false)
 
-// Nav UI state set on survey page
-const isNextDisabled = ref(false)
+  // Nav UI state set on survey page
+  const isNextDisabled = ref(false)
 
-const disableNextButton = () => {
-  isNextDisabled.value = true
-}
-const enableNextButton = () => {
-  isNextDisabled.value = false
-}
+  const disableNextButton = () => {
+    isNextDisabled.value = true
+  }
 
-const useNavigation = () => {
+  const enableNextButton = () => {
+    isNextDisabled.value = false
+  }
+
   const route = useRoute()
   const { surveyPageSlugs } = storeToRefs(useConfigStore())
 
@@ -43,7 +44,7 @@ const useNavigation = () => {
    * The route & set of survey pages determines several UI states
    */
   watch(
-    route,
+    () => route,
     (to) => {
       // Avoid unnamed routes
       if (typeof to.name !== 'string') {
@@ -74,10 +75,14 @@ const useNavigation = () => {
 
   /**
    * State of the progress navigation,
-   *  determined by the current route name & known pages
+   * determined by the current route name & known pages
    */
   const surveyNavigationState = computed(() => {
-    let currentIndex = 9999
+    if (!surveyPageSlugs.value.length) {
+      return []
+    }
+
+    let currentIndex = -1
 
     return surveyPageSlugs.value.map((slug, index) => {
       // update the current index when arriving at the current page
@@ -97,34 +102,41 @@ const useNavigation = () => {
 
   /**
    * Return the slug of the next survey page.
-   *  If not currently on a survey page, return the first
-   *  If on the last page, return null
-   *  If there are no known pages, return null
+   * If not currently on a survey page, return the first
+   * If on the last page, return null
+   * If there are no known pages, return null
    */
   const getNextSurveyPageSlug = (): string | null => {
+    if (!surveyNavigationState.value.length) {
+      return null
+    }
+
     const current = surveyNavigationState.value.findIndex((state) => state.current)
     if (current !== -1) {
       return surveyNavigationState.value[current + 1]?.slug || null
     }
 
     // Get the slug of the first page if none are marked as current
-    return surveyNavigationState.value?.[0].slug || null
+    return surveyNavigationState.value[0]?.slug || null
   }
 
   /**
    * Return the slug of the previous survey page.
-   *  If not currently on a survey page, return the last
-   *  If on the first page, return null
-   *  If there are no known pages, return null
+   * If not currently on a survey page, return null
+   * If on the first page, return null
+   * If there are no known pages, return null
    */
   const getPreviousSurveyPageSlug = (): string | null => {
-    const current = surveyNavigationState.value.findIndex((state) => state.current)
-    if (current !== -1) {
-      return surveyNavigationState.value[current - 1]?.slug || null
+    if (!surveyNavigationState.value.length) {
+      return null
     }
 
-    // Get the slug of the last page if none are marked as current
-    return surveyNavigationState.value?.[surveyNavigationState.value.length - 1].slug || null
+    const current = surveyNavigationState.value.findIndex((state) => state.current)
+    if (current > 0) {
+      return surveyNavigationState.value[current - 1].slug
+    }
+
+    return null
   }
 
   return {
@@ -146,6 +158,4 @@ const useNavigation = () => {
     disableNextButton,
     enableNextButton
   }
-}
-
-export const useNavigationStore = defineStore('Navigation', useNavigation)
+})

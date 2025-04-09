@@ -5,6 +5,41 @@ import { storeToRefs } from 'pinia'
 import HomeView from '@/views/HomeView.vue'
 import FinishView from '@/views/FinishView.vue'
 
+// Extract vendor helpers to utilities
+/**
+ * Extract vendor slug from subdomain
+ * @returns {string|undefined} The vendor slug from subdomain, or undefined if not found
+ */
+export const extractVendorSlugFromSubdomain = (): string | undefined => {
+  const hostname = window.location.hostname
+
+  // Check if there's a query param like ?vendor=acme
+  const urlParams = new URLSearchParams(window.location.search)
+  const vendorParam = urlParams.get('vendor')
+  if (vendorParam) return vendorParam.toLowerCase()
+
+  // Check if we're on a fundermaps.com subdomain
+  if (hostname.endsWith('.fundermaps.com') && hostname !== 'fundermaps.com') {
+    // Extract the subdomain (everything before the first dot)
+    const subdomain = hostname.split('.')[0]
+    return subdomain.toLowerCase()
+  }
+
+  return undefined
+}
+
+/**
+ * Determine which vendor slug to use
+ * @returns {string} The determined vendor slug
+ */
+export const determineVendorSlug = (): string => {
+  const vendorFromSubdomain = extractVendorSlugFromSubdomain()
+  if (vendorFromSubdomain) {
+    return vendorFromSubdomain
+  }
+  return import.meta.env.VITE_DEFAULT_APP_ID || 'incident'
+}
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -85,67 +120,32 @@ const router = createRouter({
   ]
 })
 
-// TODO: Move to some helper file
-const extractVendorSlugFromSubdomain = (): string | undefined => {
-  const hostname = window.location.hostname
-
-  // Handle localhost for development
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    // For local development, check if there's a query param like ?vendor=acme
-    const urlParams = new URLSearchParams(window.location.search)
-    const vendorParam = urlParams.get('vendor')
-    if (vendorParam) return vendorParam.toLowerCase()
-    return undefined
-  }
-
-  // Check if we're on a fundermaps.com subdomain
-  if (hostname.endsWith('.fundermaps.com') && hostname !== 'fundermaps.com') {
-    // Extract the subdomain (everything before the first dot)
-    const subdomain = hostname.split('.')[0]
-    return subdomain.toLowerCase()
-  }
-
-  return undefined
-}
-
-// TODO: Move to some helper file
-const determineVendorSlug = (): string => {
-  const vendorFromSubdomain = extractVendorSlugFromSubdomain()
-  if (vendorFromSubdomain) {
-    return vendorFromSubdomain
-  }
-  return import.meta.env.VITE_DEFAULT_APP_ID || 'incident'
-}
-
 router.beforeEach(async (to, from, next) => {
   const configStore = useConfigStore()
-  const { clientId, vendorSlug } = storeToRefs(configStore)
+  const { vendorSlug } = storeToRefs(configStore)
   const surveyStore = useSurveyStore()
 
   try {
-    // Only load vendor config if not already set or if different
+    // Only load vendor config if not already set
     if (!vendorSlug.value) {
       const vendor = determineVendorSlug()
-      // console.log('Loading config for vendor:', vendor)
-      await configStore.loadVendorConfig(vendor)
+      const success = await configStore.loadVendorConfig(vendor)
+
+      if (!success) {
+        console.error('Failed to load vendor configuration')
+        // Consider redirecting to an error page here
+        return next(false)
+      }
     }
 
-    // Populate the survey model with URL parameters
+    // Populate the survey model with URL parameters on initial load only
     if (from.name === undefined && to.query && Object.keys(to.query).length > 0) {
       surveyStore.populateFromParams(to.query)
     }
 
-    // Validate the survey model
-    // if (from.name === undefined && to.meta.survey && !surveyStore.validateSurveyModel()) {
-    //   console.error('Survey model validation failed')
-    //   surveyStore.clearSurveyData()
-    //   return next({ name: 'home' })
-    // }
-
-    // console.log('Client ID:', clientId.value)
     next()
   } catch (error) {
-    console.error('Failed to load vendor configuration:', error)
+    console.error('Router navigation error:', error)
     next(false) // Cancel navigation
   }
 })

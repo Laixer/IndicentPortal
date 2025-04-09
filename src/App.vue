@@ -6,10 +6,7 @@ import Footer from '@/components/Footer.vue'
 import { useConfigStore } from '@/stores/config.js'
 import { useNavigationStore } from '@/stores/navigation.js'
 
-// TODO: Proper loading state indicator
-// TODO: Errors (fundermaps api unresponsive, unknown error, unknown vendor, incomplete vendor, save failed)
-
-const { vendorLogoPath, loading, loadingError } = storeToRefs(useConfigStore())
+const { branding, loading, loadingError } = storeToRefs(useConfigStore())
 const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationStore())
 </script>
 
@@ -23,7 +20,7 @@ const { isProgressVisible, surveyNavigationState } = storeToRefs(useNavigationSt
               <h2>Het laden van de vragenlijst is mislukt</h2>
             </div>
             <h2 v-else-if="loading" class="Header__Loading">Bezig met laden...</h2>
-            <img v-else-if="vendorLogoPath" class="Header__Logo" :src="vendorLogoPath" alt="Logo" />
+            <img v-else-if="branding.vendorLogoPath" class="Header__Logo" :src="branding.vendorLogoPath" alt="Logo" />
           </Transition>
         </div>
       </header>

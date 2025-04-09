@@ -8,10 +8,12 @@ import type { LocationQuery } from 'vue-router'
 // Define interface for better type safety
 interface SurveyState {
   saving: boolean
+  saveError: string | null
   model: ISurveyModel
 }
 
-const cleanModelState: ISurveyModel = {
+// Extract clean model to avoid duplication and ensure consistency
+const getCleanModelState = (): ISurveyModel => ({
   // Client
   client_id: null, // number
 
@@ -45,13 +47,14 @@ const cleanModelState: ISurveyModel = {
 
   // Upload
   document_file: []
-}
+})
 
 export const useSurveyStore = defineStore('survey', () => {
   // State using reactive instead of ref for better destructuring
   const state = reactive<SurveyState>({
     saving: false,
-    model: JSON.parse(JSON.stringify(cleanModelState))
+    saveError: null,
+    model: getCleanModelState()
   })
 
   /**
@@ -64,47 +67,67 @@ export const useSurveyStore = defineStore('survey', () => {
       contact_phone_number: state.model.contact_phone_number
     }
 
-    // Reset all data
-    state.model = JSON.parse(JSON.stringify(cleanModelState))
+    // Reset all data with a clean copy to avoid reference issues
+    state.model = getCleanModelState()
 
     // Restore contact details
     state.model.contact_name = contactDetails.contact_name
     state.model.contact = contactDetails.contact
     state.model.contact_phone_number = contactDetails.contact_phone_number
+
+    // Clear any previous save errors
+    state.saveError = null
   }
 
   /**
    * Validate the survey model to ensure required fields are filled
+   * @returns {boolean} True if the model is valid, false otherwise
    */
-  const validateSurveyModel = () => {
-    return state.model.building !== ''
-      && state.model.contact !== ''
-      && state.model.contact_name !== ''
+  const validateSurveyModel = (): boolean => {
+    // Basic validation - could be expanded with more detailed validation
+    return Boolean(
+      state.model.building &&
+      state.model.contact &&
+      state.model.contact_name
+    )
   }
 
   /**
    * Store the survey data as a new Incident record
+   * @returns {Promise<boolean>} True if save was successful, false otherwise
    */
-  const saveToDatabase = async () => {
+  const saveToDatabase = async (): Promise<boolean> => {
     const { clientId } = storeToRefs(useConfigStore())
+
+    if (state.saving) {
+      console.warn('Save already in progress')
+      return false
+    }
 
     try {
       state.saving = true
+      state.saveError = null
 
+      // Ensure client ID is set correctly
       state.model.client_id = clientId.value
 
       if (!validateSurveyModel()) {
-        console.error('Survey model validation failed')
-        state.saving = false
-        return
+        const error = 'Survey model validation failed'
+        console.error(error)
+        state.saveError = error
+        return false
       }
 
       await saveIncidentData(state.model)
 
-      // Reset the survey data
+      // Reset the survey data on successful save
       clearSurveyData()
+      return true
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error saving data'
       console.error('Failed to save incident data:', error)
+      state.saveError = errorMessage
+      return false
     } finally {
       state.saving = false
     }
@@ -112,12 +135,16 @@ export const useSurveyStore = defineStore('survey', () => {
 
   /**
    * Populate the model from URL parameters
+   * @param {LocationQuery} params - URL query parameters
    */
-  const populateFromParams = (params: LocationQuery) => {
-    // TODO: Validate params
+  const populateFromParams = (params: LocationQuery): void => {
+    // Only handle the building parameter for now
+    // Add more parameter handling as needed
     if (params.building && typeof params.building === 'string') {
-      state.model.building = params.building;
+      state.model.building = params.building.trim();
     }
+
+    // Additional parameters could be handled here
   }
 
   // Use toRefs to make all properties reactive while allowing destructuring

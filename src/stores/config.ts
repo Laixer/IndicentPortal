@@ -4,25 +4,27 @@ import { getAppConfig } from '@/services/fundermaps/endpoints/app'
 import type { ISurveyConfig } from '@/services/fundermaps/interfaces/survey/ISurveyConfig'
 
 // Define interfaces for better type safety
+interface BrandingState {
+  vendorName: string
+  vendorLogoPath: string
+  vendorPicturePath: string
+  primaryColor: string
+  secondaryColor: string
+  introTextRaw: string
+}
+
 interface ConfigState {
   loading: boolean
   loadingError: boolean
   errorMessage: string | null
   vendorSlug: string | undefined
   clientId: number
-  branding: {
-    vendorName: string
-    vendorLogoPath: string
-    vendorPicturePath: string
-    primaryColor: string
-    secondaryColor: string
-    introTextRaw: string
-  }
+  branding: BrandingState
   surveyPageSlugs: string[]
 }
 
 /**
- * List of known survey pages
+ * List of known survey pages - make this a constant to avoid recreation
  */
 const KNOWN_SURVEY_PAGE_SLUGS = [
   'address',
@@ -35,7 +37,7 @@ const KNOWN_SURVEY_PAGE_SLUGS = [
   'upload',
   'note',
   'contact'
-]
+] as const;
 
 /**
  * Default intro text template
@@ -47,24 +49,27 @@ const DEFAULT_INTRO_TEXT = `
   
   Bij dit loket kunt u een melding maken van een funderingsprobleem aan uw woning. Wij zullen u vrijblijvend van advies voorzien. Dit loket is een initiatief van KCAF (Kennis Centrum Aanpak Funderingsproblematiek) en {{VENDOR}}.`
 
+// Initial state to use for both initialization and reset
+const getInitialState = (): ConfigState => ({
+  loading: true,
+  loadingError: false,
+  errorMessage: null,
+  vendorSlug: undefined,
+  clientId: 0,
+  branding: {
+    vendorName: 'Fundermaps',
+    vendorLogoPath: '/img/logo.png',
+    vendorPicturePath: '/img/home.jpg',
+    primaryColor: '#000',
+    secondaryColor: '#000',
+    introTextRaw: DEFAULT_INTRO_TEXT
+  },
+  surveyPageSlugs: []
+})
+
 export const useConfigStore = defineStore('vendorConfig', () => {
   // State using reactive instead of ref for better destructuring
-  const state = reactive<ConfigState>({
-    loading: true,
-    loadingError: false,
-    errorMessage: null,
-    vendorSlug: undefined,
-    clientId: 0,
-    branding: {
-      vendorName: 'Fundermaps',
-      vendorLogoPath: '/img/logo.png',
-      vendorPicturePath: '/img/home.jpg',
-      primaryColor: '#000',
-      secondaryColor: '#000',
-      introTextRaw: DEFAULT_INTRO_TEXT
-    },
-    surveyPageSlugs: []
-  })
+  const state = reactive<ConfigState>(getInitialState())
 
   // Only create computed properties for derived values
   const introText = computed(() => {
@@ -74,8 +79,17 @@ export const useConfigStore = defineStore('vendorConfig', () => {
   /**
    * Load vendor configuration from the API
    * @param vendor The vendor slug to load configuration for
+   * @returns Promise that resolves to boolean indicating success
    */
   const loadVendorConfig = async (vendor: string): Promise<boolean> => {
+    if (!vendor || typeof vendor !== 'string') {
+      console.error('Invalid vendor slug provided')
+      state.loadingError = true
+      state.errorMessage = 'Invalid vendor slug'
+      state.loading = false
+      return false
+    }
+
     state.loading = true
     state.loadingError = false
     state.errorMessage = null
@@ -95,32 +109,26 @@ export const useConfigStore = defineStore('vendorConfig', () => {
       state.vendorSlug = vendor
       state.clientId = surveyConfig.client_id
 
-      // Update branding information
+      // Update branding information if available
       if (surveyConfig.branding) {
-        if (surveyConfig.branding.vendor_name) {
-          state.branding.vendorName = surveyConfig.branding.vendor_name
-        }
-        if (surveyConfig.branding.vendor_logo_path) {
-          state.branding.vendorLogoPath = surveyConfig.branding.vendor_logo_path
-        }
-        if (surveyConfig.branding.vendor_picture_path) {
-          state.branding.vendorPicturePath = surveyConfig.branding.vendor_picture_path
-        }
-        if (surveyConfig.branding.primary_color) {
-          state.branding.primaryColor = surveyConfig.branding.primary_color
-        }
-        if (surveyConfig.branding.secondary_color) {
-          state.branding.secondaryColor = surveyConfig.branding.secondary_color
-        }
-        if (surveyConfig.branding.intro_text && surveyConfig.branding.intro_text.length !== 0) {
-          state.branding.introTextRaw = surveyConfig.branding.intro_text
+        const { branding } = surveyConfig
+        
+        // Use optional chaining and nullish coalescing for cleaner code
+        state.branding.vendorName = branding.vendor_name ?? state.branding.vendorName
+        state.branding.vendorLogoPath = branding.vendor_logo_path ?? state.branding.vendorLogoPath
+        state.branding.vendorPicturePath = branding.vendor_picture_path ?? state.branding.vendorPicturePath
+        state.branding.primaryColor = branding.primary_color ?? state.branding.primaryColor
+        state.branding.secondaryColor = branding.secondary_color ?? state.branding.secondaryColor
+        
+        if (branding.intro_text && branding.intro_text.trim().length !== 0) {
+          state.branding.introTextRaw = branding.intro_text
         }
       }
 
       // Filter survey page slugs against the whitelist
-      state.surveyPageSlugs = surveyConfig.pages.filter(page =>
-        KNOWN_SURVEY_PAGE_SLUGS.includes(page)
-      )
+      state.surveyPageSlugs = Array.isArray(surveyConfig.pages)
+        ? surveyConfig.pages.filter(page => KNOWN_SURVEY_PAGE_SLUGS.includes(page as any))
+        : []
 
       state.loading = false
       return true
@@ -137,29 +145,12 @@ export const useConfigStore = defineStore('vendorConfig', () => {
    * Reset store to default values
    */
   const resetConfig = () => {
-    Object.assign(state, {
-      loading: false,
-      loadingError: false,
-      errorMessage: null,
-      vendorSlug: undefined,
-      clientId: 0,
-      branding: {
-        vendorName: 'Fundermaps',
-        vendorLogoPath: '/img/logo.png',
-        vendorPicturePath: '/img/home.jpg',
-        primaryColor: '#000',
-        secondaryColor: '#000',
-        introTextRaw: DEFAULT_INTRO_TEXT
-      },
-      surveyPageSlugs: []
-    })
+    Object.assign(state, getInitialState())
   }
 
   // Use toRefs to make all properties reactive while allowing destructuring
   return {
     ...toRefs(state),
-    // Flattened branding properties for easier access
-    ...toRefs(state.branding),
     // Computed properties
     introText,
     // Methods

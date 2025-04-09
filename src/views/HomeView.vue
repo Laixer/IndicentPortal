@@ -6,19 +6,19 @@ import VueMarkdown from 'vue-markdown-render'
 import Title from '@/components/Title.vue'
 import { useConfigStore } from '@/stores/config.js'
 
-const { vendorPicturePath, vendorName, introText } = storeToRefs(useConfigStore())
+const { branding, introText } = storeToRefs(useConfigStore())
 </script>
 
 <template>
   <div class="Home__Wrapper">
     <div class="Home--left">
-      <Title :message="`Funderingsloket ${vendorName}`" />
+      <Title :message="`Funderingsloket ${branding.vendorName}`" />
 
       <VueMarkdown class="Home__Intro" :source="introText" :options="{ breaks: true }" />
     </div>
 
     <div class="Home--right">
-      <img :src="vendorPicturePath" width="640" height="585" alt="Logo" />
+      <img :src="branding.vendorPicturePath" width="640" height="585" alt="Logo" />
     </div>
   </div>
 </template>
