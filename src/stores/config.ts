@@ -11,6 +11,10 @@ interface BrandingState {
   primaryColor: string
   secondaryColor: string
   introTextRaw: string
+  mapCenter?: {
+    lat: number
+    lng: number
+  }
 }
 
 interface ConfigState {
@@ -62,7 +66,8 @@ const getInitialState = (): ConfigState => ({
     vendorPicturePath: '/img/home.jpg',
     primaryColor: '#000',
     secondaryColor: '#000',
-    introTextRaw: DEFAULT_INTRO_TEXT
+    introTextRaw: DEFAULT_INTRO_TEXT,
+    mapCenter: undefined
   },
   surveyPageSlugs: []
 })
@@ -122,6 +127,14 @@ export const useConfigStore = defineStore('vendorConfig', () => {
 
         if (branding.intro_text && branding.intro_text.trim().length !== 0) {
           state.branding.introTextRaw = branding.intro_text
+        }
+
+        // Add mapCenter if it exists in the API response
+        if (branding.map_center && typeof branding.map_center.lat === 'number' && typeof branding.map_center.lng === 'number') {
+          state.branding.mapCenter = {
+            lat: branding.map_center.lat,
+            lng: branding.map_center.lng
+          }
         }
       }
 

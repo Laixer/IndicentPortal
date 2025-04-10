@@ -8,6 +8,10 @@ export interface ISurveyConfig {
     vendor_logo_path: string
     vendor_picture_path: string
     intro_text?: string | null
+    map_center?: {
+      lat: number
+      lng: number
+    }
   }
   pages: string[]
 }

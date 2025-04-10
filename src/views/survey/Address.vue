@@ -10,7 +10,9 @@ import { getLookup, getSuggestions } from '@/services/pdok'
 import api from '@/services/fundermaps/'
 import Mapbox from '@/components/Mapbox.vue'
 import { LngLat, Map, Marker } from 'mapbox-gl'
+import { useConfigStore } from '@/stores/config'
 
+const { branding } = storeToRefs(useConfigStore())
 const surveyStore = useSurveyStore()
 const { model } = storeToRefs(surveyStore)
 const { disableNextButton, enableNextButton } = useNavigationStore()
@@ -27,7 +29,7 @@ onBeforeMount(() => {
  */
 const mapboxOptions = {
   style: 'mapbox://styles/mapbox/streets-v11',
-  center: [4.9041, 52.3676],
+  center: branding.value.mapCenter ?? [4.9041, 52.3676],
   zoom: 12.5
 }
 
