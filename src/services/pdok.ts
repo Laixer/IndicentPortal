@@ -8,8 +8,10 @@ const callPDOK = async function callPDOK(endpoint: string) {
     try {
       return response.json()
     } catch (e) {
-      console.log('Failed to process PDOK response.')
+      console.error('Failed to process PDOK response:', e)
     }
+  } else {
+    console.error(`PDOK API error: ${response.status} ${response.statusText}`)
   }
 
   return null
@@ -48,45 +50,3 @@ export const getReverse = async function getReverse(
 export const getLookup = async function getLookup(id: string) {
   return await callPDOK(`lookup?id=${id}`)
 }
-
-/// <summary>
-///     Suggest addresses based on a query.
-/// </summary>
-// public async Task<List<PDOKSuggestion>> SuggestAsync(string query, int rows = 10)
-// {
-//     var response = await httpClient.GetAsync($"suggest?fq=type:adres&q={query}&rows={rows}");
-//     if (!response.IsSuccessStatusCode)
-//     {
-//         _logger.LogError("Location server API call failed with status code {StatusCode}", response.StatusCode);
-
-//         throw new HttpRequestException("Location server API call failed.");
-//     }
-
-//     var jsonResponse = await response.Content.ReadAsStringAsync();
-//     var responseObject = JsonSerializer.Deserialize<LocationServerResult>(jsonResponse);
-
-//     var suggestions = new List<PDOKSuggestion>();
-//     foreach (var highlightProperty in responseObject.highlighting.EnumerateObject())
-//     {
-//         var suggestionProperty = highlightProperty.Value.GetProperty("suggest");
-
-//         if (suggestionProperty.GetArrayLength() == 0)
-//         {
-//             continue;
-//         }
-
-//         var suggestion = suggestionProperty[0].GetString();
-//         if (string.IsNullOrEmpty(suggestion))
-//         {
-//             continue;
-//         }
-
-//         suggestions.Add(new PDOKSuggestion
-//         {
-//             Id = highlightProperty.Name,
-//             Suggestion = suggestion,
-//         });
-//     }
-
-//     return suggestions;
-// }

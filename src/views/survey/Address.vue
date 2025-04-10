@@ -6,7 +6,7 @@ import SuggestionIcon from '@/components/icons/SuggestionIcon.vue'
 
 import { useSurveyStore } from '@/stores/survey'
 import { useNavigationStore } from '@/stores/navigation'
-import { getLookup, getSuggestions } from '@/services/pdok'
+import { getLookup, getSuggestions, getSuggestionsNearCoordinates } from '@/services/pdok'
 import api from '@/services/fundermaps/'
 import Mapbox from '@/components/Mapbox.vue'
 import { LngLat, Map, Marker } from 'mapbox-gl'
@@ -54,7 +54,7 @@ const autoCompleteSuggestions: Ref<{ Id: string; Suggestion: string }[]> = ref([
 /**
  * Update the local & central model upon selecting a suggestion
  */
-const selectSuggestion = async function selectSuggestion(id: string) {
+const selectSuggestion = async (id: string) => {
   let response = await getLookup(id)
   response = response?.response || null
 
@@ -110,7 +110,15 @@ watch(
       if (value === '') {
         autoCompleteSuggestions.value = []
       } else {
-        const response = await getSuggestions(value, 7)
+        let response;
+        
+        // Use location-based search if map center is defined
+        if (branding.value.mapCenter) {
+          const { lat, lng } = branding.value.mapCenter
+          response = await getSuggestionsNearCoordinates(value, lat, lng, 7)
+        } else {
+          response = await getSuggestions(value, 7)
+        }
 
         if (
           !response ||
