@@ -146,6 +146,7 @@ router.beforeEach(async (to, from, next) => {
     // Check if trying to access a survey page without valid data
     if (from.name === undefined && to.meta.survey && !surveyStore.isDirtyAndValid()) {
       console.log('Redirecting to home: Survey not initialized or no valid building ID')
+      surveyStore.resetIfInvalid()
       return next({ name: 'home' })
     }
 

@@ -10,6 +10,8 @@ interface SurveyState {
   saving: boolean
   saveError: string | null
   isDirty: boolean
+  vendorSlug: string | undefined
+  clientId: number
   model: ISurveyModel
 }
 
@@ -64,13 +66,27 @@ const validateBuilding = (building: string): boolean => {
 }
 
 export const useSurveyStore = defineStore('survey', () => {
+  const configStore = useConfigStore()
+
   // State using reactive instead of ref for better destructuring
   const state = reactive<SurveyState>({
     saving: false,
     saveError: null,
     isDirty: false,
+    vendorSlug: configStore.vendorSlug,
+    clientId: configStore.clientId,
     model: getCleanModelState()
   })
+
+  // Reset the state to its initial clean state
+  const resetState = () => {
+    state.saving = false
+    state.saveError = null
+    state.isDirty = false
+    state.vendorSlug = configStore.vendorSlug
+    state.clientId = configStore.clientId
+    state.model = getCleanModelState()
+  }
 
   /**
    * Reset the survey data while preserving contact details
@@ -82,8 +98,8 @@ export const useSurveyStore = defineStore('survey', () => {
       contact_phone_number: state.model.contact_phone_number
     }
 
-    // Reset all data with a clean copy to avoid reference issues
-    state.model = getCleanModelState()
+    // Reset the model to its clean state
+    resetState()
 
     // Restore contact details
     state.model.contact_name = contactDetails.contact_name
@@ -108,18 +124,53 @@ export const useSurveyStore = defineStore('survey', () => {
   }
 
   /**
-   * Check if the survey data is dirty and valid
-   * @returns {boolean} True if dirty and valid, false otherwise
+   * Validates if the current store context matches the config store
+   * Used to detect when loading potentially stale data from persistence
+   * @returns {boolean} True if the context is valid, false otherwise
    */
-  const isDirtyAndValid = (): boolean => {
-    return state.isDirty && state.model.building ? validateBuilding(state.model.building) : false
+  const validateStoreContext = (): boolean => {
+    if (state.vendorSlug !== configStore.vendorSlug ||
+      state.clientId !== configStore.clientId) {
+      console.warn('Vendor or client mismatch detected in persisted state')
+      return false;
+    }
+    return true;
   }
 
   /**
-   * Mark the survey as dirty when user makes changes
+   * Check if the survey data is dirty and valid
+   * Detects if we're loading an invalid state from persistence
+   * @returns {boolean} True if dirty and valid, false otherwise
    */
-  const markAsDirty = (): void => {
-    state.isDirty = true
+  const isDirtyAndValid = (): boolean => {
+    // First check if store context is valid
+    const isContextValid = validateStoreContext();
+
+    // Check if it's dirty and has a valid building
+    const hasDirtyValidBuilding = state.isDirty &&
+      state.model.building ? validateBuilding(state.model.building) : false;
+
+    // If either context is invalid or the building is invalid but we have dirty data,
+    // this likely means we loaded an invalid state from persistence
+    if (!isContextValid || (state.isDirty && !hasDirtyValidBuilding)) {
+      console.warn('Detected potentially invalid persisted state');
+      return false;
+    }
+
+    return hasDirtyValidBuilding;
+  }
+
+  /**
+   * Reset the survey store if invalid persisted state is detected
+   * Call this when navigating to survey pages to ensure valid state
+   * @returns {boolean} True if state was valid, false if it was reset
+   */
+  const resetIfInvalid = (): boolean => {
+    if (!isDirtyAndValid()) {
+      clearSurveyData();
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -131,7 +182,7 @@ export const useSurveyStore = defineStore('survey', () => {
     const trimmedId = buildingId.trim()
     if (validateBuilding(trimmedId)) {
       state.model.building = trimmedId
-      markAsDirty()
+      state.isDirty = true
       return true
     }
     return false
@@ -142,8 +193,6 @@ export const useSurveyStore = defineStore('survey', () => {
    * @returns {Promise<boolean>} True if save was successful, false otherwise
    */
   const saveToDatabase = async (): Promise<boolean> => {
-    const { clientId } = storeToRefs(useConfigStore())
-
     if (state.saving) {
       console.warn('Save already in progress')
       return false
@@ -154,7 +203,7 @@ export const useSurveyStore = defineStore('survey', () => {
       state.saveError = null
 
       // Ensure client ID is set correctly
-      state.model.client_id = clientId.value
+      state.model.client_id = state.clientId
 
       if (!validateSurveyModel()) {
         const error = 'Survey model validation failed'
@@ -163,6 +212,14 @@ export const useSurveyStore = defineStore('survey', () => {
         return false
       }
 
+      if (!isDirtyAndValid()) {
+        const error = 'Survey data is not valid or dirty'
+        console.error(error)
+        state.saveError = error
+        return false
+      }
+
+      // Save the incident data
       await saveIncidentData(state.model)
 
       // Reset the survey data on successful save
@@ -198,9 +255,9 @@ export const useSurveyStore = defineStore('survey', () => {
     // Methods
     clearSurveyData,
     saveToDatabase,
-    validateSurveyModel,
     isDirtyAndValid,
     populateFromParams,
-    setBuilding
+    setBuilding,
+    resetIfInvalid
   }
 }, { persist: { storage: sessionStorage } })

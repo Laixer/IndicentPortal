@@ -9,7 +9,6 @@ const baseUrl =
 const callPDOK = async (endpoint: string): Promise<any | null> => {
   try {
     const response = await fetch(`${baseUrl}/${endpoint}`)
-    
     if (response.ok) {
       return await response.json()
     } else {
