@@ -11,7 +11,8 @@ import api from '@/services/fundermaps/'
 import Mapbox from '@/components/Mapbox.vue'
 import { LngLat, Map, Marker } from 'mapbox-gl'
 
-const { model } = storeToRefs(useSurveyStore())
+const surveyStore = useSurveyStore()
+const { model } = storeToRefs(surveyStore)
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
 onBeforeMount(() => {
@@ -76,7 +77,7 @@ const selectSuggestion = async function selectSuggestion(id: string) {
     doc.nummeraanduiding_id
   )
 
-  model.value.building = GeocoderResult.building_id
+  surveyStore.setBuilding(GeocoderResult.building_id)
 
   // Set the coordinates, if the API response has this information
   // TODO: What to do if LngLat info is missing?

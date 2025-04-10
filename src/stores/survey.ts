@@ -9,6 +9,7 @@ import type { LocationQuery } from 'vue-router'
 interface SurveyState {
   saving: boolean
   saveError: string | null
+  isDirty: boolean
   model: ISurveyModel
 }
 
@@ -67,6 +68,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const state = reactive<SurveyState>({
     saving: false,
     saveError: null,
+    isDirty: false,
     model: getCleanModelState()
   })
 
@@ -106,6 +108,36 @@ export const useSurveyStore = defineStore('survey', () => {
   }
 
   /**
+   * Check if the survey data is dirty and valid
+   * @returns {boolean} True if dirty and valid, false otherwise
+   */
+  const isDirtyAndValid = (): boolean => {
+    return state.isDirty && state.model.building ? validateBuilding(state.model.building) : false
+  }
+
+  /**
+   * Mark the survey as dirty when user makes changes
+   */
+  const markAsDirty = (): void => {
+    state.isDirty = true
+  }
+
+  /**
+   * Update building ID and validate it
+   * @param {string} buildingId - The building ID to set
+   * @returns {boolean} True if valid, false otherwise
+   */
+  const setBuilding = (buildingId: string): boolean => {
+    const trimmedId = buildingId.trim()
+    if (validateBuilding(trimmedId)) {
+      state.model.building = trimmedId
+      markAsDirty()
+      return true
+    }
+    return false
+  }
+
+  /**
    * Store the survey data as a new Incident record
    * @returns {Promise<boolean>} True if save was successful, false otherwise
    */
@@ -135,6 +167,8 @@ export const useSurveyStore = defineStore('survey', () => {
 
       // Reset the survey data on successful save
       clearSurveyData()
+      state.isDirty = false
+      state.saveError = null
       return true
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error saving data'
@@ -152,10 +186,7 @@ export const useSurveyStore = defineStore('survey', () => {
    */
   const populateFromParams = (params: LocationQuery): void => {
     if (params.building && typeof params.building === 'string') {
-      const building = params.building.trim();
-      if (validateBuilding(building)) {
-        state.model.building = building;
-      }
+      setBuilding(params.building);
     }
 
     // Additional parameters could be handled here
@@ -168,6 +199,8 @@ export const useSurveyStore = defineStore('survey', () => {
     clearSurveyData,
     saveToDatabase,
     validateSurveyModel,
+    isDirtyAndValid,
     populateFromParams,
+    setBuilding
   }
 }, { persist: { storage: sessionStorage } })
