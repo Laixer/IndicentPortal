@@ -12,6 +12,7 @@ interface SurveyState {
   isDirty: boolean
   vendorSlug: string | undefined
   clientId: number
+  address: string | null
   model: ISurveyModel
 }
 
@@ -75,6 +76,7 @@ export const useSurveyStore = defineStore('survey', () => {
     isDirty: false,
     vendorSlug: configStore.vendorSlug,
     clientId: configStore.clientId,
+    address: null,
     model: getCleanModelState()
   })
 
@@ -85,6 +87,7 @@ export const useSurveyStore = defineStore('survey', () => {
     state.isDirty = false
     state.vendorSlug = configStore.vendorSlug
     state.clientId = configStore.clientId
+    state.address = null
     state.model = getCleanModelState()
   }
 

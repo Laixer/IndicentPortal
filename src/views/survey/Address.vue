@@ -14,13 +14,19 @@ import { useConfigStore } from '@/stores/config'
 
 const { branding } = storeToRefs(useConfigStore())
 const surveyStore = useSurveyStore()
-const { model } = storeToRefs(surveyStore)
+const { model, address } = storeToRefs(surveyStore)
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
 onBeforeMount(() => {
   // If either the address or building id are not filled in, disable the next button
   if (model.value.building === '') {
     disableNextButton()
+  }
+
+  // Initialize suggestion with address if address is not null or empty
+  if (address.value && address.value.trim() !== '') {
+    suggestion.value = address.value
+    enableNextButton()
   }
 })
 
@@ -35,11 +41,6 @@ const mapboxOptions = {
 
 let mapboxInstance: Map | undefined = undefined
 const marker = new Marker()
-
-/**
- * The local address model
- */
-const address = ref('')
 
 /**
  * The latest suggestion. Used to compare to address, to avoid triggering the suggestions API call
@@ -72,19 +73,17 @@ const selectSuggestion = async (id: string) => {
 
   // First update suggestion, then address. This order is expected by the address watcher
   suggestion.value = doc.weergavenaam
-  address.value = doc.weergavenaam
+  address.value = doc.weergavenaam;
 
   // Throw the reference through the Fundermaps Geocoder to get an standardized address & building reference
-  const GeocoderResult = await api.building.getLocationInformationByBuildingId(
-    doc.nummeraanduiding_id
-  )
+  const geocoderResult = await api.building.getLocationInformationByBuildingId(doc.nummeraanduiding_id)
 
-  surveyStore.setBuilding(GeocoderResult.building_id)
+  surveyStore.setBuilding(geocoderResult.building_id)
 
   // Set the coordinates, if the API response has this information
   // TODO: What to do if LngLat info is missing?
-  if (mapboxInstance && GeocoderResult.residence_lon && GeocoderResult.residence_lat) {
-    const coords = new LngLat(GeocoderResult.residence_lon, GeocoderResult.residence_lat)
+  if (mapboxInstance && geocoderResult.residence_lon && geocoderResult.residence_lat) {
+    const coords = new LngLat(geocoderResult.residence_lon, geocoderResult.residence_lat)
     mapboxInstance.setCenter(coords)
 
     marker.remove().setLngLat(coords).addTo(mapboxInstance)
@@ -100,7 +99,7 @@ const selectSuggestion = async (id: string) => {
 watch(
   address,
   async () => {
-    const value = address.value.trim()
+    const value = address.value?.trim()
 
     if (value !== suggestion.value) {
       // Disable the button if the address value no longer matches the suggestion
@@ -111,13 +110,13 @@ watch(
         autoCompleteSuggestions.value = []
       } else {
         let response;
-        
+
         // Use location-based search if map center is defined
         if (branding.value.mapCenter) {
           const { lat, lng } = branding.value.mapCenter
-          response = await getSuggestionsNearCoordinates(value, lat, lng, 7)
+          response = await getSuggestionsNearCoordinates(value as string, lat, lng, 7)
         } else {
-          response = await getSuggestions(value, 7)
+          response = await getSuggestions(value as string, 7)
         }
 
         if (
@@ -160,7 +159,7 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
 
         <div class="FormField__Wrapper">
           <input id="address" placeholder="Stationsplein, 1012 AB Amsterdam" autocomplete="off" class="FormField__Field"
-            v-model="address" />
+            v-model="address" type="text" />
 
           <template v-if="autoCompleteSuggestions.length !== 0">
             <div class="GeoCoder__Suggestions">
