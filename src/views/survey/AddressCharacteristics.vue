@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import Title from '@/components/Title.vue'
@@ -18,20 +18,20 @@ import { useNavigationStore } from '@/stores/navigation.js'
 const { disableNextButton, enableNextButton } = useNavigationStore()
 const { model } = storeToRefs(useSurveyStore())
 
+// Computed property to check if all required fields are filled
+const isFormValid = computed(() => {
+  return model.value.chained_building !== null &&
+    model.value.owner !== null &&
+    model.value.neighbor_recovery !== null
+})
+
+// Watch the computed property instead of the entire model
 watch(
-  () => model.value,
-  () => {
-    if (
-      model.value.chained_building === null ||
-      model.value.owner === null ||
-      model.value.neighbor_recovery === null
-    ) {
-      disableNextButton()
-    } else {
-      enableNextButton()
-    }
+  isFormValid,
+  (valid) => {
+    valid ? enableNextButton() : disableNextButton()
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 )
 </script>
 
