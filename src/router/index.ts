@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia'
 import HomeView from '@/views/HomeView.vue'
 import FinishView from '@/views/FinishView.vue'
 
-// Extract vendor helpers to utilities
 /**
  * Extract vendor slug from subdomain
  * @returns {string|undefined} The vendor slug from subdomain, or undefined if not found
