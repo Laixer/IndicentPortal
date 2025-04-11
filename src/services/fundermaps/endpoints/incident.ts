@@ -21,6 +21,7 @@ export const uploadIncidentFiles = async (files: FileList) => {
   })
 }
 
+// TODO: Remove
 export default {
   saveIncidentData,
   uploadIncidentFiles

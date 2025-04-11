@@ -68,10 +68,7 @@ export const changePassword = async function changePassword(
   })
 }
 
+// TODO: Remove 
 export default {
-  login,
-  refresh,
-  requestPasswordReset,
-  resetPassword,
-  changePassword
+  login
 }

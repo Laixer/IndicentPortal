@@ -8,6 +8,7 @@ export const getLocationInformationByBuildingId = async (buildingId: string): Pr
   return await get({ endpoint: `/geocoder/${buildingId}`, requireAuth: false })
 }
 
+// TODO: Remove
 export default {
   getLocationInformationByBuildingId
 }
