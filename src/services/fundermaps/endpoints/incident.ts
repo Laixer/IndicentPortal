@@ -1,7 +1,7 @@
 import { post } from '../client'
 import type { ISurveyModel } from '../interfaces/survey/ISurveyModel'
 
-export const saveIncidentData = async function saveIncidentData(body: ISurveyModel) {
+export const saveIncidentData = async (body: ISurveyModel) => {
   return await post({
     endpoint: 'incident',
     requireAuth: false,
@@ -9,7 +9,7 @@ export const saveIncidentData = async function saveIncidentData(body: ISurveyMod
   })
 }
 
-export const uploadIncidentFiles = async function uploadIncidentFiles(files: FileList) {
+export const uploadIncidentFiles = async (files: FileList) => {
   const body = new FormData()
   for (const file of files) {
     body.append('files', file)
