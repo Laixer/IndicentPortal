@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import Title from '@/components/Title.vue'
@@ -8,7 +8,6 @@ import { useNavigationStore } from '@/stores/navigation.js'
 import { useSurveyStore } from '@/stores/survey.js'
 
 const { disableNextButton, enableNextButton } = useNavigationStore()
-
 const { model } = storeToRefs(useSurveyStore())
 
 /**
@@ -18,33 +17,46 @@ const { model } = storeToRefs(useSurveyStore())
 const mailRegex =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
-const inValidMail = function inValidMail() {
-  return model.value.contact !== '' && !model.value.contact.match(mailRegex)
-}
-const showEmailError = ref(false)
+const isEmailValid = computed(() => {
+  return model.value.contact === '' || mailRegex.test(model.value.contact)
+})
 
-// This is the only page with input requirements, so the validation is ad-hoc
-// The validation is repeated right before submit, and if validation fails, the user is redirected to this page
-// Although currently the contact page is actually always the last page in which the data is submitted.
-const handleValidateModel = function () {
-  showEmailError.value = inValidMail()
+// Ref to control error message visibility, only show after interaction
+const emailTouched = ref(false)
+const showEmailError = computed(() => emailTouched.value && !isEmailValid.value)
 
-  if (
-    !model.value.contact ||
-    model.value.contact === '' ||
-    !model.value.contact_name ||
-    model.value.contact_name === '' ||
-    showEmailError.value
-  ) {
-    disableNextButton()
-  } else {
+// Computed property for overall form validity
+const isFormValid = computed(() => {
+  return model.value.contact_name && model.value.contact_name.trim() !== '' &&
+    model.value.contact && model.value.contact.trim() !== '' &&
+    isEmailValid.value
+})
+
+// Watch for validity changes to enable/disable the next button
+watch(isFormValid, (isValid) => {
+  if (isValid) {
     enableNextButton()
+  } else {
+    disableNextButton()
   }
+}, { immediate: true }) // Use immediate to set initial state
+
+// Function to mark email as touched (e.g., on blur)
+const handleEmailBlur = () => {
+  emailTouched.value = true
 }
 
-onBeforeMount(() => {
-  // Works as long as we do not show any feedback...
-  handleValidateModel()
+// Set initial button state on mount based on pre-filled data
+onMounted(() => {
+  if (isFormValid.value) {
+    enableNextButton()
+  } else {
+    disableNextButton()
+  }
+  // If email has initial value, mark as touched to show potential error
+  if (model.value.contact && model.value.contact !== '') {
+    emailTouched.value = true;
+  }
 })
 </script>
 
@@ -56,8 +68,7 @@ onBeforeMount(() => {
     <div class="FormField">
       <label for="naam" class="FormField__Label">Naam (vereist)</label>
       <div class="FormField__Wrapper">
-        <input id="naam" autocomplete="given-name" class="FormField__Field" @focus="handleValidateModel"
-          @blur="handleValidateModel" v-model="model.contact_name" />
+        <input id="naam" autocomplete="given-name" class="FormField__Field" v-model.trim="model.contact_name" />
       </div>
     </div>
 
@@ -65,16 +76,16 @@ onBeforeMount(() => {
       <label for="email" class="FormField__Label">E-mail (vereist)</label>
       <div v-if="showEmailError" class="FormField__Error">Voer een geldig e-mail adres in</div>
       <div class="FormField__Wrapper">
-        <input id="email" autocomplete="email" class="FormField__Field" @focus="handleValidateModel"
-          @blur="handleValidateModel" v-model="model.contact" />
+        <input id="email" autocomplete="email" class="FormField__Field" @blur="handleEmailBlur"
+          v-model.trim="model.contact" />
       </div>
     </div>
 
     <div class="FormField">
       <label for="telefoon" class="FormField__Label">Telefoonnummer (optioneel)</label>
       <div class="FormField__Wrapper">
-        <input id="telefoon" placeholder="+31" autocomplete="given-name" class="FormField__Field"
-          @focus="handleValidateModel" @blur="handleValidateModel" v-model="model.contact_phone_number" />
+        <input id="telefoon" placeholder="+31" autocomplete="tel" class="FormField__Field"
+          v-model="model.contact_phone_number" />
       </div>
     </div>
   </div>

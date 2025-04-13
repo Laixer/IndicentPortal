@@ -19,7 +19,7 @@ const errorMessage: Ref<string> = ref('')
 // File validation constants
 const MAX_FILES = 25
 const MAX_FILE_SIZE = 4 * 1024 * 1024 * 1024 // 4GB in bytes
-const ALLOWED_FILE_TYPES = [
+const ALLOWED_FILE_TYPES = new Set([
   'image/png', 'image/jpeg', 'image/jpg', 'image/heif', 'image.heic',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // xlsx
@@ -27,7 +27,7 @@ const ALLOWED_FILE_TYPES = [
   'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-ms-wmv',
   'application/pdf', // PDF
   'text/plain' // TXT
-]
+])
 
 interface ValidationResult {
   isValid: boolean;
@@ -47,26 +47,31 @@ const validateFiles = (files: FileList, currentCount: number): ValidationResult 
 
   // Validate file types and sizes
   const validFiles: File[] = []
+  let specificErrorMessage = '';
+
   for (let i = 0; i < files.length; i++) {
     const file = files[i]
 
-    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      return {
-        isValid: false,
-        validFiles: [],
-        errorMessage: 'Alleen png, jpg, jpeg, docx, xlsx, csv, heif, en video bestanden zijn toegestaan.'
-      }
+    if (!ALLOWED_FILE_TYPES.has(file.type)) {
+      specificErrorMessage = `Bestandstype '${file.type || file.name.split('.').pop()}' is niet toegestaan. Toegestane types: png, jpg, jpeg, docx, xlsx, csv, heif, heic, mp4, mov, avi, wmv, pdf, txt.`
+      break; // Stop validation on first invalid type
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return {
-        isValid: false,
-        validFiles: [],
-        errorMessage: 'Bestandsgrootte mag niet groter zijn dan 4 GB.'
-      }
+      specificErrorMessage = `Bestand '${file.name}' is te groot (maximaal 4 GB).`
+      break; // Stop validation on first oversized file
     }
 
     validFiles.push(file)
+  }
+
+  // If a specific error occurred, return it
+  if (specificErrorMessage) {
+    return {
+      isValid: false,
+      validFiles: [],
+      errorMessage: specificErrorMessage
+    }
   }
 
   return {
@@ -120,7 +125,7 @@ const handleFileChange = async function handleFileChange(e: Event) {
           <input type="file" id="file-upload" style="display: none" @change="handleFileChange" multiple
             accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv,.pdf,.txt" />
 
-          <div v-if="errorMessage" class="error-message">
+          <div v-if="errorMessage" class="error-message" role="alert" aria-live="assertive">
             {{ errorMessage }}
           </div>
 
@@ -229,6 +234,7 @@ const handleFileChange = async function handleFileChange(e: Event) {
   padding: 8px;
   background-color: rgba(217, 83, 79, 0.1);
   border-radius: 4px;
+  border: 1px solid #d9534f;
 }
 
 .file-limits {

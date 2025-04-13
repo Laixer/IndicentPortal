@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch, ref, type Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import Title from '@/components/Title.vue'
@@ -7,7 +6,6 @@ import SvgIconCheck from '@/components/icons/SvgIconCheck.vue'
 
 import { FoundationDamageCharacteristics } from '@/enums.js'
 import { useSurveyStore } from '@/stores/survey.js'
-import type { ILocalCheckboxGroupModel } from '@/interfaces.js'
 
 const { model } = storeToRefs(useSurveyStore())
 
@@ -41,27 +39,6 @@ const options = [
     label: 'Hoog water in de kruipruimte'
   }
 ]
-
-/**
- * We split the checkbox group into separate checkboxes and track them with a local model
- */
-const LocalModel: Ref<ILocalCheckboxGroupModel> = ref(
-  options.reduce((acc: ILocalCheckboxGroupModel, option) => {
-    acc[option.id] = model.value.foundation_damage_characteristics.includes(option.id)
-      ? 'yes'
-      : 'no'
-    return acc
-  }, {})
-)
-watch(
-  LocalModel,
-  () => {
-    model.value.foundation_damage_characteristics = Object.keys(LocalModel.value).filter(
-      (id: string) => LocalModel.value[id] === 'yes'
-    )
-  },
-  { deep: true }
-)
 </script>
 
 <template>
@@ -73,7 +50,7 @@ watch(
       <div class="CheckboxInput__Wrapper">
         <div v-for="option in options" :key="option.id" class="CheckboxInput__Field">
           <input type="checkbox" :id="`option_${option.id}`" :name="`checkbox_${option.id}`"
-            v-model="LocalModel[option.id]" true-value="yes" false-value="no" />
+            v-model="model.foundation_damage_characteristics" :value="option.id" />
 
           <label :for="`option_${option.id}`" class="CheckboxInput__Label">
             <span class="CheckboxInput__Checkbox">

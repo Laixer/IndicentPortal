@@ -30,9 +30,9 @@ watch(
 </script>
 
 <template>
-  <div class="AddressCharacteristics">
+  <div class="FeedbackCharacteristics">
     <form class="Form" @submit.prevent="void">
-      <div class="AddressCharacteristics--one">
+      <div class="FeedbackCharacteristics--one">
         <Title message="Maakt u deze melding als pandeigenaar of taxateur?" :center="true" />
 
         <div class="RadioImageInput">
@@ -65,7 +65,7 @@ watch(
         </div>
       </div>
 
-      <div class="AddressCharacteristics--two">
+      <div class="FeedbackCharacteristics--two">
         <Title message="Is funderingsherstel uitgevoerd?" :center="true" />
 
         <div class="RadioImageInput">
@@ -102,21 +102,21 @@ watch(
 </template>
 
 <style>
-.AddressCharacteristics {
+.FeedbackCharacteristics {
   padding: 20px 20px;
 }
 
 @media only screen and (min-width: 900px) {
-  .AddressCharacteristics {
+  .FeedbackCharacteristics {
     padding: 50px 80px;
   }
 }
 
-.AddressCharacteristics .Title {
+.FeedbackCharacteristics .Title {
   margin-bottom: 21px;
 }
 
-.AddressCharacteristics .Form {
+.FeedbackCharacteristics .Form {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -125,41 +125,32 @@ watch(
 }
 
 @media only screen and (min-width: 1115px) {
-  .AddressCharacteristics .Form {
+  .FeedbackCharacteristics .Form {
     flex-direction: row;
   }
 }
 
-.AddressCharacteristics--one,
-.AddressCharacteristics--two {
+.FeedbackCharacteristics--one,
+.FeedbackCharacteristics--two {
   padding-bottom: 44px;
   /* border-bottom: 1px solid #d4daf0; */
 }
 
-.AddressCharacteristics--two,
-.AddressCharacteristics--three {
+.FeedbackCharacteristics--two {
   padding-top: 25px;
-}
-
-.AddressCharacteristics--three {
-  padding-bottom: 24px;
 }
 
 /* More than regular breakpoint, because the items won't fit otherwise */
 @media only screen and (min-width: 1115px) {
-  .AddressCharacteristics--one {
+  .FeedbackCharacteristics--one {
     width: 430px;
     padding: 0 50px 31px 0;
   }
 
-  .AddressCharacteristics--two {
+  .FeedbackCharacteristics--two {
     width: 430px;
     padding: 0 0 31px 50px;
     border-left: 1px solid #d4daf0;
-  }
-
-  .AddressCharacteristics--three {
-    padding-bottom: 0;
   }
 }
 </style>
