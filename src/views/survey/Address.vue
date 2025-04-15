@@ -198,7 +198,7 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
             v-model="address" type="text" />
 
           <div v-if="autoCompleteSuggestions.length !== 0" class="GeoCoder__Suggestions">
-            <ul> <!-- Use list for semantics -->
+            <ul>
               <li v-for="suggestionItem in autoCompleteSuggestions" :key="suggestionItem.Id" class="Suggestion"
                 :title="suggestionItem.Suggestion" @click="selectSuggestion(suggestionItem.Id)">
                 <div class="SvgIcon svg-container">
@@ -312,7 +312,6 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
 
 @media only screen and (max-width: 900px) {
   .GeoCoder__Suggestions {
-    /* Removed absolute positioning that was causing issues */
     width: 100%;
   }
 }
