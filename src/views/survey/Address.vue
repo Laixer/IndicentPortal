@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, ref, watch, type Ref } from 'vue' // useTemplateRef,
+import { onBeforeMount, ref, watch, type Ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import SuggestionIcon from '@/components/icons/SuggestionIcon.vue'
@@ -14,19 +14,20 @@ import { useConfigStore } from '@/stores/config'
 
 const { branding } = storeToRefs(useConfigStore())
 const surveyStore = useSurveyStore()
-const { model, address } = storeToRefs(surveyStore)
+const { model, address, coordinates } = storeToRefs(surveyStore)
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
 onBeforeMount(() => {
-  // If either the address or building id are not filled in, disable the next button
-  if (model.value.building === '') {
-    disableNextButton()
-  }
+  // Disable next button initially
+  disableNextButton()
 
   // Initialize suggestion with address if address is not null or empty
   if (address.value && address.value.trim() !== '') {
     suggestion.value = address.value
-    enableNextButton()
+    // Only enable next if a building ID is already stored (meaning a valid selection was made previously)
+    if (model.value.building !== '') {
+      enableNextButton()
+    }
   }
 })
 
@@ -75,21 +76,40 @@ const selectSuggestion = async (id: string) => {
   suggestion.value = doc.weergavenaam
   address.value = doc.weergavenaam;
 
-  // Throw the reference through the Fundermaps Geocoder to get an standardized address & building reference
-  const geocoderResult = await api.building.getLocationInformationByBuildingId(doc.nummeraanduiding_id)
+  // Disable next button until we confirm a building ID
+  disableNextButton()
+  surveyStore.setBuilding('')
+  coordinates.value = null
 
-  surveyStore.setBuilding(geocoderResult.building_id)
-
-  // Set the coordinates, if the API response has this information
-  // TODO: What to do if LngLat info is missing?
-  if (mapboxInstance && geocoderResult.residence_lon && geocoderResult.residence_lat) {
-    const coords = new LngLat(geocoderResult.residence_lon, geocoderResult.residence_lat)
-    mapboxInstance.setCenter(coords)
-
-    marker.remove().setLngLat(coords).addTo(mapboxInstance)
+  // Remove marker if it exists when resetting
+  if (mapboxInstance) {
+    marker.remove()
   }
 
-  enableNextButton()
+  try {
+    // Throw the reference through the Fundermaps Geocoder to get a standardized address & building reference
+    const geocoderResult = await api.building.getLocationInformationByBuildingId(doc.nummeraanduiding_id)
+    if (!geocoderResult || !geocoderResult.building_id) { // Check for building_id specifically
+      console.error('Geocoder result missing or does not contain building_id')
+      return
+    }
+
+    surveyStore.setBuilding(geocoderResult.building_id)
+
+    // Set the coordinates, if the API response has this information
+    if (mapboxInstance && geocoderResult.residence_lon && geocoderResult.residence_lat) {
+      const coords = new LngLat(geocoderResult.residence_lon, geocoderResult.residence_lat)
+      coordinates.value = { lat: coords.lat, lng: coords.lng }
+      mapboxInstance.setCenter(coords)
+      marker.setLngLat(coords).addTo(mapboxInstance)
+    }
+
+    enableNextButton() // Enable next only if building_id is confirmed
+  } catch (error) {
+    console.error('Error fetching geocoder result:', error)
+    // Optionally, show an error message to the user
+    // TODO: Implement user-facing error handling
+  }
 }
 
 /**
@@ -102,8 +122,15 @@ watch(
     const value = address.value?.trim()
 
     if (value !== suggestion.value) {
-      // Disable the button if the address value no longer matches the suggestion
+      // Disable the button and clear stored data if the address value no longer matches the suggestion
       disableNextButton()
+      surveyStore.setBuilding('')
+
+      // Remove marker from map when address changes and no longer matches suggestion
+      if (mapboxInstance) {
+        marker.remove()
+        coordinates.value = null
+      }
 
       // Clear suggestions if the input is cleared
       if (value === '') {
@@ -113,8 +140,9 @@ watch(
 
         // Use location-based search if map center is defined
         if (branding.value.mapCenter) {
-          const { lat, lng } = branding.value.mapCenter
-          response = await getSuggestionsNearCoordinates(value as string, lat, lng, 7)
+          // Use branding mapCenter as fallback, but prefer stored coordinates if available
+          const searchCenter = coordinates.value ?? branding.value.mapCenter;
+          response = await getSuggestionsNearCoordinates(value as string, searchCenter.lat, searchCenter.lng, 7)
         } else {
           response = await getSuggestions(value as string, 7)
         }
@@ -124,6 +152,7 @@ watch(
           !response.highlighting ||
           Object.keys(response.highlighting).length === 0
         ) {
+          autoCompleteSuggestions.value = []
           return
         }
 
@@ -131,8 +160,8 @@ watch(
           return { Id: key, Suggestion: response.highlighting[key].suggest + '' }
         })
       }
-    } else if (value !== '' && value === suggestion.value) {
-      // Re-enable the next button if the address value is restored to the suggestion value
+    } else if (value !== '' && value === suggestion.value && model.value.building !== '') {
+      // Re-enable the next button ONLY if the address value is restored AND a building ID is present
       enableNextButton()
     }
   },
@@ -141,6 +170,13 @@ watch(
 
 const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
   mapboxInstance = map
+
+  // Check if coordinates are already stored and place marker
+  if (coordinates.value && mapboxInstance) {
+    const coords = new LngLat(coordinates.value.lng, coordinates.value.lat)
+    mapboxInstance.setCenter(coords)
+    marker.setLngLat(coords).addTo(mapboxInstance)
+  }
 }
 </script>
 
@@ -161,17 +197,17 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
           <input id="address" placeholder="Stationsplein, 1012 AB Amsterdam" autocomplete="off" class="FormField__Field"
             v-model="address" type="text" />
 
-          <template v-if="autoCompleteSuggestions.length !== 0">
-            <div class="GeoCoder__Suggestions">
-              <div v-for="suggestion in autoCompleteSuggestions" class="Suggestion" :title="suggestion.Suggestion"
-                @click="selectSuggestion(suggestion.Id)">
+          <div v-if="autoCompleteSuggestions.length !== 0" class="GeoCoder__Suggestions">
+            <ul> <!-- Use list for semantics -->
+              <li v-for="suggestionItem in autoCompleteSuggestions" :key="suggestionItem.Id" class="Suggestion"
+                :title="suggestionItem.Suggestion" @click="selectSuggestion(suggestionItem.Id)">
                 <div class="SvgIcon svg-container">
                   <SuggestionIcon />
                 </div>
-                <span v-html="suggestion.Suggestion"></span>
-              </div>
-            </div>
-          </template>
+                <span v-html="suggestionItem.Suggestion"></span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -231,8 +267,6 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
   }
 }
 
-/*  */
-
 .GeoCoder {
   position: relative;
 }
@@ -269,20 +303,32 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
   border-bottom-right-radius: 4px;
   overflow: hidden;
   background: white;
+  position: absolute;
+  z-index: 9999;
+  top: 100%;
+  left: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 @media only screen and (max-width: 900px) {
   .GeoCoder__Suggestions {
-    position: absolute;
-    top: 80px;
-    z-index: 9999;
+    /* Removed absolute positioning that was causing issues */
+    width: 100%;
   }
+}
+
+.GeoCoder__Suggestions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .GeoCoder__Suggestions .Suggestion {
   display: block;
   position: relative;
   padding: 13px 15px 14px 50px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .GeoCoder__Suggestions .Suggestion span {
@@ -304,13 +350,16 @@ const onMapboxLoad = function onMapboxLoad({ map }: { map: Map }) {
   font-size: 19px;
 }
 
-.GeoCoder__Suggestions .Suggestion:hover {
-  cursor: pointer;
+.GeoCoder__Suggestions .Suggestion:hover,
+.GeoCoder__Suggestions .Suggestion:focus {
   background: #2657ff;
+  outline: none;
 }
 
 .GeoCoder__Suggestions .Suggestion:hover .SvgIcon,
-.GeoCoder__Suggestions .Suggestion:hover span {
+.GeoCoder__Suggestions .Suggestion:hover span,
+.GeoCoder__Suggestions .Suggestion:focus .SvgIcon,
+.GeoCoder__Suggestions .Suggestion:focus span {
   color: white;
 }
 </style>

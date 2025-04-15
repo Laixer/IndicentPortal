@@ -5,6 +5,12 @@ import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
 import type { LocationQuery } from 'vue-router'
 
+// Define interface for coordinates
+interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
 // Define interface for better type safety
 interface SurveyState {
   saving: boolean
@@ -13,6 +19,7 @@ interface SurveyState {
   vendorSlug: string | undefined
   clientId: number
   address: string | null
+  coordinates: Coordinates | null
   model: ISurveyModel
 }
 
@@ -77,6 +84,7 @@ export const useSurveyStore = defineStore('survey', () => {
     vendorSlug: configStore.vendorSlug,
     clientId: configStore.clientId,
     address: null,
+    coordinates: null, // Initialize coordinates
     model: getCleanModelState()
   })
 
@@ -88,6 +96,7 @@ export const useSurveyStore = defineStore('survey', () => {
     state.vendorSlug = configStore.vendorSlug
     state.clientId = configStore.clientId
     state.address = null
+    state.coordinates = null // Reset coordinates
     state.model = getCleanModelState()
   }
 
@@ -188,6 +197,9 @@ export const useSurveyStore = defineStore('survey', () => {
       state.isDirty = true
       return true
     }
+    // If validation fails, clear building and related data (like coordinates)
+    state.model.building = ''
+    state.coordinates = null
     return false
   }
 
