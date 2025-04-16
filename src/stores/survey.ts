@@ -76,6 +76,7 @@ const validateBuilding = (building: string): boolean => {
 
 export const useSurveyStore = defineStore('survey', () => {
   const configStore = useConfigStore()
+  const { vendorSlug, clientId } = storeToRefs(configStore)
 
   // State using reactive instead of ref for better destructuring
   const state = reactive<SurveyState>({
@@ -83,8 +84,8 @@ export const useSurveyStore = defineStore('survey', () => {
     saveError: null,
     submissionError: false,
     isDirty: false,
-    vendorSlug: configStore.vendorSlug,
-    clientId: configStore.clientId,
+    vendorSlug: vendorSlug.value,
+    clientId: clientId.value,
     address: null,
     coordinates: null, // Initialize coordinates
     model: getCleanModelState()
@@ -96,8 +97,8 @@ export const useSurveyStore = defineStore('survey', () => {
     state.saveError = null
     state.submissionError = false
     state.isDirty = false
-    state.vendorSlug = configStore.vendorSlug
-    state.clientId = configStore.clientId
+    state.vendorSlug = vendorSlug.value
+    state.clientId = clientId.value
     state.address = null
     state.coordinates = null // Reset coordinates
     state.model = getCleanModelState()
@@ -144,8 +145,9 @@ export const useSurveyStore = defineStore('survey', () => {
    * @returns {boolean} True if the context is valid, false otherwise
    */
   const validateStoreContext = (): boolean => {
-    if (state.vendorSlug !== configStore.vendorSlug ||
-      state.clientId !== configStore.clientId) {
+    // Now compare (which should always be true after the update above)
+    if (state.vendorSlug !== vendorSlug.value ||
+      state.clientId !== clientId.value) {
       console.warn('Vendor or client mismatch detected in persisted state')
       return false;
     }
