@@ -15,6 +15,7 @@ interface Coordinates {
 interface SurveyState {
   saving: boolean
   saveError: string | null
+  submissionError: boolean
   isDirty: boolean
   vendorSlug: string | undefined
   clientId: number
@@ -80,6 +81,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const state = reactive<SurveyState>({
     saving: false,
     saveError: null,
+    submissionError: false,
     isDirty: false,
     vendorSlug: configStore.vendorSlug,
     clientId: configStore.clientId,
@@ -92,6 +94,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const resetState = () => {
     state.saving = false
     state.saveError = null
+    state.submissionError = false
     state.isDirty = false
     state.vendorSlug = configStore.vendorSlug
     state.clientId = configStore.clientId
@@ -216,6 +219,7 @@ export const useSurveyStore = defineStore('survey', () => {
     try {
       state.saving = true
       state.saveError = null
+      state.submissionError = false
 
       // Ensure client ID is set correctly
       state.model.client_id = state.clientId
@@ -224,6 +228,7 @@ export const useSurveyStore = defineStore('survey', () => {
         const error = 'Survey model validation failed'
         console.error(error)
         state.saveError = error
+        state.submissionError = true
         return false
       }
 
@@ -231,6 +236,7 @@ export const useSurveyStore = defineStore('survey', () => {
         const error = 'Survey data is not valid or dirty'
         console.error(error)
         state.saveError = error
+        state.submissionError = true
         return false
       }
 
@@ -241,11 +247,13 @@ export const useSurveyStore = defineStore('survey', () => {
       clearSurveyData()
       state.isDirty = false
       state.saveError = null
+      state.submissionError = false
       return true
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error saving data'
       console.error('Failed to save incident data:', error)
       state.saveError = errorMessage
+      state.submissionError = true
       return false
     } finally {
       state.saving = false

@@ -7,15 +7,37 @@ import Title from '@/components/Title.vue'
 import SvgIconKCAF from '@/components/icons/SvgIconKCAF.vue'
 
 import { useConfigStore } from '@/stores/config.js'
+import { useSurveyStore } from '@/stores/survey.js'
 
-const { vendorSlug } = storeToRefs(useConfigStore())
+const configStore = useConfigStore()
+const surveyStore = useSurveyStore()
+const { vendorSlug } = storeToRefs(configStore)
+const { submissionError } = storeToRefs(surveyStore)
 const isFeedback = computed(() => vendorSlug.value === 'feedback')
 </script>
 
 <template>
   <div class="Finish">
     <div class="Finish__Wrapper">
-      <template v-if="isFeedback">
+      <template v-if="submissionError">
+        <Title message="Er is iets misgegaan" />
+
+        <p class="BodyText BodyText--bold error-text" style="margin-bottom: 26px">
+          <span>De melding kon niet worden ingediend</span>
+        </p>
+
+        <p class="BodyText" style="margin-bottom: 26px">
+          <span>
+            Er is helaas een fout opgetreden bij het verwerken van uw gegevens.
+            Probeer het later nog eens of neem contact op met onze helpdesk.
+          </span>
+        </p>
+
+        <!-- <button @click="resetError" class="Button Button--primary">
+          <span>Probeer opnieuw</span>
+        </button> -->
+      </template>
+      <template v-else-if="isFeedback">
         <Title message="Afgerond!" />
 
         <p class="BodyText BodyText--bold" style="margin-bottom: 26px">
@@ -93,6 +115,20 @@ a {
   margin-bottom: 26px;
 }
 
+.error-text {
+  color: #e74c3c;
+  /* Red color for error text */
+}
+
+.Button--primary {
+  background-color: #00c95d;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
 /* .Title+.BodyText {
     color: #202122;
 } */
