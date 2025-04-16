@@ -24,7 +24,6 @@ const handlePrevStepNavigation = function handlePrevStepNavigation() {
 const handleNextStepNavigation = async function handleNextStepNavigation() {
   let nextPageName = getNextSurveyPageSlug() || 'finish'
   if (isLastSurveyPage.value) {
-    // nextPageName = (await saveToDatabase()) || nextPageName
     await saveToDatabase()
   }
 
