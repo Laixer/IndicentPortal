@@ -149,6 +149,7 @@ router.beforeEach(async (to, from, next) => {
     // Check if trying to access a survey page without valid data
     if (from.name === undefined && to.meta.survey && !surveyStore.isDirtyAndValid()) {
       surveyStore.clearStore()
+      surveyStore.setVendorSlug(configStore.vendorSlug as string, configStore.clientId)
       return next({ name: 'home' })
     }
 
