@@ -97,18 +97,6 @@ export const useSurveyStore = defineStore('survey', () => {
     model: getCleanModelState()
   })
 
-  // Reset the state to its initial clean state
-  const resetState = () => {
-    state.saving = false
-    state.saveError = null
-    state.submissionError = false
-    state.isDirty = false
-    state.vendorSlug = undefined
-    state.address = null
-    state.coordinates = null
-    state.model = getCleanModelState()
-  }
-
   /**
    * Validates if the current store vendor slug matches the provided vendor slug
    * Used to ensure operations are performed in the correct vendor context
@@ -130,7 +118,14 @@ export const useSurveyStore = defineStore('survey', () => {
     }
 
     // Reset the model to its clean state
-    resetState()
+    state.saving = false
+    state.saveError = null
+    state.submissionError = false
+    state.isDirty = false
+    state.vendorSlug = undefined
+    state.address = null
+    state.coordinates = null
+    state.model = getCleanModelState()
 
     // Restore contact details
     state.model.contact_name = contactDetails.contact_name
