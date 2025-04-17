@@ -18,7 +18,6 @@ interface SurveyState {
   submissionError: boolean
   isDirty: boolean
   vendorSlug: string | undefined
-  clientId: number
   address: string | null
   coordinates: Coordinates | null
   model: ISurveyModel
@@ -75,17 +74,13 @@ const validateBuilding = (building: string): boolean => {
 }
 
 export const useSurveyStore = defineStore('survey', () => {
-  const configStore = useConfigStore()
-  const { vendorSlug, clientId } = storeToRefs(configStore)
-
   // State using reactive instead of ref for better destructuring
   const state = reactive<SurveyState>({
     saving: false,
     saveError: null,
     submissionError: false,
     isDirty: false,
-    vendorSlug: vendorSlug.value,
-    clientId: clientId.value,
+    vendorSlug: undefined,
     address: null,
     coordinates: null, // Initialize coordinates
     model: getCleanModelState()
@@ -97,17 +92,26 @@ export const useSurveyStore = defineStore('survey', () => {
     state.saveError = null
     state.submissionError = false
     state.isDirty = false
-    state.vendorSlug = vendorSlug.value
-    state.clientId = clientId.value
+    state.vendorSlug = undefined
     state.address = null
-    state.coordinates = null // Reset coordinates
+    state.coordinates = null
     state.model = getCleanModelState()
+  }
+
+  /**
+   * Validates if the current store vendor slug matches the provided vendor slug
+   * Used to ensure operations are performed in the correct vendor context
+   * @param {string} vendorSlug - The vendor slug to validate against the current store state
+   * @returns {boolean} True if the vendor slugs match, false otherwise
+   */
+  const isStoreValid = (vendorSlug: string): boolean => {
+    return state.vendorSlug === vendorSlug && state.vendorSlug !== undefined
   }
 
   /**
    * Reset the survey data while preserving contact details
    */
-  const clearSurveyData = () => {
+  const clearStore = () => {
     const contactDetails = {
       contact_name: state.model.contact_name,
       contact: state.model.contact,
@@ -130,27 +134,15 @@ export const useSurveyStore = defineStore('survey', () => {
    * Validate the survey model to ensure required fields are filled
    * @returns {boolean} True if the model is valid, false otherwise
    */
-  const validateSurveyModel = (): boolean => {
+  const isSurveyModelValid = (): boolean => {
     // Basic validation - could be expanded with more detailed validation
     return Boolean(
+      state.model.client_id &&
       state.model.building &&
+      validateBuilding(state.model.building) &&
       state.model.contact &&
       state.model.contact_name
     )
-  }
-
-  /**
-   * Validates if the current store context matches the config store
-   * Used to detect when loading potentially stale data from persistence
-   * @returns {boolean} True if the context is valid, false otherwise
-   */
-  const validateStoreContext = (): boolean => {
-    if (state.vendorSlug !== vendorSlug.value ||
-      state.clientId !== clientId.value) {
-      console.warn('Vendor or client mismatch detected in persisted state')
-      return false;
-    }
-    return true;
   }
 
   /**
@@ -159,16 +151,13 @@ export const useSurveyStore = defineStore('survey', () => {
    * @returns {boolean} True if dirty and valid, false otherwise
    */
   const isDirtyAndValid = (): boolean => {
-    // First check if store context is valid
-    const isContextValid = validateStoreContext();
-
     // Check if it's dirty and has a valid building
     const hasDirtyValidBuilding = state.isDirty &&
       state.model.building ? validateBuilding(state.model.building) : false;
 
     // If either context is invalid or the building is invalid but we have dirty data,
     // this likely means we loaded an invalid state from persistence
-    if (!isContextValid || (state.isDirty && !hasDirtyValidBuilding)) {
+    if (state.isDirty && !hasDirtyValidBuilding) {
       console.warn('Detected potentially invalid persisted state');
       return false;
     }
@@ -177,16 +166,14 @@ export const useSurveyStore = defineStore('survey', () => {
   }
 
   /**
-   * Reset the survey store if invalid persisted state is detected
-   * Call this when navigating to survey pages to ensure valid state
-   * @returns {boolean} True if state was valid, false if it was reset
+   * Sets the vendor slug and client ID for the current survey
+   * Used to associate the survey with the specific vendor and client context
+   * @param {string} vendorSlug - The unique identifier for the vendor
+   * @param {number} clientId - The client ID associated with the vendor
    */
-  const resetIfInvalid = (): boolean => {
-    if (!isDirtyAndValid()) {
-      clearSurveyData();
-      return false;
-    }
-    return true;
+  const setVendorSlug = (vendorSlug: string, clientId: number): void => {
+    state.vendorSlug = vendorSlug
+    state.model.client_id = clientId
   }
 
   /**
@@ -222,10 +209,7 @@ export const useSurveyStore = defineStore('survey', () => {
       state.saveError = null
       state.submissionError = false
 
-      // Ensure client ID is set correctly
-      state.model.client_id = state.clientId
-
-      if (!validateSurveyModel()) {
+      if (!isSurveyModelValid()) {
         const error = 'Survey model validation failed'
         console.error(error)
         state.saveError = error
@@ -237,7 +221,7 @@ export const useSurveyStore = defineStore('survey', () => {
       await saveIncidentData(state.model)
 
       // Reset the survey data on successful save
-      clearSurveyData()
+      clearStore()
       state.isDirty = false
       state.saveError = null
       state.submissionError = false
@@ -269,11 +253,12 @@ export const useSurveyStore = defineStore('survey', () => {
   return {
     ...toRefs(state),
     // Methods
-    clearSurveyData,
+    clearStore,
     saveToDatabase,
+    setVendorSlug,
     isDirtyAndValid,
     populateFromParams,
     setBuilding,
-    resetIfInvalid
+    isStoreValid
   }
 }, { persist: { storage: sessionStorage } })

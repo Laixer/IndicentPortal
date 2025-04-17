@@ -132,9 +132,13 @@ router.beforeEach(async (to, from, next) => {
 
       if (!success) {
         console.error('Failed to load vendor configuration')
-        // Consider redirecting to an error page here
         return next(false)
       }
+
+      if (!surveyStore.isStoreValid(configStore.vendorSlug as string)) {
+        surveyStore.clearStore()
+      }
+      surveyStore.setVendorSlug(configStore.vendorSlug as string, configStore.clientId)
     }
 
     // Populate the survey model with URL parameters on initial load only
@@ -145,14 +149,14 @@ router.beforeEach(async (to, from, next) => {
     // Check if trying to access a survey page without valid data
     if (from.name === undefined && to.meta.survey && !surveyStore.isDirtyAndValid()) {
       console.log('Redirecting to home: Survey not initialized or no valid building ID')
-      surveyStore.resetIfInvalid()
+      surveyStore.clearStore()
       return next({ name: 'home' })
     }
 
     next()
   } catch (error) {
     console.error('Router navigation error:', error)
-    next(false) // Cancel navigation
+    next(false)
   }
 })
 
