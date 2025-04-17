@@ -145,7 +145,6 @@ export const useSurveyStore = defineStore('survey', () => {
    * @returns {boolean} True if the context is valid, false otherwise
    */
   const validateStoreContext = (): boolean => {
-    // Now compare (which should always be true after the update above)
     if (state.vendorSlug !== vendorSlug.value ||
       state.clientId !== clientId.value) {
       console.warn('Vendor or client mismatch detected in persisted state')
@@ -228,14 +227,6 @@ export const useSurveyStore = defineStore('survey', () => {
 
       if (!validateSurveyModel()) {
         const error = 'Survey model validation failed'
-        console.error(error)
-        state.saveError = error
-        state.submissionError = true
-        return false
-      }
-
-      if (!isDirtyAndValid()) {
-        const error = 'Survey data is not valid or dirty'
         console.error(error)
         state.saveError = error
         state.submissionError = true

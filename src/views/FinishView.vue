@@ -32,10 +32,6 @@ const isFeedback = computed(() => vendorSlug.value === 'feedback')
             Probeer het later nog eens of neem contact op met onze helpdesk.
           </span>
         </p>
-
-        <!-- <button @click="resetError" class="Button Button--primary">
-          <span>Probeer opnieuw</span>
-        </button> -->
       </template>
       <template v-else-if="isFeedback">
         <Title message="Afgerond!" />
@@ -129,16 +125,14 @@ a {
   cursor: pointer;
   font-size: 16px;
 }
-/* .Title+.BodyText {
-    color: #202122;
-} */
+
 
 .Footer {
   color: #202122;
   font-size: 18px;
 }
 
-.Footer .SvgIcon {
+.Footer.SvgIcon {
   font-size: 24px;
   /* color: #00c95d; */
   margin-right: 6px;
