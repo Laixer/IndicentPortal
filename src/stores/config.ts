@@ -101,7 +101,6 @@ export const useConfigStore = defineStore('vendorConfig', () => {
 
     try {
       const appConfig = await getAppConfig(vendor)
-
       if (!appConfig || !appConfig.data) {
         throw new Error('No app config data found')
       }
@@ -109,6 +108,21 @@ export const useConfigStore = defineStore('vendorConfig', () => {
       // Parse the survey config
       const surveyConfig: ISurveyConfig =
         typeof appConfig.data === 'string' ? JSON.parse(appConfig.data) : appConfig.data
+
+      // Validate vendor slug and client_id
+      if (!vendor) {
+        state.loadingError = true
+        state.errorMessage = 'Missing vendor slug'
+        state.loading = false
+        return false
+      }
+
+      if (!surveyConfig.client_id) {
+        state.loadingError = true
+        state.errorMessage = 'Missing client ID'
+        state.loading = false
+        return false
+      }
 
       // Update store state with the new configuration
       state.vendorSlug = vendor
