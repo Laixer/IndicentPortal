@@ -268,4 +268,9 @@ export const useSurveyStore = defineStore('survey', () => {
     setBuilding,
     isStoreValid
   }
-}, { persist: { storage: sessionStorage } })
+}, {
+  persist: {
+    storage: sessionStorage,
+    omit: ['saving', 'saveError', 'submissionError'],
+  }
+})
