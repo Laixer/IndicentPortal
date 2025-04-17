@@ -1,6 +1,5 @@
 import { reactive, toRefs } from 'vue'
-import { defineStore, storeToRefs } from 'pinia'
-import { useConfigStore } from './config'
+import { defineStore } from 'pinia'
 import { saveIncidentData } from '@/services/fundermaps/endpoints/incident'
 import type { ISurveyModel } from '@/services/fundermaps/interfaces/survey/ISurveyModel'
 import type { LocationQuery } from 'vue-router'
@@ -61,11 +60,23 @@ const getCleanModelState = (): ISurveyModel => ({
 })
 
 /**
+ * Validates the client ID
+ * @param {number} clientId - The client ID to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+const validateClientId = (clientId: number | undefined | null): boolean => {
+  return Boolean(
+    clientId &&
+    clientId > 0
+  )
+}
+
+/**
  * Validates the building identifier
  * @param {string} building - The building identifier to validate
  * @returns {boolean} True if valid, false otherwise
  */
-const validateBuilding = (building: string): boolean => {
+const validateBuilding = (building: string | undefined | null): boolean => {
   return Boolean(
     building &&
     building.trim().length > 0 &&
@@ -135,10 +146,8 @@ export const useSurveyStore = defineStore('survey', () => {
    * @returns {boolean} True if the model is valid, false otherwise
    */
   const isSurveyModelValid = (): boolean => {
-    // Basic validation - could be expanded with more detailed validation
     return Boolean(
-      state.model.client_id &&
-      state.model.building &&
+      validateClientId(state.model.client_id) &&
       validateBuilding(state.model.building) &&
       state.model.contact &&
       state.model.contact_name
@@ -151,18 +160,18 @@ export const useSurveyStore = defineStore('survey', () => {
    * @returns {boolean} True if dirty and valid, false otherwise
    */
   const isDirtyAndValid = (): boolean => {
-    // Check if it's dirty and has a valid building
-    const hasDirtyValidBuilding = state.isDirty &&
-      state.model.building ? validateBuilding(state.model.building) : false;
+    // Check both required fields are valid
+    const isValid = validateClientId(state.model.client_id) &&
+      validateBuilding(state.model.building);
 
-    // If either context is invalid or the building is invalid but we have dirty data,
-    // this likely means we loaded an invalid state from persistence
-    if (state.isDirty && !hasDirtyValidBuilding) {
+    // Return false if data is dirty but invalid (likely from invalid persisted state)
+    if (state.isDirty && !isValid) {
       console.warn('Detected potentially invalid persisted state');
       return false;
     }
 
-    return hasDirtyValidBuilding;
+    // Return true only if the state is dirty and valid
+    return state.isDirty && isValid;
   }
 
   /**
@@ -245,8 +254,6 @@ export const useSurveyStore = defineStore('survey', () => {
     if (params.building && typeof params.building === 'string') {
       setBuilding(params.building);
     }
-
-    // Additional parameters could be handled here
   }
 
   // Use toRefs to make all properties reactive while allowing destructuring
