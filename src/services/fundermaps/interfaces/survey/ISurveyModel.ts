@@ -38,5 +38,6 @@ export interface ISurveyModel {
   note: string
 
   // Upload
+  file_resource_key: string | null
   document_file: string[]
 }

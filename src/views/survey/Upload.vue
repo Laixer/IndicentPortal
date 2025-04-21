@@ -97,6 +97,7 @@ const uploadFiles = async (files: FileList) => {
     await uploadIncidentFiles(validationResult.validFiles as unknown as FileList).then((response) => {
       loadedFiles.value = loadedFiles.value.concat(Array.from(validationResult.validFiles))
       model.value.document_file = (model.value.document_file || []).concat(response?.files || [])
+      model.value.file_resource_key = response?.key
     })
   } catch (error) {
     console.error('Error uploading files:', error)

@@ -56,6 +56,7 @@ const getCleanModelState = (): ISurveyModel => ({
   note: '',
 
   // Upload
+  file_resource_key: null,
   document_file: []
 })
 
