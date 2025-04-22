@@ -1,6 +1,6 @@
 import { get, post } from '../client'
 
-export const login = async (email: string, password: string) => {
+const login = async (email: string, password: string) => {
   return await post({
     endpoint: '/auth/signin',
     body: {
@@ -11,17 +11,14 @@ export const login = async (email: string, password: string) => {
   })
 }
 
-export const refresh = async () => {
+const refresh = async () => {
   return await get({
     endpoint: 'auth/token-refresh',
     requireAuth: true
   })
 }
 
-/**
- * Send a request for a password reset mail
- */
-export const requestPasswordReset = async (email: string) => {
+const requestPasswordReset = async (email: string) => {
   return await post({
     endpoint: '/auth/reset-password',
     body: {
@@ -31,10 +28,7 @@ export const requestPasswordReset = async (email: string) => {
   })
 }
 
-/**
- * Send a request for a password reset mail
- */
-export const resetPassword = async (
+const resetPassword = async (
   email: string,
   token: string,
   password: string
@@ -50,11 +44,7 @@ export const resetPassword = async (
   })
 }
 
-/**
- * Send a request to change a password
- *  Note: this is only for users who are logged in
- */
-export const changePassword = async function changePassword(
+const changePassword = async function changePassword(
   oldPassword: string,
   newPassword: string
 ) {
@@ -68,7 +58,10 @@ export const changePassword = async function changePassword(
   })
 }
 
-// TODO: Remove 
 export default {
-  login
+  login,
+  refresh,
+  requestPasswordReset,
+  resetPassword,
+  changePassword
 }

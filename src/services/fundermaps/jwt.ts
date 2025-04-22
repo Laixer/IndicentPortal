@@ -1,6 +1,6 @@
 import { type JwtPayload, jwtDecode } from 'jwt-decode'
-import { refresh } from './endpoints/auth'
 import type { AuthorizationHeader } from './client'
+import fundermaps from './'
 
 // ****************************************************************************
 //  Interface
@@ -115,7 +115,7 @@ export function removeAccessToken(): void {
  */
 export function refreshAccessToken(): void {
   if (hasNonExpiredToken()) {
-    refresh()
+    fundermaps.auth.refresh()
       .then((response) => storeAccessToken(response.token))
       .catch(() => {
         // TODO: Redirect to Login?
