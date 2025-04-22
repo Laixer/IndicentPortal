@@ -124,7 +124,7 @@ const handleFileChange = async function handleFileChange(e: Event) {
       <label for="file-upload">
         <div class="dz-message align-self-center">
           <input type="file" id="file-upload" style="display: none" @change="handleFileChange" multiple
-            accept=".png,.jpg,.jpeg,.heif,.heic,.docx,.xlsx,.csv,.mp4,.mov,.avi,.wmv,.pdf,.txt" />
+            accept="image/*,video/*,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" />
 
           <div v-if="errorMessage" class="error-message" role="alert" aria-live="assertive">
             {{ errorMessage }}
