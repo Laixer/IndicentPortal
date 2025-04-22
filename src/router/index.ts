@@ -129,7 +129,6 @@ router.beforeEach(async (to, from, next) => {
     if (!vendorSlug.value) {
       const vendor = determineVendorSlug()
       const success = await configStore.loadVendorConfig(vendor)
-
       if (!success) {
         console.error('Failed to load vendor configuration')
         return next(false)
