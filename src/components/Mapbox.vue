@@ -1,12 +1,4 @@
 <script setup lang="ts">
-/**
- * @copyright MIT
- * @author Wouter van Dam (wouter@journeyworks.nl)
- *
- * This is a basic, generic Vue wrapper component for MapBox.
- * This module is included in the source code of the application itself for simplicity and reliability
- */
-
 import { nextTick, onMounted, onUnmounted, provide, readonly, ref } from 'vue'
 import mapboxgl, { type Map } from 'mapbox-gl'
 
