@@ -1,5 +1,5 @@
 export interface AppConfig {
   id: string
   name: string
-  data: string // TODO: Discuss change to a JSON object structure (which will differ per app)
+  data: Record<string, unknown>
 }
