@@ -1,4 +1,4 @@
-export interface IGeoLocationData {
+export interface GeoLocationData {
   building_built_year: null | string
   building_id: string
   building_type: null | string
