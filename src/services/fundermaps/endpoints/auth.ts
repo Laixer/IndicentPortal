@@ -1,7 +1,7 @@
 import { get, post } from '../client'
 
-const login = async (email: string, password: string) => {
-  return await post({
+const login = (email: string, password: string): Promise<any> => {
+  return post({
     endpoint: '/auth/signin',
     body: {
       email,
@@ -11,15 +11,15 @@ const login = async (email: string, password: string) => {
   })
 }
 
-const refresh = async () => {
-  return await get({
+const refresh = () => {
+  return get({
     endpoint: 'auth/token-refresh',
     requireAuth: true
   })
 }
 
-const requestPasswordReset = async (email: string) => {
-  return await post({
+const requestPasswordReset = (email: string): Promise<any> => {
+  return post({
     endpoint: '/auth/reset-password',
     body: {
       email
@@ -28,12 +28,12 @@ const requestPasswordReset = async (email: string) => {
   })
 }
 
-const resetPassword = async (
+const resetPassword = (
   email: string,
   token: string,
   password: string
-) => {
-  return await post({
+): Promise<any> => {
+  return post({
     endpoint: '/auth/reset-new-password',
     body: {
       email,
@@ -44,11 +44,11 @@ const resetPassword = async (
   })
 }
 
-const changePassword = async function changePassword(
+const changePassword = (
   oldPassword: string,
   newPassword: string
-) {
-  return await post({
+): Promise<any> => {
+  return post({
     endpoint: '/auth/change-password',
     body: {
       oldPassword: oldPassword,
