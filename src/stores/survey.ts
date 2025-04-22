@@ -25,15 +25,14 @@ interface SurveyState {
 // Extract clean model to avoid duplication and ensure consistency
 const getCleanModelState = (): ISurveyModel => ({
   // Client
-  client_id: null, // number
+  client_id: null,
 
   // Address
-  building: '', // (use this param format)
+  building: '',
 
-  // AddressCharacteristics / FeedbackCharacteristics
   chained_building: null,
   owner: null,
-  neighbor_recovery: null, //
+  neighbor_recovery: null,
 
   // Contact
   contact_name: '',
@@ -44,20 +43,23 @@ const getCleanModelState = (): ISurveyModel => ({
   environment_damage_characteristics: [],
 
   // FoundationDamageCause
-  foundation_damage_cause: null, // string
+  foundation_damage_cause: null,
 
   // FoundationDamageCharacteristics
   foundation_damage_characteristics: [],
 
   // FoundationType
-  foundation_type: null, // string
+  foundation_type: null,
 
   // Note
   note: '',
 
   // Upload
   file_resource_key: null,
-  document_file: []
+  document_file: [],
+
+  // Metadata
+  metadata: {}
 })
 
 /**

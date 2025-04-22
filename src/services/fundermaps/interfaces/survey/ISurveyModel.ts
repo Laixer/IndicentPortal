@@ -40,4 +40,7 @@ export interface ISurveyModel {
   // Upload
   file_resource_key: string | null
   document_file: string[]
+
+  // Metadata
+  metadata: Record<string, unknown>
 }
