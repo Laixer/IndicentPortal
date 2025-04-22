@@ -1,7 +1,7 @@
 import { get } from '../client'
-import type { IAppConfig } from '../interfaces/IAppConfig'
+import type { AppConfig } from '../interfaces/AppConfig'
 
-export const getAppConfig = async (slug: string): Promise<IAppConfig | null> => {
+export const getAppConfig = async (slug: string): Promise<AppConfig | null> => {
   try {
     return await get({
       endpoint: `app/${slug}`,
