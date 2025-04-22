@@ -95,6 +95,12 @@ const selectSuggestion = async (id: string) => {
     }
 
     surveyStore.setBuilding(geocoderResult.building_id)
+    surveyStore.model.metadata = {
+      ...surveyStore.model.metadata,
+      address_name: doc.weergavenaam,
+      nummeraanduiding_id: doc.nummeraanduiding_id,
+      pdok_id: id,
+    }
 
     // Set the coordinates, if the API response has this information
     if (mapboxInstance && geocoderResult.residence_lon && geocoderResult.residence_lat) {
