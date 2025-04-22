@@ -143,15 +143,15 @@ const handleFileChange = async function handleFileChange(e: Event) {
             <div class="upload-image-container">
               <img alt="upload" src="/img/upload.svg" />
             </div>
+            <div class="mb-0 mt-3">
+              <strong>Upload onderzoeksrapporten, archiefstukken, tekeningen of foto's</strong>
+              <div>
+                <span>Klik om een bestand te kiezen</span>
+                <p class="file-limits">(max 25 bestanden, 4 GB per bestand)</p>
+              </div>
+            </div>
           </template>
 
-          <div class="mb-0 mt-3">
-            <strong>Upload onderzoeksrapporten, archiefstukken, tekeningen of foto's</strong>
-            <div>
-              <span>Klik om een bestand te kiezen</span>
-              <p class="file-limits">(max 25 bestanden, 4 GB per bestand)</p>
-            </div>
-          </div>
         </div>
       </label>
     </form>
