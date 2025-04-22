@@ -27,7 +27,7 @@ const getCleanModelState = (): ISurveyModel => ({
   // Client
   client_id: null,
 
-  // Address
+  // Building
   building: '',
 
   chained_building: null,
