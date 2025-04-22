@@ -1,277 +1,181 @@
+/**
+ * Environment damage characteristics enum
+ */
 export enum EnvironmentDamageCharacteristics {
-  /// <summary>
-  ///     Subsidence.
-  /// </summary>
+  /** Subsidence */
   Subsidence = 'subsidence',
 
-  /// <summary>
-  ///     Sagging sewer connections.
-  /// </summary>
+  /** Sagging sewer connections */
   SaggingSewerConnection = 'sagging_sewer_connection',
 
-  /// <summary>
-  ///     Sagging cables and pipes.
-  /// </summary>
+  /** Sagging cables and pipes */
   SaggingCablesPipes = 'sagging_cables_pipes',
 
-  /// <summary>
-  ///     Flooding.
-  /// </summary>
+  /** Flooding */
   Flooding = 'flooding',
 
-  /// <summary>
-  ///     Foundation damage nearby.
-  /// </summary>
+  /** Foundation damage nearby */
   FoundationDamageNearby = 'foundation_damage_nearby',
 
-  /// <summary>
-  ///     Elevation.
-  /// </summary>
+  /** Elevation */
   Elevation = 'elevation',
 
-  /// <summary>
-  ///     Increasing traffic.
-  /// </summary>
+  /** Increasing traffic */
   IncreasingTraffic = 'increasing_traffic',
 
-  /// <summary>
-  ///     Construction nearby.
-  /// </summary>
+  /** Construction nearby */
   ConstructionNearby = 'construction_nearby',
 
-  /// <summary>
-  ///     Vegetation nearby.
-  /// </summary>
+  /** Vegetation nearby */
   VegetationNearby = 'vegetation_nearby',
 
-  /// <summary>
-  ///     Sewage leakage.
-  /// </summary>
+  /** Sewage leakage */
   SewageLeakage = 'sewage_leakage',
 
-  /// <summary>
-  ///     Low ground water.
-  /// </summary>
+  /** Low ground water */
   LowGroundWater = 'low_ground_water'
 }
 
+/**
+ * Foundation damage cause enum
+ */
 export enum FoundationDamageCause {
-  /// <summary>
-  ///     Drainage.
-  /// </summary>
+  /** Drainage */
   Drainage = 'drainage',
 
-  /// <summary>
-  ///     Construction flaw.
-  /// </summary>
+  /** Construction flaw */
   ConstructionFlaw = 'construction_flaw',
 
-  /// <summary>
-  ///     Drystand.
-  /// </summary>
+  /** Drystand */
   Drystand = 'drystand',
 
-  /// <summary>
-  ///     Overcharge.
-  /// </summary>
+  /** Overcharge */
   Overcharge = 'overcharge',
 
-  /// <summary>
-  ///     Overcharge and negative cling.
-  /// </summary>
+  /** Overcharge and negative cling */
   OverchargeNegativeCling = 'overcharge_negative_cling',
 
-  /// <summary>
-  ///     Negative cling.
-  /// </summary>
+  /** Negative cling */
   NegativeCling = 'negative_cling',
 
-  /// <summary>
-  ///     Bio infection.
-  /// </summary>
+  /** Bio infection */
   BioInfection = 'bio_infection',
 
-  /// <summary>
-  ///     Fungus infection.
-  /// </summary>
+  /** Fungus infection */
   FungusInfection = 'fungus_infection',
 
-  /// <summary>
-  ///     Bio and fungus infection.
-  /// </summary>
+  /** Bio and fungus infection */
   BioFungusInfection = 'bio_fungus_infection',
 
-  /// <summary>
-  ///     Foundation flaw.
-  /// </summary>
+  /** Foundation flaw */
   FoundationFlaw = 'foundation_flaw',
 
-  /// <summary>
-  ///     Construction heave.
-  /// </summary>
+  /** Construction heave */
   ConstructionHeave = 'construction_heave',
 
-  /// <summary>
-  ///     Subsidence.
-  /// </summary>
+  /** Subsidence */
   Subsidence = 'subsidence',
 
-  /// <summary>
-  ///     Vegetation.
-  /// </summary>
+  /** Vegetation */
   Vegetation = 'vegetation',
 
-  /// <summary>
-  ///     Gas.
-  /// </summary>
+  /** Gas */
   Gas = 'gas',
 
-  /// <summary>
-  ///     Vibrations.
-  /// </summary>
+  /** Vibrations */
   Vibrations = 'vibrations',
 
-  /// <summary>
-  ///     Foundation was partially recovered.
-  /// </summary>
+  /** Foundation was partially recovered */
   PartialFoundationRecovery = 'partial_foundation_recovery',
 
-  /// <summary>
-  ///     Damage due to Japanese knotweed.
-  /// </summary>
+  /** Damage due to Japanese knotweed */
   JapanseKnotweed = 'japanse_knotweed',
 
-  /// <summary>
-  ///     Groundwater level reduction.
-  /// </summary>
+  /** Groundwater level reduction */
   GroundwaterLevelReduction = 'groundwater_level_reduction'
 }
 
+/**
+ * Foundation damage characteristics enum
+ */
 export enum FoundationDamageCharacteristics {
-  /// <summary>
-  ///     Jamming door window.
-  /// </summary>
+  /** Jamming door window */
   JammingDoorWindow = 'jamming_door_window',
 
-  /// <summary>
-  ///     Crack.
-  /// </summary>
+  /** Crack */
   Crack = 'crack',
 
-  /// <summary>
-  ///     Skewed.
-  /// </summary>
+  /** Skewed */
   Skewed = 'skewed',
 
-  /// <summary>
-  ///     Crawlspace flooding.
-  /// </summary>
+  /** Crawlspace flooding */
   CrawlspaceFlooding = 'crawlspace_flooding',
 
-  /// <summary>
-  ///     Threshold above subsurface.
-  /// </summary>
+  /** Threshold above subsurface */
   ThresholdAboveSubsurface = 'threshold_above_subsurface',
 
-  /// <summary>
-  ///     Threshold below subsurface.
-  /// </summary>
+  /** Threshold below subsurface */
   ThresholdBelowSubsurface = 'threshold_below_subsurface',
 
-  /// <summary>
-  ///     Crooked floor wall.
-  /// </summary>
+  /** Crooked floor wall */
   CrookedFloorWall = 'crooked_floor_wall'
 }
 
+/**
+ * Foundation type enum
+ */
 export enum FoundationType {
-  /// <summary>
-  ///     Wood.
-  /// </summary>
+  /** Wood */
   Wood = 'wood',
 
-  /// <summary>
-  ///     Wood foundation according to Amsterdam.
-  /// </summary>
+  /** Wood foundation according to Amsterdam */
   WoodAmsterdam = 'wood_amsterdam',
 
-  /// <summary>
-  ///     Wood foundation according to Rotterdam.
-  /// </summary>
+  /** Wood foundation according to Rotterdam */
   WoodRotterdam = 'wood_rotterdam',
 
-  /// <summary>
-  ///     Concrete.
-  /// </summary>
+  /** Concrete */
   Concrete = 'concrete',
 
-  /// <summary>
-  ///     No pile.
-  /// </summary>
+  /** No pile */
   NoPile = 'no_pile',
 
-  /// <summary>
-  ///     No pile and no masonry.
-  /// </summary>
+  /** No pile and no masonry */
   NoPileMasonry = 'no_pile_masonry',
 
-  /// <summary>
-  ///     No pile strips.
-  /// </summary>
+  /** No pile strips */
   NoPileStrips = 'no_pile_strips',
 
-  /// <summary>
-  ///     No pile and no bearing floor.
-  /// </summary>
+  /** No pile and no bearing floor */
   NoPileBearingFloor = 'no_pile_bearing_floor',
 
-  /// <summary>
-  ///     No pile and no concrete floor.
-  /// </summary>
+  /** No pile and no concrete floor */
   NoPileConcreteFloor = 'no_pile_concrete_floor',
 
-  /// <summary>
-  ///     No pile and no slit.
-  /// </summary>
+  /** No pile and no slit */
   NoPileSlit = 'no_pile_slit',
 
-  /// <summary>
-  ///     Wood charger.
-  /// </summary>
+  /** Wood charger */
   WoodCharger = 'wood_charger',
 
-  /// <summary>
-  ///     Weighted pile.
-  /// </summary>
+  /** Weighted pile */
   WeightedPile = 'weighted_pile',
 
-  /// <summary>
-  ///     Combined.
-  /// </summary>
+  /** Combined */
   Combined = 'combined',
 
-  /// <summary>
-  ///     Steel pile.
-  /// </summary>
+  /** Steel pile */
   SteelPile = 'steel_pile',
 
-  /// <summary>
-  ///     Other.
-  /// </summary>
+  /** Other */
   Other = 'other',
 
-  /// <summary>
-  ///     Wood foundation according to Amsterdam or Rotterdam.
-  /// </summary>
+  /** Wood foundation according to Amsterdam or Rotterdam */
   WoodRotterdamAmsterdam = 'wood_rotterdam_amsterdam',
 
-  /// <summary>
-  ///     Wood foundation according to Rotterdam with an arch.
-  /// </summary>
+  /** Wood foundation according to Rotterdam with an arch */
   WoodRotterdamArch = 'wood_rotterdam_arch',
 
-  /// <summary>
-  ///     Wood foundation according to Amsterdam with an arch.
-  /// </summary>
+  /** Wood foundation according to Amsterdam with an arch */
   WoodAmsterdamArch = 'wood_amsterdam_arch'
 }

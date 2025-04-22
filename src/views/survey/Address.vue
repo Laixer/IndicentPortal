@@ -113,8 +113,6 @@ const selectSuggestion = async (id: string) => {
     enableNextButton() // Enable next only if building_id is confirmed
   } catch (error) {
     console.error('Error fetching geocoder result:', error)
-    // Optionally, show an error message to the user
-    // TODO: Implement user-facing error handling
   }
 }
 
