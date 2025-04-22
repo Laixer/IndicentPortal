@@ -1,16 +1,66 @@
 const baseUrl = import.meta.env.VITE_PDOK_LOCATIONSERVICE || 'https://api.pdok.nl/bzk/locatieserver/search/v3_1'
 
 /**
+ * Interface for PDOK suggestion response
+ */
+export interface PDOKSuggestion {
+  id: string;
+  weergavenaam: string;
+  type: string;
+  score: number;
+  [key: string]: any;
+}
+
+/**
+ * Interface for PDOK suggestion response
+ */
+export interface PDOKSuggestionResponse {
+  response: {
+    numFound: number;
+    start: number;
+    maxScore: number;
+    docs: PDOKSuggestion[];
+  };
+  highlighting: Record<string, any>;
+  spellcheck?: any;
+}
+
+/**
+ * Interface for PDOK lookup response
+ */
+export interface PDOKLookupResponse {
+  response: {
+    numFound: number;
+    start: number;
+    docs: Array<{
+      id: string;
+      weergavenaam: string;
+      straatnaam: string;
+      huisnummer: number;
+      huisletter?: string;
+      huisnummertoevoeging?: string;
+      postcode: string;
+      woonplaatsnaam: string;
+      gemeentenaam: string;
+      provincienaam: string;
+      centroide_rd: string;
+      centroide_ll: string;
+      [key: string]: any;
+    }>;
+  };
+}
+
+/**
  * Makes a request to the PDOK API.
  *
  * @param endpoint - The API endpoint to call
  * @returns The JSON response or null if the request failed
  */
-const callPDOK = async (endpoint: string): Promise<any | null> => {
+const fetchPDOK = async <T>(endpoint: string): Promise<T | null> => {
   try {
     const response = await fetch(`${baseUrl}/${endpoint}`)
     if (response.ok) {
-      return await response.json()
+      return await response.json() as T;
     } else {
       console.error(`PDOK API error: ${response.status} ${response.statusText}`)
       return null
@@ -19,6 +69,19 @@ const callPDOK = async (endpoint: string): Promise<any | null> => {
     console.error('Failed to process PDOK request:', e)
     return null
   }
+}
+
+/**
+ * Encodes URL parameters safely
+ * 
+ * @param params - Object containing URL parameters
+ * @returns Encoded URL parameter string
+ */
+const encodeParams = (params: Record<string, string | number | boolean | undefined | null>): string => {
+  return Object.entries(params)
+    .filter(([_, value]) => value !== undefined && value !== null)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+    .join('&');
 }
 
 /**
@@ -31,10 +94,13 @@ const callPDOK = async (endpoint: string): Promise<any | null> => {
 export const getSuggestions = async (
   query: string,
   count: number | undefined | null = 5
-): Promise<any | null> => {
-  return callPDOK(
-    `suggest?q=${query}&rows=${count || 5}&fq=type:(adres)`
-  )
+): Promise<PDOKSuggestionResponse | null> => {
+  const params = encodeParams({
+    q: query,
+    rows: count || 5,
+    fq: 'type:(adres)'
+  });
+  return fetchPDOK<PDOKSuggestionResponse>(`suggest?${params}`);
 }
 
 /**
@@ -52,10 +118,15 @@ export const getSuggestionsNearCoordinates = async (
   lat: string | number,
   lon: string | number,
   count: number | undefined | null = 5
-): Promise<any | null> => {
-  return callPDOK(
-    `suggest?q=${query}&lat=${lat.toString()}&lon=${lon.toString()}&rows=${count || 5}&fq=type:(adres)`
-  )
+): Promise<PDOKSuggestionResponse | null> => {
+  const params = encodeParams({
+    q: query,
+    lat: lat.toString(),
+    lon: lon.toString(),
+    rows: count || 5,
+    fq: 'type:(adres)'
+  });
+  return fetchPDOK<PDOKSuggestionResponse>(`suggest?${params}`);
 }
 
 /**
@@ -71,10 +142,14 @@ export const getReverse = async (
   lat: string | number,
   lon: string | number,
   count: number | undefined | null = 5
-): Promise<any | null> => {
-  return callPDOK(
-    `reverse?lat=${lat.toString()}&lon=${lon.toString()}&rows=${count || 5}&fq=type:(adres)`
-  )
+): Promise<PDOKLookupResponse | null> => {
+  const params = encodeParams({
+    lat: lat.toString(),
+    lon: lon.toString(),
+    rows: count || 5,
+    fq: 'type:(adres)'
+  });
+  return fetchPDOK<PDOKLookupResponse>(`reverse?${params}`);
 }
 
 /**
@@ -84,6 +159,7 @@ export const getReverse = async (
  * @returns Detailed address object or null if not found or request failed.
  *          Contains complete address information, geographic coordinates, and related identifiers.
  */
-export const getLookup = async (id: string): Promise<any | null> => {
-  return callPDOK(`lookup?id=${id}`)
+export const getLookup = async (id: string): Promise<PDOKLookupResponse | null> => {
+  const params = encodeParams({ id });
+  return fetchPDOK<PDOKLookupResponse>(`lookup?${params}`);
 }
