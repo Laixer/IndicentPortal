@@ -58,16 +58,15 @@ const autoCompleteSuggestions: Ref<{ Id: string; Suggestion: string }[]> = ref([
  */
 const selectSuggestion = async (id: string) => {
   let response = await getLookup(id)
-  response = response?.response || null
 
-  if (!response || !Array.isArray(response.docs) || response.docs.length === 0) {
+  if (!response || !Array.isArray(response.response.docs) || response.response.docs.length === 0) {
     // TODO: Show error ?
     autoCompleteSuggestions.value = []
     return
   }
 
   // Select the first match
-  const doc = response.docs[0]
+  const doc = response.response.docs[0]
 
   // Clear suggestions
   autoCompleteSuggestions.value = []
@@ -139,7 +138,7 @@ watch(
       // Clear suggestions if the input is cleared
       if (value === '') {
         autoCompleteSuggestions.value = []
-      } else {
+      } else if (value !== '' && value !== undefined) {
         let response;
 
         // Use location-based search if map center is defined
