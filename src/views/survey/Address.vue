@@ -17,6 +17,57 @@ const surveyStore = useSurveyStore()
 const { model, address, coordinates } = storeToRefs(surveyStore)
 const { disableNextButton, enableNextButton } = useNavigationStore()
 
+// Get system information for metadata
+const screenSize = {
+  width: window.screen.width,
+  height: window.screen.height
+}
+const locale = navigator.language
+const referrer = document.referrer || "Direct"
+
+// Extract browser and device information
+const getBrowserInfo = () => {
+  const ua = navigator.userAgent
+  let browserName = "Unknown"
+  let browserVersion = "Unknown"
+
+  if (ua.includes("Firefox")) {
+    browserName = "Firefox"
+    browserVersion = ua.match(/Firefox\/([0-9.]+)/)?.[1] || "Unknown"
+  } else if (ua.includes("Chrome") && !ua.includes("Edg")) {
+    browserName = "Chrome"
+    browserVersion = ua.match(/Chrome\/([0-9.]+)/)?.[1] || "Unknown"
+  } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
+    browserName = "Safari"
+    browserVersion = ua.match(/Version\/([0-9.]+)/)?.[1] || "Unknown"
+  } else if (ua.includes("Edg")) {
+    browserName = "Edge"
+    browserVersion = ua.match(/Edg\/([0-9.]+)/)?.[1] || "Unknown"
+  } else if (ua.includes("MSIE") || ua.includes("Trident/")) {
+    browserName = "Internet Explorer"
+    browserVersion = ua.match(/(?:MSIE |rv:)([0-9.]+)/)?.[1] || "Unknown"
+  }
+
+  return { browserName, browserVersion }
+}
+
+// Determine device type
+const getDeviceType = () => {
+  const ua = navigator.userAgent
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+    return "Tablet"
+  }
+  if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+    return "Mobile"
+  }
+  return "Desktop"
+}
+
+// Prepare all metadata
+const browserInfo = getBrowserInfo()
+const deviceType = getDeviceType()
+const osName = navigator.platform || "Unknown"
+
 onBeforeMount(() => {
   // Disable next button initially
   disableNextButton()
@@ -95,10 +146,20 @@ const selectSuggestion = async (id: string) => {
 
     surveyStore.setBuilding(geocoderResult.building_id)
     surveyStore.model.metadata = {
-      ...surveyStore.model.metadata,
       address_name: doc.weergavenaam,
       nummeraanduiding_id: doc.nummeraanduiding_id,
       pdok_id: id,
+      browser: {
+        name: browserInfo.browserName,
+        version: browserInfo.browserVersion,
+        locale: locale,
+      },
+      device: {
+        type: deviceType,
+        os: osName
+      },
+      referrer: referrer,
+      screen_size: `${screenSize.width}x${screenSize.height}`,
     }
 
     // Set the coordinates, if the API response has this information
