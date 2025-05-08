@@ -63,10 +63,21 @@ const getDeviceType = () => {
   return "Desktop"
 }
 
+// Get OS name using user agent instead of deprecated platform
+const getOSName = () => {
+  const ua = navigator.userAgent
+  if (ua.includes("Win")) return "Windows"
+  if (ua.includes("Mac")) return "MacOS"
+  if (ua.includes("X11") || ua.includes("Linux")) return "Linux"
+  if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS"
+  if (ua.includes("Android")) return "Android"
+  return "Unknown"
+}
+
 // Prepare all metadata
 const browserInfo = getBrowserInfo()
 const deviceType = getDeviceType()
-const osName = navigator.platform || "Unknown"
+const osName = getOSName()
 
 onBeforeMount(() => {
   // Disable next button initially
